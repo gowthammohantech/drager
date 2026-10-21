@@ -1,81 +1,90 @@
 import BridgeCore
 import BridgeDiagnostics
+import BridgeGesture
 import BridgeModels
+import BridgeNetworking
 import BridgePersistence
 import BridgeSecurity
+import BridgeServices
+import BridgeTransfer
 import CryptoKit
 import Foundation
+import Network
 import Observation
 import UIKit
 
-/// Composition root. Everything the UI needs is constructed here once and
-/// injected through the SwiftUI environment, so screens stay testable.
-@Observable
+/// Composition root. Builds every dependency once and hands the UI a single
+/// `AppModel`. UI tests launch with `-ui-testing` to get isolated, in-memory
+/// state that never touches the network.
 @MainActor
-final class AppEnvironment {
-    let identity: DeviceIdentity
-    let settings: SettingsStore
-    let trustedPeers: TrustedPeerStore
-    let history: TransferHistoryStore
-    let secrets: any SecretStore
-    let pairSecrets: PairSecretStore
-    let deviceInfo: DeviceInfo
+enum AppEnvironment {
+    static var isUITesting: Bool { ProcessInfo.processInfo.arguments.contains("-ui-testing") }
 
-    private let log = BridgeLogger(.app)
-
-    init(
-        identity: DeviceIdentity,
-        settings: SettingsStore,
-        trustedPeers: TrustedPeerStore,
-        history: TransferHistoryStore,
-        secrets: any SecretStore,
-        deviceInfo: DeviceInfo
-    ) {
-        self.identity = identity
-        self.settings = settings
-        self.trustedPeers = trustedPeers
-        self.history = history
-        self.secrets = secrets
-        self.pairSecrets = PairSecretStore(secrets: secrets)
-        self.deviceInfo = deviceInfo
-        DiagnosticsRecorder.shared.setAnalyticsEnabled(settings.settings.analyticsOptIn)
-        log.notice("App environment ready; peer \(identity.peerID.shortDescription)")
-    }
-
-    /// Production wiring. Falls back to an in-memory secret store only if the
-    /// Keychain is unavailable (for example an unsigned simulator build), and
-    /// logs that fact so it is never silent.
-    static func live() -> AppEnvironment {
-        let keychain = KeychainSecretStore()
+    static func live() -> AppModel {
+        let uiTesting = isUITesting
         let secrets: any SecretStore
         let identity: DeviceIdentity
-        do {
-            identity = try IdentityStore(secrets: keychain).loadOrCreate()
-            secrets = keychain
-        } catch {
-            BridgeLogger(.app).fault("Keychain unavailable (\(error)); using in-memory secrets for this launch")
+        let keychain = KeychainSecretStore(service: "com.gowthammohan.spatialbridge.ios")
+        if uiTesting {
             let memory = InMemorySecretStore()
             secrets = memory
             identity = (try? IdentityStore(secrets: memory).loadOrCreate()) ?? DeviceIdentity(signingKey: .init())
+        } else {
+            do {
+                identity = try IdentityStore(secrets: keychain).loadOrCreate()
+                secrets = keychain
+            } catch {
+                // Never silent: an unsigned simulator build may lack Keychain access.
+                BridgeLogger(.app).fault("Keychain unavailable (\(error)); using in-memory secrets for this launch")
+                let memory = InMemorySecretStore()
+                secrets = memory
+                identity = (try? IdentityStore(secrets: memory).loadOrCreate()) ?? DeviceIdentity(signingKey: .init())
+            }
         }
 
-        let settings = SettingsStore(store: UserDefaultsStore())
-        let peersURL = (try? JSONFileStore<[TrustedPeer]>.applicationSupportURL(fileName: TrustedPeerStore.fileName))
-            ?? FileManager.default.temporaryDirectory.appendingPathComponent(TrustedPeerStore.fileName)
-        let historyURL = (try? JSONFileStore<[TransferRecord]>.applicationSupportURL(fileName: TransferHistoryStore.fileName))
-            ?? FileManager.default.temporaryDirectory.appendingPathComponent(TransferHistoryStore.fileName)
+        let defaults = uiTesting ? (UserDefaults(suiteName: "uitest-\(UUID().uuidString)") ?? .standard) : .standard
+        let settings = SettingsStore(store: UserDefaultsStore(defaults: defaults))
+        if ProcessInfo.processInfo.arguments.contains("-skip-onboarding") {
+            settings.settings.hasCompletedOnboarding = true
+        }
+        let storageRoot = uiTesting
+            ? FileManager.default.temporaryDirectory.appendingPathComponent("uitest-\(UUID().uuidString)", isDirectory: true)
+            : nil
+        let trusted = TrustedPeerStore(url: storeURL(TrustedPeerStore.fileName, root: storageRoot))
+        let history = TransferHistoryStore(url: storeURL(TransferHistoryStore.fileName, root: storageRoot))
 
         let name = settings.settings.deviceDisplayNameOverride ?? UIDevice.current.name
-        let info = DeviceInfo(peerID: identity.peerID, displayName: name, platform: .iOS, model: Self.modelIdentifier())
+        let device = DeviceInfo(peerID: identity.peerID, displayName: name, platform: .iOS, model: modelIdentifier())
+        let locator: any PeerLocating = uiTesting ? OfflineLocator() : BonjourBrowser(excluding: identity.peerID)
 
-        return AppEnvironment(
+        let service = SenderService(dependencies: .init(
             identity: identity,
+            device: device,
+            pairSecrets: PairSecretStore(secrets: secrets),
+            trustedPeers: trusted,
+            history: history,
+            locator: locator,
+            limits: TransferLimits(maxFileBytes: settings.settings.maxFileBytes),
+            preferredPeerID: { await MainActor.run { settings.settings.preferredPeerID } },
+            watchNetworkPath: !uiTesting
+        ))
+
+        OutgoingStaging.purge()
+        return AppModel(
+            identity: identity,
+            device: device,
             settings: settings,
-            trustedPeers: TrustedPeerStore(url: peersURL),
-            history: TransferHistoryStore(url: historyURL),
-            secrets: secrets,
-            deviceInfo: info
+            sender: service,
+            trustedPeers: trusted,
+            history: history,
+            secrets: secrets
         )
+    }
+
+    private static func storeURL(_ name: String, root: URL?) -> URL {
+        if let root { return root.appendingPathComponent(name) }
+        return (try? JSONFileStore<[TransferRecord]>.applicationSupportURL(fileName: name))
+            ?? FileManager.default.temporaryDirectory.appendingPathComponent(name)
     }
 
     static func modelIdentifier() -> String {
@@ -85,10 +94,17 @@ final class AppEnvironment {
             String(decoding: buffer.prefix { $0 != 0 }, as: UTF8.self)
         }
     }
+}
 
-    var appVersion: String {
-        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "0"
-        let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "0"
-        return "\(version) (\(build))"
-    }
+/// Locator used by UI tests: never finds anything, never touches the network.
+final class OfflineLocator: PeerLocating, @unchecked Sendable {
+    private let peerBroadcaster = Broadcaster<[DiscoveredPeer]>([])
+    private let stateBroadcaster = Broadcaster<DiscoveryState>(.idle)
+    nonisolated var peers: AsyncStream<[DiscoveredPeer]> { peerBroadcaster.stream() }
+    nonisolated var state: AsyncStream<DiscoveryState> { stateBroadcaster.stream() }
+    nonisolated var currentPeers: [DiscoveredPeer] { [] }
+    nonisolated func endpoint(for peerID: String, role: ServiceRole) -> NWEndpoint? { nil }
+    nonisolated func start() async { stateBroadcaster.send(.waiting(.noPeer)) }
+    nonisolated func stop() async { stateBroadcaster.send(.idle) }
+    nonisolated func restart() async {}
 }

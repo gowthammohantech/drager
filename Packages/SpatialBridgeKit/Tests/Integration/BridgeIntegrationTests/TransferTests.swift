@@ -317,6 +317,30 @@ struct TransferTests {
         #expect(h.events.acceptedCount == 1)
     }
 
+    @Test("Retrying a failed transfer with the same ID succeeds and saves exactly one file")
+    func retrySameID() async throws {
+        let h = try await TransferHarness.make()
+        defer { Task { await h.cleanUp() } }
+        let file = try h.makeFile(megabytes: 0.5, name: "retry.jpeg")
+        let id = UUID()
+        // First attempt fails on the receiver (corrupt digest via a bogus raw COMPLETE).
+        let offer = TransferOffer(
+            transferID: id, sourcePeerID: h.phone.identity.peerID, targetPeerID: h.mac.identity.peerID,
+            filename: "retry.jpeg", contentType: "public.jpeg", byteCount: 4,
+            sha256Hex: String(repeating: "0", count: 64), gesture: nil
+        )
+        try await h.senderChannel.send(.transferOffer(offer))
+        guard case .transferAccept = try await h.senderChannel.receiveControl(timeout: .seconds(5)) else { Issue.record("accept"); return }
+        try await h.senderChannel.send(.chunk(ChunkFrame(transferID: id, sequence: 0, offset: 0, payload: Data([1, 2, 3, 4]))))
+        try await h.senderChannel.send(.complete(TransferComplete(transferID: id, sha256Hex: offer.sha256Hex, byteCount: 4)))
+        #expect(await h.events.waitFor { $0.failures == [.hashMismatch] })
+        await h.senderChannel.drainInbox()
+        // The retry with the same ID is accepted and commits once.
+        let committed = try await h.sender.send(file, transferID: id, gesture: nil) { _ in }
+        #expect(committed.savedFilename == "retry.jpeg")
+        #expect(h.destinationContents == ["retry.jpeg"])
+    }
+
     @Test("Cancelling the sender cleans up on both sides")
     func senderCancel() async throws {
         let h = try await TransferHarness.make(link: .fake(sender: .init(sendDelay: .milliseconds(5))))

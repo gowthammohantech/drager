@@ -90,14 +90,12 @@ public actor TransferReceiver {
     // MARK: Offer handling
 
     private func handle(_ offer: TransferOffer) async {
-        // Replay / retry of a finished transfer: answer from the ledger, never write again.
-        if let outcome = await ledger.outcome(for: offer.transferID) {
-            switch outcome {
-            case .committed(let name, let bytes):
-                try? await channel.send(.committed(TransferCommitted(transferID: offer.transferID, savedFilename: name, byteCount: bytes)))
-            case .failed(let code):
-                try? await channel.send(.transferReject(TransferReject(transferID: offer.transferID, reason: code, message: "transfer ID already used")))
-            }
+        // Replay / retry of a committed transfer: answer from the ledger, never
+        // write again. A retry of a *failed* attempt reuses the same ID
+        // (ADR-011) and is processed afresh, so one user activation can never
+        // produce two saved files even if a COMMITTED message was lost.
+        if case .committed(let name, let bytes) = await ledger.outcome(for: offer.transferID) {
+            try? await channel.send(.committed(TransferCommitted(transferID: offer.transferID, savedFilename: name, byteCount: bytes)))
             return
         }
 
