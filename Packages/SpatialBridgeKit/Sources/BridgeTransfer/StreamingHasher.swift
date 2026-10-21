@@ -34,8 +34,13 @@ public enum FileHasher {
             var hasher = StreamingHasher()
             while true {
                 try Task.checkCancellation()
-                guard let data = try handle.read(upToCount: chunkBytes), !data.isEmpty else { break }
-                hasher.update(data)
+                // Drain autoreleased buffers per chunk; cooperative threads have no run-loop pool.
+                let more = try autoreleasepool { () throws -> Bool in
+                    guard let data = try handle.read(upToCount: chunkBytes), !data.isEmpty else { return false }
+                    hasher.update(data)
+                    return true
+                }
+                if !more { break }
             }
             return (hasher.finalizeHex(), hasher.byteCount)
         }.value
@@ -59,7 +64,8 @@ public actor ChunkedFileReader {
 
     /// Next chunk, or `nil` at end of file.
     public func next() throws -> (offset: Int64, data: Data)? {
-        guard let data = try handle.read(upToCount: chunkBytes), !data.isEmpty else { return nil }
+        let read = try autoreleasepool { try handle.read(upToCount: chunkBytes).map { Data($0) } }
+        guard let data = read, !data.isEmpty else { return nil }
         let start = offset
         offset += Int64(data.count)
         return (start, data)

@@ -163,7 +163,11 @@ func sha256(_ url: URL) throws -> String {
     var hasher = SHA256()
     let handle = try FileHandle(forReadingFrom: url)
     defer { try? handle.close() }
-    while let data = try handle.read(upToCount: 1 << 20), !data.isEmpty { hasher.update(data: data) }
+    while try autoreleasepool(invoking: { () throws -> Bool in
+        guard let data = try handle.read(upToCount: 1 << 20), !data.isEmpty else { return false }
+        hasher.update(data: data)
+        return true
+    }) {}
     return hasher.finalize().map { String(format: "%02x", $0) }.joined()
 }
 
