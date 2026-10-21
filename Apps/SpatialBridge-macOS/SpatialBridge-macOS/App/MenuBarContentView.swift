@@ -1,4 +1,6 @@
+import BridgeModels
 import BridgePersistence
+import BridgeSecurity
 import SwiftUI
 
 /// Popover shown from the menu bar icon. Phase 1 shows live identity and

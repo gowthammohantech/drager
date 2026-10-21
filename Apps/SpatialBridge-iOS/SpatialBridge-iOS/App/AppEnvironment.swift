@@ -3,6 +3,7 @@ import BridgeDiagnostics
 import BridgeModels
 import BridgePersistence
 import BridgeSecurity
+import CryptoKit
 import Foundation
 import Observation
 import UIKit

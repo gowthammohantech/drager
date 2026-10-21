@@ -1,4 +1,6 @@
+import BridgeModels
 import BridgePersistence
+import BridgeSecurity
 import SwiftUI
 
 /// Root of the iPhone app. Routes between onboarding and the main experience.

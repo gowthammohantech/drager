@@ -1,0 +1,451 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		ACE5A43E94963196BB3CC5E2 /* BridgeModels in Frameworks */ = {isa = PBXBuildFile; productRef = CADC80C621A002621814754A /* BridgeModels */; };
+		E590665A24BC3C3515FA90F4 /* BridgeCore in Frameworks */ = {isa = PBXBuildFile; productRef = D213D323F90D388F0F9D1A88 /* BridgeCore */; };
+		0CA4CB15F07E13AD74BF1761 /* BridgeDiagnostics in Frameworks */ = {isa = PBXBuildFile; productRef = 39CE14FBDE53F22062E04F2C /* BridgeDiagnostics */; };
+		B23D28384AA72DAB7411C64A /* BridgeSecurity in Frameworks */ = {isa = PBXBuildFile; productRef = 85A3B4A7CAA6D1F0C1A92C39 /* BridgeSecurity */; };
+		D365F3A4B7BBD50BE66AB6B8 /* BridgeNetworking in Frameworks */ = {isa = PBXBuildFile; productRef = 744312B18D91529B48F7B732 /* BridgeNetworking */; };
+		298D0FF60EF9D98B19C6E1EF /* BridgeTransfer in Frameworks */ = {isa = PBXBuildFile; productRef = ACB7499B12BE0FE00BBEF6BE /* BridgeTransfer */; };
+		8F8C4AE1D73C1C77395F7CAD /* BridgeGesture in Frameworks */ = {isa = PBXBuildFile; productRef = F9D2B52946D734F83E6262C1 /* BridgeGesture */; };
+		79CD0C1EB8689A5EBB0120B8 /* BridgeCalibration in Frameworks */ = {isa = PBXBuildFile; productRef = 8BCAAFEEBDBC8729E13157DE /* BridgeCalibration */; };
+		4979A458FDBA59F16799D690 /* BridgePersistence in Frameworks */ = {isa = PBXBuildFile; productRef = 61D1377174F5814D498FC151 /* BridgePersistence */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B18E52CDA566CEADBD0AD30E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8E83FE06259A43BC189DCA07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5B0629A48348B0DEB18AAE6C;
+			remoteInfo = "SpatialBridge-macOS";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		C9D9DE1B3D773DE681F8837F /* SpatialBridge-macOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SpatialBridge-macOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2993F4848F1AA17E924319A7 /* SpatialBridge-macOSUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SpatialBridge-macOSUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		88F910DB7E10DAE47D95DEC2 /* Shared.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Shared.xcconfig; sourceTree = "<group>"; };
+		ADFF4D420C71D60DC4CDF145 /* macOS-App.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "macOS-App.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		204935689045996D91D70E87 /* Exceptions for "SpatialBridge-macOS" folder in "SpatialBridge-macOS" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 5B0629A48348B0DEB18AAE6C /* SpatialBridge-macOS */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		A2055E16DE4F3B99901DF641 /* SpatialBridge-macOS */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				204935689045996D91D70E87 /* Exceptions for "SpatialBridge-macOS" folder in "SpatialBridge-macOS" target */,
+			);
+			path = "SpatialBridge-macOS";
+			sourceTree = "<group>";
+		};
+		6E0A95492EBA17AE08D1A71A /* SpatialBridge-macOSUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			name = "SpatialBridge-macOSUITests";
+			path = "../../Tests/UI/SpatialBridge-macOSUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		33E905281EA8B9EEC458203B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ACE5A43E94963196BB3CC5E2 /* BridgeModels in Frameworks */,
+				E590665A24BC3C3515FA90F4 /* BridgeCore in Frameworks */,
+				0CA4CB15F07E13AD74BF1761 /* BridgeDiagnostics in Frameworks */,
+				B23D28384AA72DAB7411C64A /* BridgeSecurity in Frameworks */,
+				D365F3A4B7BBD50BE66AB6B8 /* BridgeNetworking in Frameworks */,
+				298D0FF60EF9D98B19C6E1EF /* BridgeTransfer in Frameworks */,
+				8F8C4AE1D73C1C77395F7CAD /* BridgeGesture in Frameworks */,
+				79CD0C1EB8689A5EBB0120B8 /* BridgeCalibration in Frameworks */,
+				4979A458FDBA59F16799D690 /* BridgePersistence in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F2792C480423F4A70C7495FD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		202F3200969F465F90D67A0B = {
+			isa = PBXGroup;
+			children = (
+				A2055E16DE4F3B99901DF641 /* SpatialBridge-macOS */,
+				6E0A95492EBA17AE08D1A71A /* SpatialBridge-macOSUITests */,
+				9E317BDDECC9EF2F59BDEE57 /* Config */,
+				C88E76C2D9E88307525AF64C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9E317BDDECC9EF2F59BDEE57 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				88F910DB7E10DAE47D95DEC2 /* Shared.xcconfig */,
+				ADFF4D420C71D60DC4CDF145 /* macOS-App.xcconfig */,
+			);
+			name = Config;
+			path = ../../Config;
+			sourceTree = "<group>";
+		};
+		C88E76C2D9E88307525AF64C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C9D9DE1B3D773DE681F8837F /* SpatialBridge-macOS.app */,
+				2993F4848F1AA17E924319A7 /* SpatialBridge-macOSUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5B0629A48348B0DEB18AAE6C /* SpatialBridge-macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 44685B9AEA635CE3512D21DD /* Build configuration list for PBXNativeTarget "SpatialBridge-macOS" */;
+			buildPhases = (
+				3BA6C9911C4D5A766B38DF97 /* Sources */,
+				33E905281EA8B9EEC458203B /* Frameworks */,
+				2ABE68439D63395F60DE9FC0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				A2055E16DE4F3B99901DF641 /* SpatialBridge-macOS */,
+			);
+			name = "SpatialBridge-macOS";
+			packageProductDependencies = (
+				CADC80C621A002621814754A /* BridgeModels */,
+				D213D323F90D388F0F9D1A88 /* BridgeCore */,
+				39CE14FBDE53F22062E04F2C /* BridgeDiagnostics */,
+				85A3B4A7CAA6D1F0C1A92C39 /* BridgeSecurity */,
+				744312B18D91529B48F7B732 /* BridgeNetworking */,
+				ACB7499B12BE0FE00BBEF6BE /* BridgeTransfer */,
+				F9D2B52946D734F83E6262C1 /* BridgeGesture */,
+				8BCAAFEEBDBC8729E13157DE /* BridgeCalibration */,
+				61D1377174F5814D498FC151 /* BridgePersistence */,
+			);
+			productName = "SpatialBridge-macOS";
+			productReference = C9D9DE1B3D773DE681F8837F /* SpatialBridge-macOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F321B99C6A6EC881B02C2EF6 /* SpatialBridge-macOSUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8D8F9C947B1993C96D899685 /* Build configuration list for PBXNativeTarget "SpatialBridge-macOSUITests" */;
+			buildPhases = (
+				9D74A90C24DFE00ADD5826D7 /* Sources */,
+				F2792C480423F4A70C7495FD /* Frameworks */,
+				ACCF9EA39CB19C7644849EAF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C732FE8E2EA5A802F9EBE0A0 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				6E0A95492EBA17AE08D1A71A /* SpatialBridge-macOSUITests */,
+			);
+			name = "SpatialBridge-macOSUITests";
+			packageProductDependencies = (
+			);
+			productName = "SpatialBridge-macOSUITests";
+			productReference = 2993F4848F1AA17E924319A7 /* SpatialBridge-macOSUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8E83FE06259A43BC189DCA07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2700;
+				LastUpgradeCheck = 2700;
+				TargetAttributes = {
+					5B0629A48348B0DEB18AAE6C = {
+						CreatedOnToolsVersion = 27.0;
+					};
+					F321B99C6A6EC881B02C2EF6 = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = 5B0629A48348B0DEB18AAE6C;
+					};
+				};
+			};
+			buildConfigurationList = 9E555C070BB38306ACA00062 /* Build configuration list for PBXProject "SpatialBridge-macOS" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 202F3200969F465F90D67A0B;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				DE0D3A9390729F3B55F955D9 /* XCLocalSwiftPackageReference "../../Packages/SpatialBridgeKit" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = C88E76C2D9E88307525AF64C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5B0629A48348B0DEB18AAE6C /* SpatialBridge-macOS */,
+				F321B99C6A6EC881B02C2EF6 /* SpatialBridge-macOSUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2ABE68439D63395F60DE9FC0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		ACCF9EA39CB19C7644849EAF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3BA6C9911C4D5A766B38DF97 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9D74A90C24DFE00ADD5826D7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C732FE8E2EA5A802F9EBE0A0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5B0629A48348B0DEB18AAE6C /* SpatialBridge-macOS */;
+			targetProxy = B18E52CDA566CEADBD0AD30E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		9A8E258A0E76C16DBB1B18EB /* Debug configuration for PBXProject "SpatialBridge-macOS" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		FBF386671245C6A4AD370F12 /* Release configuration for PBXProject "SpatialBridge-macOS" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B20E80A10E7B49532F1C3796 /* Debug configuration for PBXNativeTarget "SpatialBridge-macOS" */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = ADFF4D420C71D60DC4CDF145 /* macOS-App.xcconfig */;
+			buildSettings = {
+
+			};
+			name = Debug;
+		};
+		E2DB4F0464C85229CB3FD330 /* Release configuration for PBXNativeTarget "SpatialBridge-macOS" */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = ADFF4D420C71D60DC4CDF145 /* macOS-App.xcconfig */;
+			buildSettings = {
+
+			};
+			name = Release;
+		};
+		0B20B22CD8F6D63D21C8771B /* Debug configuration for PBXNativeTarget "SpatialBridge-macOSUITests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TWR2VXDJQB;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gowthammohan.spatialbridge.mac.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TEST_TARGET_NAME = "SpatialBridge-macOS";
+			};
+			name = Debug;
+		};
+		702287B8FC20724B041629B7 /* Release configuration for PBXNativeTarget "SpatialBridge-macOSUITests" */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = TWR2VXDJQB;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.gowthammohan.spatialbridge.mac.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TEST_TARGET_NAME = "SpatialBridge-macOS";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9E555C070BB38306ACA00062 /* Build configuration list for PBXProject "SpatialBridge-macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9A8E258A0E76C16DBB1B18EB /* Debug configuration for PBXProject "SpatialBridge-macOS" */,
+				FBF386671245C6A4AD370F12 /* Release configuration for PBXProject "SpatialBridge-macOS" */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		44685B9AEA635CE3512D21DD /* Build configuration list for PBXNativeTarget "SpatialBridge-macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B20E80A10E7B49532F1C3796 /* Debug configuration for PBXNativeTarget "SpatialBridge-macOS" */,
+				E2DB4F0464C85229CB3FD330 /* Release configuration for PBXNativeTarget "SpatialBridge-macOS" */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8D8F9C947B1993C96D899685 /* Build configuration list for PBXNativeTarget "SpatialBridge-macOSUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0B20B22CD8F6D63D21C8771B /* Debug configuration for PBXNativeTarget "SpatialBridge-macOSUITests" */,
+				702287B8FC20724B041629B7 /* Release configuration for PBXNativeTarget "SpatialBridge-macOSUITests" */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		DE0D3A9390729F3B55F955D9 /* XCLocalSwiftPackageReference "../../Packages/SpatialBridgeKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../Packages/SpatialBridgeKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CADC80C621A002621814754A /* BridgeModels */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE0D3A9390729F3B55F955D9 /* XCLocalSwiftPackageReference "../../Packages/SpatialBridgeKit" */;
+			productName = BridgeModels;
+		};
+		D213D323F90D388F0F9D1A88 /* BridgeCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE0D3A9390729F3B55F955D9 /* XCLocalSwiftPackageReference "../../Packages/SpatialBridgeKit" */;
+			productName = BridgeCore;
+		};
+		39CE14FBDE53F22062E04F2C /* BridgeDiagnostics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE0D3A9390729F3B55F955D9 /* XCLocalSwiftPackageReference "../../Packages/SpatialBridgeKit" */;
+			productName = BridgeDiagnostics;
+		};
+		85A3B4A7CAA6D1F0C1A92C39 /* BridgeSecurity */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE0D3A9390729F3B55F955D9 /* XCLocalSwiftPackageReference "../../Packages/SpatialBridgeKit" */;
+			productName = BridgeSecurity;
+		};
+		744312B18D91529B48F7B732 /* BridgeNetworking */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE0D3A9390729F3B55F955D9 /* XCLocalSwiftPackageReference "../../Packages/SpatialBridgeKit" */;
+			productName = BridgeNetworking;
+		};
+		ACB7499B12BE0FE00BBEF6BE /* BridgeTransfer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE0D3A9390729F3B55F955D9 /* XCLocalSwiftPackageReference "../../Packages/SpatialBridgeKit" */;
+			productName = BridgeTransfer;
+		};
+		F9D2B52946D734F83E6262C1 /* BridgeGesture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE0D3A9390729F3B55F955D9 /* XCLocalSwiftPackageReference "../../Packages/SpatialBridgeKit" */;
+			productName = BridgeGesture;
+		};
+		8BCAAFEEBDBC8729E13157DE /* BridgeCalibration */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE0D3A9390729F3B55F955D9 /* XCLocalSwiftPackageReference "../../Packages/SpatialBridgeKit" */;
+			productName = BridgeCalibration;
+		};
+		61D1377174F5814D498FC151 /* BridgePersistence */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DE0D3A9390729F3B55F955D9 /* XCLocalSwiftPackageReference "../../Packages/SpatialBridgeKit" */;
+			productName = BridgePersistence;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 8E83FE06259A43BC189DCA07 /* Project object */;
+}

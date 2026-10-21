@@ -1,0 +1,32 @@
+included:
+  - Apps
+  - Packages/SpatialBridgeKit/Sources
+  - Packages/SpatialBridgeKit/Tests
+  - Tests
+excluded:
+  - Packages/SpatialBridgeKit/.build
+  - build
+disabled_rules:
+  - todo
+  - trailing_comma
+  - identifier_name
+  - nesting
+opt_in_rules:
+  - force_unwrapping
+  - empty_count
+line_length:
+  warning: 140
+  error: 200
+type_body_length:
+  warning: 400
+file_length:
+  warning: 600
+function_body_length:
+  warning: 80
+custom_rules:
+  no_ui_in_packages:
+    included: "Packages/SpatialBridgeKit/Sources"
+    name: "Platform-neutral packages"
+    regex: "^\\s*(public )?import (UIKit|AppKit|SwiftUI)"
+    message: "Shared packages must stay free of UIKit/AppKit/SwiftUI"
+    severity: error

@@ -1,5 +1,5 @@
 import Foundation
-public import BridgeModels
+import BridgeModels
 
 // MARK: - Hex
 

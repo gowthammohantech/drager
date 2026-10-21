@@ -47,9 +47,9 @@ public struct PairingTranscript: Sendable, Hashable {
     public func hash() throws -> Data {
         var hasher = SHA256()
         func absorb(_ label: String, _ data: Data) {
-            var length = UInt32(data.count).bigEndian
+            let length = UInt32(data.count).bigEndian
             hasher.update(data: Data(label.utf8))
-            hasher.update(bufferPointer: UnsafeRawBufferPointer(start: &length, count: 4))
+            withUnsafeBytes(of: length) { hasher.update(bufferPointer: $0) }
             hasher.update(data: data)
         }
         absorb("sb-pair-v1", Data())

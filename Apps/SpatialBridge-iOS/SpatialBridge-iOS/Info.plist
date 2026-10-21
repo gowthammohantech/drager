@@ -8,7 +8,5 @@
 	</array>
 	<key>UIBackgroundModes</key>
 	<array/>
-	<key>UIRequiresFullScreen</key>
-	<true/>
 </dict>
 </plist>

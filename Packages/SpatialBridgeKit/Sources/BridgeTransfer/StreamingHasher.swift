@@ -1,6 +1,6 @@
 import CryptoKit
 import Foundation
-public import BridgeModels
+import BridgeModels
 
 /// Incremental SHA-256 for chunked streams.
 public struct StreamingHasher: Sendable {
