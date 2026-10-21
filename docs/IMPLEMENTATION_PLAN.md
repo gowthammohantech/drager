@@ -47,23 +47,23 @@ Architecture summary: two native apps over a shared platform-neutral SwiftPM pac
 - **Objective:** onboarding, picker/gallery, gesture canvas, transfer UI, settings.
 - **Dependencies:** Phases 2–3.
 - **Acceptance:** all screens functional with real services; UI tests for onboarding, gallery, settings, error states.
-- **Status:** NOT_STARTED
+- **Status:** IMPLEMENTED. UI tests 5/5 pass on the simulator; real gesture feel and Photos import await device acceptance.
 
 ## Phase 5: macOS experience
 - **Objective:** menu bar utility, overlay, arrival animation, destination, notifications, login item.
 - **Dependencies:** Phases 2–3.
 - **Acceptance:** receives real transfers from the loopback sender; overlay never takes focus; success only after COMMITTED.
-- **Status:** NOT_STARTED
+- **Status:** IMPLEMENTED. The receive path is verified through `ReceiverService` E2E tests and the menu bar UI test passes; overlay placement on full-screen and multi-display setups (T-10) awaits a manual run.
 
 ## Phase 6: Spatial coordination
 - **Objective:** calibration on both sides, gesture → overlay mapping, provisional/final animation states, latency metrics.
 - **Dependencies:** Phases 4–5.
-- **Status:** NOT_STARTED
+- **Status:** IMPLEMENTED. The iPhone applies placement, alignment and mirroring. The Mac derives the arrival edge from the gesture edge and adds its display choice and nudge. The overlay starts on ACCEPT and turns to success only on COMMITTED. `overlayStartLatency` and `gestureToOfferLatency` metrics are recorded. Mapping is verified by `CoordinateMapperTests`.
 
 ## Phase 7: Hardening
 - **Objective:** full test run, security review, memory check, failure matrix, accessibility.
-- **Status:** NOT_STARTED
+- **Status:** IMPLEMENTED. 113 package tests, 6 UI tests and the analyzer all pass. Security review is in `docs/Testing/SECURITY_REVIEW.md`. A memory defect was fixed (308 MB → 103 MB peak). The automated failure matrix covers disconnect, corruption, disk full, revoked folder, untrusted peer and restart. Wi-Fi drop, sleep and backgrounding are in the device plan. Accessibility: VoiceOver labels and actions, Reduce Motion, Dynamic Type via system fonts, keyboard shortcuts on the Mac; a full VoiceOver pass on device is pending.
 
 ## Phase 8: Release preparation
 - **Objective:** release configs, install/release docs, release notes, final verification report, physical-device acceptance.
-- **Status:** NOT_STARTED
+- **Status:** IN_PROGRESS. Release builds succeed. Archive and notarize scripts, release instructions, notes, checklist and the test report are written. The app is installed on the iPhone. **Blocked on human steps:** running `Scripts/device-acceptance.md`, plus a Developer ID certificate and an App Store Connect record for distribution.
