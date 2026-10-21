@@ -5,7 +5,9 @@ Status: IMPLEMENTED (BridgeModels, BridgeNetworking, BridgeTransfer)
 ## Transport
 - Discovery: Bonjour `_spatialbridge._tcp` in `local.`. The Mac advertises and the iPhone browses. TXT keys: `pid` (peer ID hint), `name`, `plat`, `pv` (protocol version). TXT data is **untrusted**.
 - **Pairing connection:** plain TCP, used only for the pairing handshake below. No file data or secrets are ever sent on it.
-- **Session connection:** TLS 1.3 with an external pre-shared key. Identity = the initiator's peer ID (UTF-8). Key = the 32-byte pair PSK from pairing. Resumption and early data are disabled. A handshake with an unknown identity fails.
+- **Session connection:** TLS 1.2 with an external pre-shared key, suite `TLS_ECDHE_PSK_WITH_CHACHA20_POLY1305_SHA256` only (TLS 1.3 PSK-only is unsupported by Network.framework; see ADR-010). Identity = the initiator's peer ID (UTF-8). Key = the 32-byte pair PSK. Resumption, tickets and renegotiation are disabled. An unknown identity fails the handshake.
+- **Session authentication:** after TLS, each side sends `HELLO(session.v1)` and then `SESSION_AUTH`, an Ed25519 signature over `"sb-session-v1" ‖ len‖nonce_i ‖ len‖nonce_r ‖ len‖peerID_i ‖ len‖peerID_r ‖ len‖role`. It is verified against the stored pairing key.
+- **Advertisement:** a session instance (`role=session`) and, while pairing is enabled, a pairing instance (`role=pairing`), both of type `_spatialbridge._tcp`.
 - On the pairing connection, the first frame from the initiator is `HELLO` with capability `pair.v1`. On a session connection the capability is `session.v1`.
 
 ## Framing

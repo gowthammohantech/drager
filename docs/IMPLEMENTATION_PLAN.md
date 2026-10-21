@@ -29,7 +29,9 @@ Architecture summary: two native apps over a shared platform-neutral SwiftPM pac
 - **Tasks:** `NWFrameTransport` (framed NWConnection with backpressure); `BonjourBrowser` (timeout, dedupe, updates); `BridgeListener` (advertise when available, PSK per trusted peer); `PairingSession` initiator/responder state machines over `FrameTransport`; TLS-PSK parameters; reconnect backoff; path monitor.
 - **Dependencies:** Phase 1.
 - **Acceptance:** loopback pairing end to end; loopback TLS-PSK session exchanges frames; an untrusted PSK identity is rejected (T-11); a pairing rejection persists no trust (T-02).
-- **Status:** NOT_STARTED
+- **Status:** VERIFIED (automated, loopback + real Bonjour on one Mac). Cross-device verification is part of the Phase 8 device acceptance.
+- **Test results:** `PairingProtocolTests` (7), `SessionAuthenticatorTests` (4), `NetworkLoopbackTests` (6), and `BonjourDiscoveryTests` (1, discovered in 0.92 s with `SB_ENABLE_BONJOUR_TESTS=1`) all pass.
+- **Risks:** TLS 1.3 PSK unsupported, so TLS 1.2 ECDHE-PSK is used (ADR-010). Local Network prompt behaviour on device is still unverified.
 
 ## Phase 3: File transfer
 - **Objective:** offer → accept → stream → verify → commit, with cancellation and retry.

@@ -45,11 +45,24 @@ public struct DeviceInfo: Codable, Sendable, Hashable {
     }
 }
 
+/// What an advertised Bonjour service instance is for. A Mac advertises a
+/// `session` instance (TLS-PSK, trusted peers only) and, while pairing is
+/// allowed, a separate `pairing` instance (plain TCP, pairing handshake only).
+public enum ServiceRole: String, Codable, Sendable, Hashable, CaseIterable {
+    case session
+    case pairing
+}
+
 /// A peer that has been discovered on the local network but not necessarily trusted.
+/// One device may advertise several service instances; discovery merges them
+/// into a single `DiscoveredPeer` keyed by the advertised peer ID.
 public struct DiscoveredPeer: Identifiable, Hashable, Sendable {
-    /// Bonjour service name (unique per advertised service instance).
+    /// Advertised peer ID when present, otherwise the Bonjour service name.
     public var id: String
+    /// Bonjour service name of the primary instance (session if available).
     public var serviceName: String
+    /// Roles this device currently advertises.
+    public var roles: Set<ServiceRole>
     /// Peer ID if the TXT record advertised one; `nil` for legacy/unknown peers.
     public var advertisedPeerID: PeerID?
     public var advertisedDisplayName: String?
@@ -63,16 +76,24 @@ public struct DiscoveredPeer: Identifiable, Hashable, Sendable {
         advertisedDisplayName: String?,
         platform: DevicePlatform?,
         protocolVersion: Int?,
+        roles: Set<ServiceRole> = [.session],
         discoveredAt: Date = Date()
     ) {
-        self.id = serviceName
+        self.id = advertisedPeerID?.rawValue ?? serviceName
         self.serviceName = serviceName
+        self.roles = roles
         self.advertisedPeerID = advertisedPeerID
         self.advertisedDisplayName = advertisedDisplayName
         self.platform = platform
         self.protocolVersion = protocolVersion
         self.discoveredAt = discoveredAt
     }
+
+    public var acceptsPairing: Bool { roles.contains(.pairing) }
+    public var acceptsSessions: Bool { roles.contains(.session) }
+
+    /// Best name to show the user.
+    public var displayName: String { advertisedDisplayName ?? serviceName }
 
     public var isCompatible: Bool {
         guard let protocolVersion else { return true }

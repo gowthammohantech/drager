@@ -24,7 +24,7 @@ let package = Package(
     targets: [
         // MARK: Sources
         .target(name: "BridgeModels", swiftSettings: swiftSettings),
-        .target(name: "BridgeCore", dependencies: ["BridgeModels"], swiftSettings: swiftSettings),
+        .target(name: "BridgeCore", dependencies: ["BridgeModels", "BridgeDiagnostics"], swiftSettings: swiftSettings),
         .target(name: "BridgeDiagnostics", dependencies: ["BridgeModels"], swiftSettings: swiftSettings),
         .target(
             name: "BridgeSecurity",
@@ -50,7 +50,7 @@ let package = Package(
         ),
         .target(
             name: "BridgeTestSupport",
-            dependencies: ["BridgeModels", "BridgeCore", "BridgeNetworking", "BridgeTransfer"],
+            dependencies: ["BridgeModels", "BridgeCore", "BridgeSecurity", "BridgeNetworking", "BridgeTransfer"],
             swiftSettings: swiftSettings
         ),
 

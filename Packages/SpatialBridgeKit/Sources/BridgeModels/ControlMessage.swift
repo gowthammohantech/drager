@@ -22,6 +22,10 @@ public struct Hello: Codable, Sendable, Hashable {
     }
 
     public static let defaultCapabilities = ["transfer.v1", "gesture.v1"]
+
+    /// Capability naming the purpose of a connection; exactly one is present.
+    public static let pairingCapability = "pair.v1"
+    public static let sessionCapability = "session.v1"
 }
 
 /// Initiator → responder. Opens an authenticated key agreement.
@@ -161,6 +165,15 @@ public struct TransferCancel: Codable, Sendable, Hashable {
     }
 }
 
+/// Session-level mutual authentication, sent by each side after the HELLO
+/// exchange on a TLS-PSK session. The signature covers both nonces, both peer
+/// IDs and the sender's role, so it cannot be replayed into another session.
+public struct SessionAuth: Codable, Sendable, Hashable {
+    /// Ed25519 signature by the sender's long-term identity key.
+    public var signature: Data
+    public init(signature: Data) { self.signature = signature }
+}
+
 /// Keepalive / RTT probe.
 public struct Ping: Codable, Sendable, Hashable {
     public var sequence: UInt32
@@ -178,6 +191,7 @@ public enum ControlMessage: Sendable, Hashable {
     case pairResponse(PairResponse)
     case pairConfirm(PairConfirm)
     case pairReject(PairReject)
+    case sessionAuth(SessionAuth)
     case transferOffer(TransferOffer)
     case transferAccept(TransferAccept)
     case transferReject(TransferReject)
@@ -195,6 +209,7 @@ public enum ControlMessage: Sendable, Hashable {
         case pairResponse = "PAIR_RESPONSE"
         case pairConfirm = "PAIR_CONFIRM"
         case pairReject = "PAIR_REJECT"
+        case sessionAuth = "SESSION_AUTH"
         case transferOffer = "TRANSFER_OFFER"
         case transferAccept = "TRANSFER_ACCEPT"
         case transferReject = "TRANSFER_REJECT"
@@ -214,6 +229,7 @@ public enum ControlMessage: Sendable, Hashable {
         case .pairResponse: .pairResponse
         case .pairConfirm: .pairConfirm
         case .pairReject: .pairReject
+        case .sessionAuth: .sessionAuth
         case .transferOffer: .transferOffer
         case .transferAccept: .transferAccept
         case .transferReject: .transferReject
@@ -260,6 +276,7 @@ extension ControlMessage: Codable {
         case .pairResponse: self = .pairResponse(try container.decode(PairResponse.self, forKey: .body))
         case .pairConfirm: self = .pairConfirm(try container.decode(PairConfirm.self, forKey: .body))
         case .pairReject: self = .pairReject(try container.decode(PairReject.self, forKey: .body))
+        case .sessionAuth: self = .sessionAuth(try container.decode(SessionAuth.self, forKey: .body))
         case .transferOffer: self = .transferOffer(try container.decode(TransferOffer.self, forKey: .body))
         case .transferAccept: self = .transferAccept(try container.decode(TransferAccept.self, forKey: .body))
         case .transferReject: self = .transferReject(try container.decode(TransferReject.self, forKey: .body))
@@ -282,6 +299,7 @@ extension ControlMessage: Codable {
         case .pairResponse(let m): try container.encode(m, forKey: .body)
         case .pairConfirm(let m): try container.encode(m, forKey: .body)
         case .pairReject(let m): try container.encode(m, forKey: .body)
+        case .sessionAuth(let m): try container.encode(m, forKey: .body)
         case .transferOffer(let m): try container.encode(m, forKey: .body)
         case .transferAccept(let m): try container.encode(m, forKey: .body)
         case .transferReject(let m): try container.encode(m, forKey: .body)

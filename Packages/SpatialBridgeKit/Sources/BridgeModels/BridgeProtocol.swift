@@ -15,6 +15,7 @@ public enum BridgeProtocol {
         public static let displayName = "name"
         public static let platform = "plat"
         public static let protocolVersion = "pv"
+        public static let role = "role"
     }
 
     /// Keychain / secret-store key prefixes.

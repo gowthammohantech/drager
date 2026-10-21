@@ -26,6 +26,7 @@ struct ControlMessageTests {
             .pairResponse(PairResponse(ephemeralPublicKey: Data(repeating: 4, count: 32), signingPublicKey: Data(repeating: 5, count: 32), displayName: "Mac", challenge: Data(repeating: 6, count: 32), transcriptSignature: Data(repeating: 9, count: 64))),
             .pairConfirm(PairConfirm(challengeResponse: Data(repeating: 8, count: 32), approvedPeerID: peerB, transcriptSignature: Data())),
             .pairReject(PairReject()),
+            .sessionAuth(SessionAuth(signature: Data(repeating: 4, count: 64))),
             .transferOffer(offer),
             .transferAccept(TransferAccept(transferID: id, chunkBytes: 262_144)),
             .transferReject(TransferReject(transferID: id, reason: .sizeLimit, message: "too big")),
