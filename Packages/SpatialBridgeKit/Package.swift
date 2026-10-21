@@ -19,6 +19,7 @@ let package = Package(
         .library(name: "BridgeGesture", targets: ["BridgeGesture"]),
         .library(name: "BridgeCalibration", targets: ["BridgeCalibration"]),
         .library(name: "BridgePersistence", targets: ["BridgePersistence"]),
+        .library(name: "BridgeServices", targets: ["BridgeServices"]),
         .library(name: "BridgeTestSupport", targets: ["BridgeTestSupport"]),
     ],
     targets: [
@@ -46,6 +47,14 @@ let package = Package(
         .target(
             name: "BridgePersistence",
             dependencies: ["BridgeModels", "BridgeCore"],
+            swiftSettings: swiftSettings
+        ),
+        .target(
+            name: "BridgeServices",
+            dependencies: [
+                "BridgeModels", "BridgeCore", "BridgeDiagnostics", "BridgeSecurity",
+                "BridgeNetworking", "BridgeTransfer", "BridgePersistence",
+            ],
             swiftSettings: swiftSettings
         ),
         .target(
@@ -98,6 +107,7 @@ let package = Package(
             name: "BridgeIntegrationTests",
             dependencies: [
                 "BridgeNetworking", "BridgeTransfer", "BridgeSecurity", "BridgeTestSupport",
+                "BridgeServices", "BridgePersistence",
             ],
             path: "Tests/Integration/BridgeIntegrationTests"
         ),

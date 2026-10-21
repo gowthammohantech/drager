@@ -38,7 +38,10 @@ Architecture summary: two native apps over a shared platform-neutral SwiftPM pac
 - **Tasks:** `TransferSender`, `TransferReceiver` actors; `StagingArea`; `FolderDestinationStore`; outcome ledger; disk-space check; cleanup.
 - **Dependencies:** Phase 2.
 - **Acceptance:** T-05 (1/10/100 MiB checksums), T-06, T-07, T-09, traversal and oversize rejections, all over real TLS loopback.
-- **Status:** NOT_STARTED
+- **Status:** VERIFIED (automated on one Mac). Cross-device transfer is verified in Phase 8.
+- **Also delivered:** `BridgeServices`: `SenderService` (pairing, supervised session with reconnect/backoff/path changes, sending, history) and `ReceiverService` (availability, pairing approval, session auth, receiving, history), so the apps stay thin.
+- **Test results:** `TransferTests` (12), `StorageTests` (4) and `ServiceEndToEndTests` (5: full flow, T-12 restart persistence, reconnection, Mac-side unpair revocation, T-02) all pass. T-05 over TLS loopback: 1 MiB 0.03 s, 10 MiB 0.07 s, 100 MiB 0.46 s (≈217 MiB/s), SHA-256 identical.
+- **Risks:** Wi-Fi throughput is far below loopback; real numbers come from device acceptance.
 
 ## Phase 4: iOS experience
 - **Objective:** onboarding, picker/gallery, gesture canvas, transfer UI, settings.

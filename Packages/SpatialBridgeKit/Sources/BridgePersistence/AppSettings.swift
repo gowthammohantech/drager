@@ -11,6 +11,8 @@ public struct AppSettings: Codable, Sendable, Hashable {
     public var preferredPeerID: PeerID?
     /// macOS: whether to advertise the receiver service.
     public var isAvailable: Bool
+    /// macOS: whether new iPhones may start pairing (each request still needs approval).
+    public var allowNewPairings: Bool
     /// macOS: launch-at-login preference mirror (the source of truth is SMAppService).
     public var launchAtLoginRequested: Bool
     /// macOS: show the arrival overlay (otherwise notification only).
@@ -27,6 +29,7 @@ public struct AppSettings: Codable, Sendable, Hashable {
         gestureVelocityThreshold: Double = 500,
         preferredPeerID: PeerID? = nil,
         isAvailable: Bool = true,
+        allowNewPairings: Bool = true,
         launchAtLoginRequested: Bool = false,
         overlayEnabled: Bool = true,
         analyticsOptIn: Bool = false,
@@ -40,6 +43,7 @@ public struct AppSettings: Codable, Sendable, Hashable {
         self.gestureVelocityThreshold = gestureVelocityThreshold
         self.preferredPeerID = preferredPeerID
         self.isAvailable = isAvailable
+        self.allowNewPairings = allowNewPairings
         self.launchAtLoginRequested = launchAtLoginRequested
         self.overlayEnabled = overlayEnabled
         self.analyticsOptIn = analyticsOptIn
@@ -49,6 +53,24 @@ public struct AppSettings: Codable, Sendable, Hashable {
     }
 
     public static let `default` = AppSettings()
+
+    public init(from decoder: any Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        let d = AppSettings.default
+        hasCompletedOnboarding = try c.decodeIfPresent(Bool.self, forKey: .hasCompletedOnboarding) ?? d.hasCompletedOnboarding
+        layout = try c.decodeIfPresent(SpatialLayout.self, forKey: .layout) ?? d.layout
+        gestureSensitivity = try c.decodeIfPresent(Double.self, forKey: .gestureSensitivity) ?? d.gestureSensitivity
+        gestureVelocityThreshold = try c.decodeIfPresent(Double.self, forKey: .gestureVelocityThreshold) ?? d.gestureVelocityThreshold
+        preferredPeerID = try c.decodeIfPresent(PeerID.self, forKey: .preferredPeerID)
+        isAvailable = try c.decodeIfPresent(Bool.self, forKey: .isAvailable) ?? d.isAvailable
+        allowNewPairings = try c.decodeIfPresent(Bool.self, forKey: .allowNewPairings) ?? d.allowNewPairings
+        launchAtLoginRequested = try c.decodeIfPresent(Bool.self, forKey: .launchAtLoginRequested) ?? d.launchAtLoginRequested
+        overlayEnabled = try c.decodeIfPresent(Bool.self, forKey: .overlayEnabled) ?? d.overlayEnabled
+        analyticsOptIn = try c.decodeIfPresent(Bool.self, forKey: .analyticsOptIn) ?? d.analyticsOptIn
+        keepHistory = try c.decodeIfPresent(Bool.self, forKey: .keepHistory) ?? d.keepHistory
+        maxFileBytes = try c.decodeIfPresent(Int64.self, forKey: .maxFileBytes) ?? d.maxFileBytes
+        deviceDisplayNameOverride = try c.decodeIfPresent(String.self, forKey: .deviceDisplayNameOverride)
+    }
 }
 
 /// `UserDefaults`-backed `KeyValueStore`. `UserDefaults` is documented thread-safe.

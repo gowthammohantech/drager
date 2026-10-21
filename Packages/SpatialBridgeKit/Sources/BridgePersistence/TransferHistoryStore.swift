@@ -1,5 +1,6 @@
 import Foundation
 public import BridgeModels
+public import BridgeCore
 
 /// Metadata-only history of transfers (BRD scope: "transfer history (metadata only)").
 public actor TransferHistoryStore {
@@ -90,4 +91,9 @@ public actor TrustedPeerStore {
     public func removeAll() async throws {
         try await store.save([])
     }
+}
+
+extension TrustedPeerStore: TrustDirectory {
+    public func trustedPeer(_ id: PeerID) async -> TrustedPeer? { await peer(id) }
+    public func allTrusted() async -> [TrustedPeer] { await all() }
 }

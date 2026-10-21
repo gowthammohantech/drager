@@ -16,6 +16,7 @@
 		10A672CA206556F9283C61E5 /* BridgeGesture in Frameworks */ = {isa = PBXBuildFile; productRef = BA8E6A6BFDA7F00C958BC313 /* BridgeGesture */; };
 		9740B68199A5C5468114A1A9 /* BridgeCalibration in Frameworks */ = {isa = PBXBuildFile; productRef = EC4AF0DB904007253B8373F5 /* BridgeCalibration */; };
 		6B12A4473F0F8D14B03811DE /* BridgePersistence in Frameworks */ = {isa = PBXBuildFile; productRef = B379F14C9932BBBC916F042C /* BridgePersistence */; };
+		A71565445E4CF59439A7D40E /* BridgeServices in Frameworks */ = {isa = PBXBuildFile; productRef = FC046611D080223EF2FF8232 /* BridgeServices */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +77,7 @@
 				10A672CA206556F9283C61E5 /* BridgeGesture in Frameworks */,
 				9740B68199A5C5468114A1A9 /* BridgeCalibration in Frameworks */,
 				6B12A4473F0F8D14B03811DE /* BridgePersistence in Frameworks */,
+				A71565445E4CF59439A7D40E /* BridgeServices in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,6 +149,7 @@
 				BA8E6A6BFDA7F00C958BC313 /* BridgeGesture */,
 				EC4AF0DB904007253B8373F5 /* BridgeCalibration */,
 				B379F14C9932BBBC916F042C /* BridgePersistence */,
+				FC046611D080223EF2FF8232 /* BridgeServices */,
 			);
 			productName = "SpatialBridge-iOS";
 			productReference = 97582E61113A6B4A1A58DCBF /* SpatialBridge-iOS.app */;
@@ -448,6 +451,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AB5CD99960BA2E0391A6CB15 /* XCLocalSwiftPackageReference "../../Packages/SpatialBridgeKit" */;
 			productName = BridgePersistence;
+		};
+		FC046611D080223EF2FF8232 /* BridgeServices */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AB5CD99960BA2E0391A6CB15 /* XCLocalSwiftPackageReference "../../Packages/SpatialBridgeKit" */;
+			productName = BridgeServices;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
