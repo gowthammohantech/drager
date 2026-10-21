@@ -1,3 +1,4 @@
+import BridgeCalibration
 import BridgeCore
 import BridgeDiagnostics
 import BridgeGesture
@@ -90,6 +91,7 @@ private struct StatusCard: View {
                 VStack(alignment: .leading, spacing: Tokens.Spacing.xs) {
                     Text(model.link.peer?.displayName ?? (model.hasPairedMac ? "Your Mac" : "No Mac paired"))
                         .font(.headline)
+                        .accessibilityIdentifier("home.macName")
                     ConnectionBadge(state: model.link.state, quality: model.link.quality)
                 }
                 Spacer()
@@ -101,6 +103,7 @@ private struct StatusCard: View {
                 ErrorBanner(error: BridgeError(code), retry: model.reconnect)
             }
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("home.status")
     }
 }

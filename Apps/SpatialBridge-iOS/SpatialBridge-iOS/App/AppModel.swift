@@ -1,3 +1,4 @@
+import BridgeCalibration
 import BridgeCore
 import BridgeDiagnostics
 import BridgeGesture
@@ -239,7 +240,15 @@ final class AppModel {
     /// so a single activation can never start two transfers (FR-108).
     func send(_ item: StagedItem, gesture: ExitGesture?) {
         guard !transfer.phase.isActive, let file = item.outgoing else { return }
-        let request = (file: file, gesture: gesture, id: UUID())
+        // Apply the phone-side calibration (alignment nudge, mirroring) so the Mac
+        // receives the position as the user perceives it (ADR-004). The Mac adds
+        // only its own display choice and nudge.
+        let calibrated = gesture.map { raw in
+            var mapped = raw
+            mapped.normalizedPosition = CoordinateMapper.mapNormalizedPosition(raw.normalizedPosition, layout: settings.settings.layout)
+            return mapped
+        }
+        let request = (file: file, gesture: calibrated, id: UUID())
         lastRequest = request
         transferTask = Task { await run(request, attempt: 0) }
     }

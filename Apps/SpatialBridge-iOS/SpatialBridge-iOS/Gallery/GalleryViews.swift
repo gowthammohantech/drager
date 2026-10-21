@@ -1,3 +1,4 @@
+import BridgeCalibration
 import BridgeCore
 import BridgeDiagnostics
 import BridgeGesture
@@ -37,6 +38,7 @@ struct GalleryStrip: View {
                 .padding(.vertical, Tokens.Spacing.xs)
             }
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("gallery.strip")
     }
 }

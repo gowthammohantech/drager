@@ -1,3 +1,4 @@
+import BridgeCalibration
 import BridgeCore
 import BridgeDiagnostics
 import BridgeGesture
@@ -108,6 +109,7 @@ private struct WelcomeStep: View {
                 .accessibilityIdentifier("onboarding.start")
         }
         .padding(Tokens.Spacing.xl)
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("onboarding.welcome")
     }
 }
@@ -136,6 +138,7 @@ private struct LocalNetworkStep: View {
                 .padding(Tokens.Spacing.xl)
                 .accessibilityIdentifier("onboarding.localNetwork.continue")
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("onboarding.localNetwork")
     }
 }

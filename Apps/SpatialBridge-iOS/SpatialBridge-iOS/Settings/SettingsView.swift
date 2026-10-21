@@ -1,3 +1,4 @@
+import BridgeCalibration
 import BridgeCore
 import BridgeDiagnostics
 import BridgeGesture
@@ -132,6 +133,7 @@ struct SettingsView: View {
         } message: {
             Text("This unpairs every Mac, clears history and restores default settings.")
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("settings.form")
     }
 
@@ -217,6 +219,7 @@ struct HistoryView: View {
         }
         .task { await model.refreshStores() }
         .refreshable { await model.refreshStores() }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("history.list")
     }
 

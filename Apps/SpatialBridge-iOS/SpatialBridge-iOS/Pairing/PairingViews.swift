@@ -1,3 +1,4 @@
+import BridgeCalibration
 import BridgeCore
 import BridgeDiagnostics
 import BridgeGesture
@@ -69,6 +70,7 @@ struct DiscoverPeersView: View {
                 }
             }
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("discover.list")
         .sheet(isPresented: $showTroubleshooting) { TroubleshootingView() }
     }
