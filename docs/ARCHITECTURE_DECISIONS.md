@@ -1,6 +1,6 @@
 # Architecture Decisions
 
-Index of ADRs. Each file in `Docs/ADR/` has context, decision and consequences.
+Index of ADRs. Each file in `docs/ADR/` has context, decision and consequences.
 
 | ADR | Title | Status |
 |---|---|---|

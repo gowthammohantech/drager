@@ -61,7 +61,7 @@ jobs:
 
   release-artifacts:
     # Signed artifacts need secrets (Developer ID cert, notarytool profile) that must be
-    # configured in the repository settings; see Docs/Release/RELEASE.md.
+    # configured in the repository settings; see docs/Release/RELEASE.md.
     if: startsWith(github.ref, 'refs/tags/v')
     needs: [lint, packages, apps]
     runs-on: macos-26

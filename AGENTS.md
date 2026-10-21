@@ -6,8 +6,7 @@ Guidance for AI agents and new contributors.
 - `Packages/SpatialBridgeKit`: one SwiftPM package, one target per module. **Platform-neutral**: never import UIKit, AppKit or SwiftUI here (`Scripts/lint.sh` enforces this).
 - `Apps/SpatialBridge-iOS`, `Apps/SpatialBridge-macOS`: thin SwiftUI/AppKit apps. Both projects use file-system-synchronized folders, so new Swift files under the app folder are picked up automatically without editing the `.pbxproj`.
 - `Config/*.xcconfig`: all app build settings. Change signing, IDs and deployment targets here, not in the project.
-- `Docs/`: tracking docs (plan, traceability, ADRs, test report, limitations, release checklist).
-- `docs/`: the original BRD/PRD/FRD/TD/AD requirement documents. Read-only.
+- `docs/`: the original requirement documents (`BRD.md`, `PRD.md`, `FRD.md`, `TD.md`, `AD.md`; read-only) plus the tracking docs (plan, traceability, ADRs, test report, limitations, release checklist).
 
 ## Commands
 ```sh
@@ -22,5 +21,5 @@ CI builds unsigned with `SB_UNSIGNED=1`.
 - Swift 6 strict concurrency. App targets default to `@MainActor` isolation. Mark non-UI work `nonisolated` or put it in actors.
 - Never log file contents, pairing secrets or raw filenames. Use `Redaction.filename(_:)`.
 - Never show a success state before the receiver sends `COMMITTED`.
-- Status words in docs: `NOT_STARTED`, `IN_PROGRESS`, `BLOCKED`, `IMPLEMENTED`, `VERIFIED`. `VERIFIED` requires an executed test. Physical-device results go in `Docs/TEST_REPORT.md` only after they were actually run.
-- Deviations from the requirement docs need an ADR in `Docs/ADR/`.
+- Status words in docs: `NOT_STARTED`, `IN_PROGRESS`, `BLOCKED`, `IMPLEMENTED`, `VERIFIED`. `VERIFIED` requires an executed test. Physical-device results go in `docs/TEST_REPORT.md` only after they were actually run.
+- Deviations from the requirement docs need an ADR in `docs/ADR/`.

@@ -11,6 +11,6 @@
       location = "group:Packages/SpatialBridgeKit">
    </FileRef>
    <FileRef
-      location = "group:Docs">
+      location = "group:docs">
    </FileRef>
 </Workspace>

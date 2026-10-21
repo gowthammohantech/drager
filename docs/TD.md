@@ -23,7 +23,7 @@ SpatialBridge/
 │   └── E2E/
 ├── Config/                    # entitlements, Info.plist, xcconfig
 ├── Scripts/                   # build, lint, test, notarization helpers
-├── Docs/                      # BRD PRD FRD TD AD ADRs
+├── docs/                      # BRD PRD FRD TD AD ADRs
 └── SpatialBridge.xcworkspace
 ```
 Use Swift Package Manager for packages and an Xcode workspace/project for app targets. Tuist is optional if project generation complexity justifies it.
