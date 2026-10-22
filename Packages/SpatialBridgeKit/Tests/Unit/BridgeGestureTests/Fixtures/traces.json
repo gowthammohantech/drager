@@ -1,0 +1,64 @@
+[
+  {
+    "name": "iphone-flick-up-center",
+    "bounds": [[0, 0], [390, 600]],
+    "targetEdge": "top",
+    "expectedToFire": true,
+    "samples": [
+      {"x": 195, "y": 420, "timestamp": 100.000},
+      {"x": 195, "y": 400, "timestamp": 100.008},
+      {"x": 194, "y": 372, "timestamp": 100.016},
+      {"x": 193, "y": 335, "timestamp": 100.025},
+      {"x": 192, "y": 290, "timestamp": 100.033},
+      {"x": 190, "y": 236, "timestamp": 100.041},
+      {"x": 189, "y": 175, "timestamp": 100.050},
+      {"x": 188, "y": 110, "timestamp": 100.058},
+      {"x": 187, "y": 42, "timestamp": 100.066},
+      {"x": 186, "y": 8, "timestamp": 100.075}
+    ]
+  },
+  {
+    "name": "iphone-scroll-like-drag",
+    "bounds": [[0, 0], [390, 600]],
+    "targetEdge": "top",
+    "expectedToFire": false,
+    "samples": [
+      {"x": 195, "y": 500, "timestamp": 200.000},
+      {"x": 195, "y": 470, "timestamp": 200.100},
+      {"x": 195, "y": 440, "timestamp": 200.200},
+      {"x": 195, "y": 410, "timestamp": 200.300},
+      {"x": 195, "y": 380, "timestamp": 200.400},
+      {"x": 195, "y": 350, "timestamp": 200.500}
+    ]
+  },
+  {
+    "name": "iphone-flick-right-edge",
+    "bounds": [[0, 0], [390, 600]],
+    "targetEdge": "right",
+    "expectedToFire": true,
+    "samples": [
+      {"x": 60, "y": 300, "timestamp": 300.000},
+      {"x": 90, "y": 299, "timestamp": 300.010},
+      {"x": 140, "y": 297, "timestamp": 300.020},
+      {"x": 200, "y": 294, "timestamp": 300.030},
+      {"x": 270, "y": 290, "timestamp": 300.040},
+      {"x": 340, "y": 286, "timestamp": 300.050},
+      {"x": 386, "y": 283, "timestamp": 300.060}
+    ]
+  },
+  {
+    "name": "iphone-slow-approach-to-edge",
+    "bounds": [[0, 0], [390, 600]],
+    "targetEdge": "top",
+    "expectedToFire": false,
+    "samples": [
+      {"x": 195, "y": 300, "timestamp": 400.000},
+      {"x": 195, "y": 250, "timestamp": 400.250},
+      {"x": 195, "y": 200, "timestamp": 400.500},
+      {"x": 195, "y": 150, "timestamp": 400.750},
+      {"x": 195, "y": 100, "timestamp": 401.000},
+      {"x": 195, "y": 50, "timestamp": 401.250},
+      {"x": 195, "y": 10, "timestamp": 401.500}
+    ]
+  }
+]

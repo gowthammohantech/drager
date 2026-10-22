@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "feature/**"]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install linters
+        run: brew install swiftformat swiftlint
+      - name: Lint and platform-neutrality checks
+        run: Scripts/lint.sh
+      - name: Secret scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  packages:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+      - name: Validate dependencies (no remote packages expected)
+        run: |
+          cd Packages/SpatialBridgeKit
+          swift package resolve
+          swift package show-dependencies --format json | tee deps.json
+          test "$(python3 -c 'import json;print(len(json.load(open("deps.json"))["dependencies"]))')" = "0"
+      - name: Unit + integration tests
+        run: Scripts/test-packages.sh
+
+  apps:
+    runs-on: macos-26
+    env:
+      SB_UNSIGNED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+      - name: Build iOS (simulator)
+        run: Scripts/build-ios.sh simulator
+      - name: Build iOS (device, unsigned)
+        run: Scripts/build-ios.sh device
+      - name: Build macOS
+        run: Scripts/build-macos.sh build
+      - name: Static analysis
+        run: |
+          source Scripts/_common.sh
+          xcb -scheme SpatialBridge-macOS -destination 'platform=macOS' analyze
+
+  release-artifacts:
+    # Signed artifacts need secrets (Developer ID cert, notarytool profile) that must be
+    # configured in the repository settings; see docs/Release/RELEASE.md.
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [lint, packages, apps]
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Import signing certificate
+        env:
+          CERT_P12_BASE64: ${{ secrets.MACOS_DEVELOPER_ID_P12_BASE64 }}
+          CERT_PASSWORD: ${{ secrets.MACOS_DEVELOPER_ID_P12_PASSWORD }}
+        run: |
+          KEYCHAIN=build.keychain
+          security create-keychain -p "" "$KEYCHAIN"
+          security default-keychain -s "$KEYCHAIN"
+          security unlock-keychain -p "" "$KEYCHAIN"
+          echo "$CERT_P12_BASE64" | base64 --decode > cert.p12
+          security import cert.p12 -k "$KEYCHAIN" -P "$CERT_PASSWORD" -T /usr/bin/codesign
+          rm cert.p12
+          security set-key-partition-list -S apple-tool:,apple: -s -k "" "$KEYCHAIN"
+      - name: Archive
+        run: Scripts/archive-macos.sh build/release
+      - name: Notarize
+        env:
+          SB_NOTARY_PROFILE: ci
+          APPLE_ID: ${{ secrets.NOTARY_APPLE_ID }}
+          TEAM_ID: ${{ secrets.NOTARY_TEAM_ID }}
+          APP_PASSWORD: ${{ secrets.NOTARY_APP_PASSWORD }}
+        run: |
+          xcrun notarytool store-credentials ci --apple-id "$APPLE_ID" --team-id "$TEAM_ID" --password "$APP_PASSWORD"
+          Scripts/notarize-macos.sh build/release/SpatialBridge-macOS.app
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SpatialBridge-macOS
+          path: build/release/SpatialBridge-macOS.zip

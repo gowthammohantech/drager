@@ -1,0 +1,18 @@
+#include "Shared.xcconfig"
+
+SDKROOT = macosx
+MACOSX_DEPLOYMENT_TARGET = 26.0
+SUPPORTED_PLATFORMS = macosx
+
+PRODUCT_BUNDLE_IDENTIFIER = $(SB_BUNDLE_PREFIX).mac
+INFOPLIST_FILE = SpatialBridge-macOS/Info.plist
+CODE_SIGN_ENTITLEMENTS = SpatialBridge-macOS/SpatialBridge-macOS.entitlements
+ENABLE_HARDENED_RUNTIME = YES
+ENABLE_APP_SANDBOX = YES
+COMBINE_HIDPI_IMAGES = YES
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/../Frameworks
+
+INFOPLIST_KEY_CFBundleDisplayName = Spatial Bridge
+INFOPLIST_KEY_LSUIElement = YES
+INFOPLIST_KEY_LSApplicationCategoryType = public.app-category.utilities
+INFOPLIST_KEY_NSPrincipalClass = NSApplication
