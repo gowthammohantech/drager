@@ -5,6 +5,7 @@ Guidance for AI agents and new contributors.
 ## Layout
 - `Packages/SpatialBridgeKit`: one SwiftPM package, one target per module. **Platform-neutral**: never import UIKit, AppKit or SwiftUI here (`Scripts/lint.sh` enforces this).
 - `Apps/SpatialBridge-iOS`, `Apps/SpatialBridge-macOS`: thin SwiftUI/AppKit apps. Both projects use file-system-synchronized folders, so new Swift files under the app folder are picked up automatically without editing the `.pbxproj`.
+- `Website/`: static marketing site (plain HTML/CSS/JS, no build step). Keep its claims in line with what `docs/TEST_REPORT.md` has verified.
 - `Config/*.xcconfig`: all app build settings. Change signing, IDs and deployment targets here, not in the project.
 - `docs/`: the original requirement documents (`BRD.md`, `PRD.md`, `FRD.md`, `TD.md`, `AD.md`; read-only) plus the tracking docs (plan, traceability, ADRs, test report, limitations, release checklist).
 

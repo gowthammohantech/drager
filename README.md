@@ -21,6 +21,7 @@ Requires Xcode 27, iOS 26+ and macOS 26+. See [docs/DEVELOPER_SETUP.md](docs/DEV
 - [Implementation plan](docs/IMPLEMENTATION_PLAN.md) · [Traceability](docs/REQUIREMENTS_TRACEABILITY.md) · [Architecture decisions](docs/ARCHITECTURE_DECISIONS.md) · [Protocol](docs/API/PROTOCOL.md)
 - [Test report](docs/TEST_REPORT.md) · [Known limitations](docs/KNOWN_LIMITATIONS.md) · [Security review](docs/Testing/SECURITY_REVIEW.md)
 - [Device acceptance plan](Scripts/device-acceptance.md) · [Release instructions](docs/Release/RELEASE.md) · [Release checklist](docs/RELEASE_CHECKLIST.md) · [Release notes](docs/Release/RELEASE_NOTES.md)
+- Marketing site: [Website/](Website/README.md)
 - Contributor and agent guide: [AGENTS.md](AGENTS.md)
 
 ## Status
