@@ -4,6 +4,7 @@ on:
   push:
     branches: [main, "feature/**"]
   pull_request:
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -133,12 +134,7 @@ jobs:
         run: dotnet restore src/SpatialBridge.App/SpatialBridge.App.csproj -r win-x64 -p:Platform=x64
       - name: Build WinUI app (x64)
         run: dotnet build src/SpatialBridge.App/SpatialBridge.App.csproj -c Release -p:Platform=x64 -r win-x64 -warnaserror
-      - name: Core tests
-        run: dotnet test tests/SpatialBridge.Core.Tests -c Release
-      - name: Platform tests
-        run: dotnet test tests/SpatialBridge.Platform.Windows.Tests -c Release
-      - name: Tray smoke test
-        run: ../../Scripts/build-windows.ps1 smoke Release
+      # Publish before the tests so the installable build is available even when a later step fails.
       - name: Publish release build (x64, self-contained)
         run: ../../Scripts/build-windows.ps1 publish Release x64
       - uses: actions/upload-artifact@v4
@@ -147,6 +143,17 @@ jobs:
           path: |
             build/release/SpatialBridge-Windows-*-x64.zip
             build/release/SpatialBridge-Windows-*-x64.zip.sha256
+      - name: Core tests
+        run: dotnet test tests/SpatialBridge.Core.Tests -c Release
+      - name: Platform tests
+        run: dotnet test tests/SpatialBridge.Platform.Windows.Tests -c Release
+      - name: Tray smoke test
+        run: ../../Scripts/build-windows.ps1 smoke Release
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: windows-smoke-diagnostics
+          path: build/smoke-diagnostics/
 
   interop:
     needs: packages

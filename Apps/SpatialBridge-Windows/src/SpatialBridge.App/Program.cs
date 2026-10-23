@@ -2,6 +2,7 @@ using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.Windows.AppLifecycle;
 using SpatialBridge.App.Interop;
+using SpatialBridge.App.Services;
 
 namespace SpatialBridge.App;
 
@@ -16,6 +17,14 @@ public static class Program
     [STAThread]
     public static int Main(string[] args)
     {
+        AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+        {
+            if (e.ExceptionObject is Exception ex)
+            {
+                DiagnosticsLog.Shared.WriteException("process.unhandled", ex);
+            }
+        };
+        DiagnosticsLog.Shared.Write("process.start");
         WinRT.ComWrappersSupport.InitializeComWrappers();
 
         var activation = AppInstance.GetCurrent().GetActivatedEventArgs();
@@ -38,8 +47,10 @@ public static class Program
             var context = new DispatcherQueueSynchronizationContext(DispatcherQueue.GetForCurrentThread());
             SynchronizationContext.SetSynchronizationContext(context);
             app = new App(options, activation);
+            app.UnhandledException += (_, e) => DiagnosticsLog.Shared.WriteException("xaml.unhandled", e.Exception);
         });
         app?.CaptureExitCode();
+        DiagnosticsLog.Shared.Write("process.exit code=" + App.ExitCode);
         return App.ExitCode;
     }
 

@@ -40,11 +40,25 @@ function Test-All {
 function Invoke-Smoke {
     $exe = Get-ChildItem (Join-Path $Root "src\SpatialBridge.App\bin\x64\$Config") -Recurse -Filter SpatialBridge.App.exe | Select-Object -First 1
     if (-not $exe) { throw 'SpatialBridge.App.exe not found; build first' }
+    $diag = Join-Path $PSScriptRoot '..\build\smoke-diagnostics'
+    New-Item -ItemType Directory -Force -Path $diag | Out-Null
+    $log = Join-Path $diag 'app.log'
+    Remove-Item $log -ErrorAction SilentlyContinue
+    $env:SB_DIAG_LOG_FILE = $log
+    $started = Get-Date
     # WinExe does not block the console, so wait on the process explicitly.
     $p = Start-Process -FilePath $exe.FullName -ArgumentList '--smoke-test' -PassThru
-    if (-not $p.WaitForExit(120000)) { $p.Kill(); throw 'smoke test timed out' }
-    if ($p.ExitCode -ne 0) { throw "smoke test exited $($p.ExitCode)" }
-    Write-Host 'smoke test passed'
+    $timedOut = -not $p.WaitForExit(120000)
+    if ($timedOut) { $p.Kill() }
+    Remove-Item Env:SB_DIAG_LOG_FILE
+    if (-not $timedOut -and $p.ExitCode -eq 0) { Write-Host 'smoke test passed'; return }
+
+    Write-Host "smoke test failed: exe=$($exe.FullName) timedOut=$timedOut exitCode=$(if ($timedOut) { 'n/a' } else { '0x{0:X8} ({0})' -f $p.ExitCode })"
+    if (Test-Path $log) { Write-Host '--- app log'; Get-Content $log | Write-Host } else { Write-Host '--- app log: none written (crashed before Main?)' }
+    $events = Get-WinEvent -FilterHashtable @{ LogName = 'Application'; StartTime = $started; Level = 1, 2, 3 } -ErrorAction SilentlyContinue |
+        Where-Object { $_.ProviderName -in '.NET Runtime', 'Application Error', 'Windows Error Reporting', 'SideBySide' }
+    $events | Format-List TimeCreated, ProviderName, Id, Message | Out-String -Width 400 | Tee-Object (Join-Path $diag 'events.txt') | Write-Host
+    throw 'smoke test failed'
 }
 
 switch ($Action) {

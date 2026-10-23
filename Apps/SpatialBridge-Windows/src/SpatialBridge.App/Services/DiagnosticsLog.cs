@@ -14,6 +14,13 @@ internal sealed class DiagnosticsLog
 
     public static DiagnosticsLog Shared { get; } = new();
 
+    /// <summary>Optional file sink for CI smoke tests (env <c>SB_DIAG_LOG_FILE</c>); lines are already redacted.</summary>
+    private static readonly string? FileSink = Environment.GetEnvironmentVariable("SB_DIAG_LOG_FILE");
+
+    /// <summary>Records an unhandled exception without its message, which may carry user paths.</summary>
+    public void WriteException(string where, Exception exception) =>
+        Write($"{where} {exception.GetType().FullName} hr=0x{exception.HResult:X8}{Environment.NewLine}{exception.StackTrace}");
+
     public void Write(string redactedLine)
     {
         var line = DateTimeOffset.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.InvariantCulture) + " " + redactedLine;
@@ -26,6 +33,22 @@ internal sealed class DiagnosticsLog
             }
         }
         System.Diagnostics.Debug.WriteLine(line);
+        if (FileSink is not null)
+        {
+            try
+            {
+                lock (_gate)
+                {
+                    File.AppendAllText(FileSink, line + Environment.NewLine);
+                }
+            }
+            catch (IOException)
+            {
+            }
+            catch (UnauthorizedAccessException)
+            {
+            }
+        }
     }
 
     public string[] Snapshot()
