@@ -2,6 +2,11 @@
 
 Status: IMPLEMENTED (BridgeModels, BridgeNetworking, BridgeTransfer)
 
+## Platforms
+Four implementations share this protocol: iOS (sender) and macOS (receiver) in Swift, Android (sender) in Kotlin, and Windows (receiver) in C# (ADR-013).
+The exact encoding rules, test vectors and the shared test CLI are in [CONFORMANCE.md](CONFORMANCE.md).
+`device.platform` and the TXT `plat` key take the values `iOS`, `macOS`, `android` or `windows`. Peers must accept unknown values (ADR-015).
+
 ## Transport
 - Discovery: Bonjour `_spatialbridge._tcp` in `local.`. The Mac advertises and the iPhone browses. TXT keys: `pid` (peer ID hint), `name`, `plat`, `pv` (protocol version). TXT data is **untrusted**.
 - **Pairing connection:** plain TCP, used only for the pairing handshake below. No file data or secrets are ever sent on it.

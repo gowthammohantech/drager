@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- WinUI 3 tray receiver. Builds on Windows only (CI job `windows`). -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+    <RootNamespace>SpatialBridge.App</RootNamespace>
+    <Platforms>x64;ARM64</Platforms>
+    <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
+    <UseWinUI>true</UseWinUI>
+    <EnableMsixTooling>true</EnableMsixTooling>
+    <WindowsPackageType>None</WindowsPackageType>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" />
+    <PackageReference Include="H.NotifyIcon.WinUI" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SpatialBridge.Core\SpatialBridge.Core.csproj" />
+    <ProjectReference Include="..\SpatialBridge.Platform.Windows\SpatialBridge.Platform.Windows.csproj" />
+  </ItemGroup>
+</Project>

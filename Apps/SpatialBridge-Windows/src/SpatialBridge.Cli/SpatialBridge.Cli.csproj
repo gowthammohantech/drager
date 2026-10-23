@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- sb-dotnet: interop test CLI (docs/API/CONFORMANCE.md §5). Never shipped in the app. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>sb-dotnet</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SpatialBridge.Core\SpatialBridge.Core.csproj" />
+  </ItemGroup>
+</Project>

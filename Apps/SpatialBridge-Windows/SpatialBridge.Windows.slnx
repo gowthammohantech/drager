@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SpatialBridge.App/SpatialBridge.App.csproj">
+      <Platform Project="x64" />
+    </Project>
+    <Project Path="src/SpatialBridge.Cli/SpatialBridge.Cli.csproj" />
+    <Project Path="src/SpatialBridge.Core/SpatialBridge.Core.csproj" />
+    <Project Path="src/SpatialBridge.Platform.Windows/SpatialBridge.Platform.Windows.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/SpatialBridge.Core.Tests/SpatialBridge.Core.Tests.csproj" />
+  </Folder>
+</Solution>
