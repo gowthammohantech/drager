@@ -25,7 +25,7 @@ public struct BridgeError: Error, Codable, Sendable, Hashable, LocalizedError {
             case .localNetworkDenied:
                 "Spatial Bridge isn't allowed to use the local network."
             case .noPeer:
-                "No Mac was found nearby."
+                "No device was found nearby."
             case .pairingRejected:
                 "Pairing was declined."
             case .authenticationFailed:
@@ -37,13 +37,13 @@ public struct BridgeError: Error, Codable, Sendable, Hashable, LocalizedError {
             case .sizeLimit:
                 "This file is too large to send."
             case .insufficientStorage:
-                "There isn't enough free space on the Mac."
+                "There isn't enough free space on the receiving device."
             case .destinationPermissionExpired:
                 "Access to the destination folder has expired."
             case .hashMismatch:
                 "The file arrived damaged and was discarded."
             case .writeFailed:
-                "The Mac couldn't save the file."
+                "The receiving device couldn't save the file."
             case .protocolMismatch:
                 "The other device is running an incompatible version."
             case .transferCanceled:
@@ -58,7 +58,7 @@ public struct BridgeError: Error, Codable, Sendable, Hashable, LocalizedError {
             case .localNetworkDenied:
                 "Open Settings › Privacy & Security › Local Network and enable Spatial Bridge."
             case .noPeer:
-                "Make sure the Mac app is running, both devices are on the same Wi-Fi, and Availability is on."
+                "Make sure Spatial Bridge is running on the computer, both devices are on the same Wi-Fi, and Availability is on."
             case .pairingRejected:
                 "Try pairing again and confirm that the codes match on both devices."
             case .authenticationFailed:
@@ -70,9 +70,9 @@ public struct BridgeError: Error, Codable, Sendable, Hashable, LocalizedError {
             case .sizeLimit:
                 "Files up to 100 MB are supported in this version."
             case .insufficientStorage:
-                "Free up space on the Mac or choose another destination folder."
+                "Free up space on the computer or choose another destination folder."
             case .destinationPermissionExpired:
-                "Choose the destination folder again in the Mac app."
+                "Choose the destination folder again in Spatial Bridge on the computer."
             case .hashMismatch:
                 "Try sending the file again."
             case .writeFailed:

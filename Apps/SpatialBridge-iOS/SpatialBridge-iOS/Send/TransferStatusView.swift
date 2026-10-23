@@ -97,11 +97,11 @@ struct TransferStatusView: View {
     private func subtitle(_ transfer: TransferUIState) -> String {
         switch transfer.phase {
         case .completed:
-            "\(transfer.savedName ?? transfer.filename) is on \(transfer.macName ?? "your Mac")"
+            "\(transfer.savedName ?? transfer.filename) is on \(transfer.macName ?? "your computer")"
         case .verifying:
             "Checking integrity and saving \(transfer.filename)"
         case .connecting:
-            "Waiting for \(model.link.peer?.displayName ?? "your Mac")…"
+            "Waiting for \(model.link.peer?.displayName ?? "your computer")…"
         default:
             transfer.filename
         }

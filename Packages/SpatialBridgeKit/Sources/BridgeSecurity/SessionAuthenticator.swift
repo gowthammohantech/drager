@@ -11,9 +11,12 @@ public import BridgeModels
 /// key, and the other side verifies against the public key stored at pairing.
 /// Fresh nonces make captured signatures useless in another session.
 public enum SessionAuthenticator {
-    static let label = Data("sb-session-v1".utf8)
+    public static let label = Data("sb-session-v1".utf8)
 
-    static func signedContext(initiatorNonce: Data, responderNonce: Data, initiator: PeerID, responder: PeerID, signer: PairingRole) -> Data {
+    /// The bytes each side signs: the label, then each of both nonces, both
+    /// peer IDs and the signer's role as `UInt32BE(len) ‖ bytes`. Public for
+    /// the conformance harness (`session-auth` vectors).
+    public static func signedContext(initiatorNonce: Data, responderNonce: Data, initiator: PeerID, responder: PeerID, signer: PairingRole) -> Data {
         var data = label
         for part in [initiatorNonce, responderNonce, Data(initiator.rawValue.utf8), Data(responder.rawValue.utf8), Data(signer.rawValue.utf8)] {
             var length = UInt32(part.count).bigEndian

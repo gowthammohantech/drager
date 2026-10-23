@@ -88,8 +88,9 @@ public enum PairingProtocol {
         let timer = MetricTimer(.pairingDuration)
         DiagnosticsRecorder.shared.record(analytics: AnalyticsEvent(name: .pairingStarted))
         let myHello = Hello(device: device, capabilities: [Hello.pairingCapability], sessionNonce: SecureRandom.bytes(32))
-        try await channel.send(.hello(myHello))
-        let theirHello = try await expectHello(channel, capability: Hello.pairingCapability, timeout: timeouts.handshake)
+        let myHelloPayload = try ControlMessageCoder.encode(.hello(myHello))
+        try await channel.send(.control(myHelloPayload))
+        let (theirHello, theirHelloPayload) = try await expectHelloFrame(channel, capability: Hello.pairingCapability, timeout: timeouts.handshake)
 
         let ephemeral = PairingCrypto.makeEphemeralKey()
         let request = PairRequest(
@@ -113,7 +114,9 @@ public enum PairingProtocol {
         }
         let transcript = PairingTranscript(
             initiatorHello: myHello,
+            initiatorHelloPayload: myHelloPayload,
             responderHello: theirHello,
+            responderHelloPayload: theirHelloPayload,
             initiatorEphemeralPublicKey: request.ephemeralPublicKey,
             responderEphemeralPublicKey: response.ephemeralPublicKey,
             initiatorSigningPublicKey: identity.publicKeyData,
@@ -170,7 +173,7 @@ public enum PairingProtocol {
         timeouts: Timeouts,
         decide: @escaping PairingDecisionHandler
     ) async throws -> PairingOutcome {
-        let theirHello = try await expectHello(channel, capability: Hello.pairingCapability, timeout: timeouts.handshake)
+        let (theirHello, theirHelloPayload) = try await expectHelloFrame(channel, capability: Hello.pairingCapability, timeout: timeouts.handshake)
         let peerID = theirHello.device.peerID
         let peerLocked = await rateLimiter.isLocked(peerID)
         let globallyLocked = await rateLimiter.isLocked(globalLimiterKey)
@@ -181,7 +184,8 @@ public enum PairingProtocol {
 
         do {
             let outcome = try await respond(
-                channel: channel, identity: identity, device: device, theirHello: theirHello, timeouts: timeouts, decide: decide
+                channel: channel, identity: identity, device: device,
+                theirHello: theirHello, theirHelloPayload: theirHelloPayload, timeouts: timeouts, decide: decide
             )
             await rateLimiter.recordSuccess(peerID)
             log.notice("Paired with \(peerID.shortDescription) as responder")
@@ -201,11 +205,13 @@ public enum PairingProtocol {
         identity: DeviceIdentity,
         device: DeviceInfo,
         theirHello: Hello,
+        theirHelloPayload: Data,
         timeouts: Timeouts,
         decide: @escaping PairingDecisionHandler
     ) async throws -> PairingOutcome {
         let myHello = Hello(device: device, capabilities: [Hello.pairingCapability], sessionNonce: SecureRandom.bytes(32))
-        try await channel.send(.hello(myHello))
+        let myHelloPayload = try ControlMessageCoder.encode(.hello(myHello))
+        try await channel.send(.control(myHelloPayload))
 
         guard case .pairRequest(let request) = try await channel.receiveControl(timeout: timeouts.handshake) else {
             throw BridgeError(.protocolMismatch, detail: "expected PAIR_REQUEST")
@@ -219,7 +225,9 @@ public enum PairingProtocol {
         let challenge = SecureRandom.bytes(32)
         let transcript = PairingTranscript(
             initiatorHello: theirHello,
+            initiatorHelloPayload: theirHelloPayload,
             responderHello: myHello,
+            responderHelloPayload: myHelloPayload,
             initiatorEphemeralPublicKey: request.ephemeralPublicKey,
             responderEphemeralPublicKey: ephemeral.publicKey.rawRepresentation,
             initiatorSigningPublicKey: request.signingPublicKey,
@@ -340,7 +348,13 @@ public enum PairingProtocol {
     }
 
     static func expectHello(_ channel: SessionChannel, capability: String, timeout: Duration) async throws -> Hello {
-        let message = try await channel.receiveControl(timeout: timeout)
+        try await expectHelloFrame(channel, capability: capability, timeout: timeout).hello
+    }
+
+    /// Validated HELLO plus the exact payload bytes it arrived in (ADR-014).
+    static func expectHelloFrame(_ channel: SessionChannel, capability: String, timeout: Duration) async throws -> (hello: Hello, payload: Data) {
+        let received = try await channel.receiveControlFrame(timeout: timeout)
+        let message = received.message
         if case .pairReject(let reject) = message {
             throw BridgeError(reject.reason, detail: "peer refused before HELLO")
         }
@@ -360,7 +374,7 @@ public enum PairingProtocol {
         guard PeerID(validating: hello.device.peerID.rawValue) != nil else {
             throw BridgeError(.protocolMismatch, detail: "malformed peer ID")
         }
-        return hello
+        return (hello, received.payload)
     }
 
     private static func trusted(_ device: DeviceInfo, key: Data) -> TrustedPeer {

@@ -188,7 +188,8 @@ public final class BonjourBrowser: PeerDiscovering, @unchecked Sendable {
                     serviceName: instance.name,
                     advertisedPeerID: advertisedID,
                     advertisedDisplayName: txt[BridgeProtocol.TXTKey.displayName].map { String($0.prefix(64)) },
-                    platform: txt[BridgeProtocol.TXTKey.platform].flatMap(DevicePlatform.init(rawValue:)),
+                    // Open value (ADR-015): unknown platforms are kept, empty ones dropped.
+                    platform: txt[BridgeProtocol.TXTKey.platform].flatMap { $0.isEmpty ? nil : DevicePlatform(rawValue: String($0.prefix(32))) },
                     protocolVersion: txt[BridgeProtocol.TXTKey.protocolVersion].flatMap(Int.init),
                     roles: []
                 ),

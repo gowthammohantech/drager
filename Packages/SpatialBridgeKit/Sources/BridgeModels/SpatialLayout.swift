@@ -30,10 +30,10 @@ public enum PhonePlacement: String, Codable, Sendable, Hashable, CaseIterable {
 
     public var displayName: String {
         switch self {
-        case .below: "Below the Mac"
-        case .above: "Above the Mac"
-        case .left: "Left of the Mac"
-        case .right: "Right of the Mac"
+        case .below: "Below the computer"
+        case .above: "Above the computer"
+        case .left: "Left of the computer"
+        case .right: "Right of the computer"
         }
     }
 }

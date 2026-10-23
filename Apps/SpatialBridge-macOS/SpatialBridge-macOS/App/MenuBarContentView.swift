@@ -31,7 +31,7 @@ struct MenuBarContentView: View {
                 Toggle("Available", isOn: Binding(get: { model.settings.settings.isAvailable }, set: { model.setAvailable($0) }))
                     .toggleStyle(.switch)
                     .labelsHidden()
-                    .accessibilityLabel("Available to paired iPhones")
+                    .accessibilityLabel("Available to paired phones")
                     .accessibilityIdentifier("menubar.available")
             }
 
@@ -55,17 +55,19 @@ struct MenuBarContentView: View {
             }
 
             Divider()
-            section("iPhones") {
+            section("Phones") {
                 if model.trustedPeers.isEmpty {
                     Text(model.settings.settings.allowNewPairings
-                         ? "No paired iPhones. Open Spatial Bridge on your iPhone to pair."
-                         : "No paired iPhones. Turn on “Allow new pairings” in Settings.")
+                         ? "No paired phones. Open Spatial Bridge on your phone to pair."
+                         : "No paired phones. Turn on “Allow new pairings” in Settings.")
                         .font(.caption).foregroundStyle(.secondary)
                 } else {
                     ForEach(model.trustedPeers) { peer in
                         let online = model.connectedPeers.contains { $0.peerID == peer.peerID }
                         HStack {
                             Circle().fill(online ? Color.green : Color.secondary.opacity(0.4)).frame(width: 7, height: 7)
+                                .accessibilityHidden(true)
+                            Image(systemName: peer.platform.symbolName).font(.caption).foregroundStyle(.secondary)
                                 .accessibilityHidden(true)
                             Text(peer.displayName).font(.callout)
                             Spacer()
@@ -141,7 +143,7 @@ struct MacSettingsView: View {
     var body: some View {
         TabView {
             GeneralSettings().tabItem { Label("General", systemImage: "gearshape") }
-            DevicesSettings().tabItem { Label("iPhones", systemImage: "iphone") }
+            DevicesSettings().tabItem { Label("Devices", systemImage: "iphone") }
             OverlaySettings().tabItem { Label("Arrival", systemImage: "sparkles.rectangle.stack") }
             HistorySettings().tabItem { Label("History", systemImage: "clock") }
             AboutSettings().tabItem { Label("About", systemImage: "info.circle") }
@@ -156,8 +158,8 @@ private struct GeneralSettings: View {
     var body: some View {
         Form {
             Section("Receiving") {
-                Toggle("Available to paired iPhones", isOn: Binding(get: { model.settings.settings.isAvailable }, set: { model.setAvailable($0) }))
-                Toggle("Allow new iPhones to pair", isOn: Binding(get: { model.settings.settings.allowNewPairings }, set: { model.setAllowPairing($0) }))
+                Toggle("Available to paired phones", isOn: Binding(get: { model.settings.settings.isAvailable }, set: { model.setAvailable($0) }))
+                Toggle("Allow new phones to pair", isOn: Binding(get: { model.settings.settings.allowNewPairings }, set: { model.setAllowPairing($0) }))
                 LabeledContent("Save to") {
                     HStack {
                         Text(model.destinationPath.map { ($0 as NSString).abbreviatingWithTildeInPath } ?? "Not chosen")
@@ -193,10 +195,13 @@ private struct DevicesSettings: View {
         Form {
             Section {
                 if model.trustedPeers.isEmpty {
-                    Text("No paired iPhones yet.").foregroundStyle(.secondary)
+                    Text("No paired phones yet.").foregroundStyle(.secondary)
                 }
                 ForEach(model.trustedPeers) { peer in
                     HStack {
+                        Image(systemName: peer.platform.symbolName).font(.title2).foregroundStyle(.tint)
+                            .frame(width: 28)
+                            .accessibilityLabel(peer.platform.displayName)
                         VStack(alignment: .leading) {
                             Text(peer.displayName)
                             Text("Device ID \(PairingProtocol.fingerprint(of: peer.peerID)) · paired \(peer.pairedAt.formatted(date: .abbreviated, time: .omitted))")
@@ -207,9 +212,9 @@ private struct DevicesSettings: View {
                     }
                 }
             } header: {
-                Text("Paired iPhones")
+                Text("Paired phones")
             } footer: {
-                Text("Unpairing deletes the pairing key immediately. The iPhone can no longer connect until it pairs again.")
+                Text("Unpairing deletes the pairing key immediately. The phone can no longer connect until it pairs again.")
             }
         }
         .formStyle(.grouped)
@@ -239,7 +244,7 @@ private struct OverlaySettings: View {
             } header: {
                 Text("Arrival")
             } footer: {
-                Text("Files appear on the edge facing your iPhone, set on the iPhone under Calibration. If the animation can't be shown, you get a notification instead. Reduce Motion shows a simple card.")
+                Text("Files appear on the edge facing your phone, set on the phone under Calibration. If the animation can't be shown, you get a notification instead. Reduce Motion shows a simple card.")
             }
         }
         .formStyle(.grouped)
@@ -306,7 +311,7 @@ final class PairingWindowController {
         guard let model else { return }
         if window == nil {
             let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 380, height: 300), styleMask: [.titled, .closable], backing: .buffered, defer: false)
-            window.title = "Pair iPhone"
+            window.title = "Pair Phone"
             window.isReleasedWhenClosed = false
             window.level = .floating
             window.contentView = NSHostingView(rootView: PairingApprovalView().environment(model))
@@ -328,9 +333,9 @@ struct PairingApprovalView: View {
     var body: some View {
         VStack(spacing: 16) {
             if let prompt = model.pendingPairing {
-                Image(systemName: "iphone").font(.system(size: 40)).foregroundStyle(.tint).accessibilityHidden(true)
+                Image(systemName: prompt.peer.platform.symbolName).font(.system(size: 40)).foregroundStyle(.tint).accessibilityHidden(true)
                 Text("Pair with \(prompt.peer.displayName)?").font(.title3.bold())
-                Text("Make sure this code matches the one on the iPhone.").foregroundStyle(.secondary)
+                Text("Make sure this code matches the one on \(prompt.peer.displayName).").foregroundStyle(.secondary)
                 Text(prompt.formattedCode)
                     .font(.system(size: 40, weight: .bold, design: .monospaced))
                     .accessibilityLabel(Text("Code \(prompt.shortAuthenticationString.map(String.init).joined(separator: " "))"))
@@ -349,7 +354,7 @@ struct PairingApprovalView: View {
                 Text(result).font(.title3.bold())
             } else {
                 ProgressView()
-                Text("Waiting for the iPhone to confirm…").foregroundStyle(.secondary)
+                Text("Waiting for the other device to confirm…").foregroundStyle(.secondary)
             }
         }
         .padding(24)

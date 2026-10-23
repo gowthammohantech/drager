@@ -53,8 +53,8 @@ enum TransferPhase: Equatable {
         case .preparing: "Preparing"
         case .connecting: "Connecting"
         case .transferring: "Sending"
-        case .verifying: "Saving on Mac"
-        case .completed: "Saved on Mac"
+        case .verifying: "Saving on computer"
+        case .completed: "Saved on computer"
         case .failed: "Failed"
         case .cancelled: "Cancelled"
         case .retrying(let attempt): "Retrying (\(attempt))"
@@ -286,7 +286,7 @@ final class AppModel {
             transfer.savedName = committed.savedFilename
             transfer.bytes = transfer.total
             finish(.completed, error: nil)
-            UIAccessibility.post(notification: .announcement, argument: "Saved on \(transfer.macName ?? "Mac")")
+            UIAccessibility.post(notification: .announcement, argument: "Saved on \(transfer.macName ?? "your computer")")
         } catch {
             let bridge = BridgeError.wrap(error, networkContext: true)
             if bridge.code == .transferCanceled || Task.isCancelled {

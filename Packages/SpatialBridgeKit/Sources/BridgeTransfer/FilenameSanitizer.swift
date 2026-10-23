@@ -114,8 +114,20 @@ public struct TransferPolicy: Sendable {
         if deniedTypes.contains(where: { type.conforms(to: $0) }) {
             throw BridgeError(.unsupportedFile, detail: "denied type")
         }
+        // Don't trust the sender's label alone (ADR-015): `x.sh` offered as
+        // `public.data` is still a script once saved.
+        if let byExtension = Self.typeForExtension(of: offer.filename), deniedTypes.contains(where: { byExtension.conforms(to: $0) }) {
+            throw BridgeError(.unsupportedFile, detail: "denied extension")
+        }
         if !allowedTypes.isEmpty, !allowedTypes.contains(where: { type.conforms(to: $0) }) {
             throw BridgeError(.unsupportedFile, detail: "type not allowed")
         }
+    }
+
+    /// The type the system infers from `filename`'s extension, if it has one.
+    static func typeForExtension(of filename: String) -> UTType? {
+        let ext = (filename as NSString).pathExtension
+        guard !ext.isEmpty else { return nil }
+        return UTType(filenameExtension: ext)
     }
 }

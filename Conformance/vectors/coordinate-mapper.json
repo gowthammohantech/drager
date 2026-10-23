@@ -1,0 +1,5440 @@
+{
+  "cases" : [
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 0,
+          "y" : 94
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "normalizedPosition" : 0,
+        "restPoint" : {
+          "x" : 110,
+          "y" : 154
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0,
+        "normalizedPositionInput" : 0
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "below"
+      },
+      "mappedPosition" : 0,
+      "name" : "below, mirrored false, bottom-left origin, position 0.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 178,
+          "y" : 94
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 288,
+          "y" : 0
+        },
+        "normalizedPosition" : 0.2,
+        "restPoint" : {
+          "x" : 288,
+          "y" : 154
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0.2,
+        "normalizedPositionInput" : 0.2
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "below"
+      },
+      "mappedPosition" : 0.2,
+      "name" : "below, mirrored false, bottom-left origin, position 0.2",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 610,
+          "y" : 94
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 720,
+          "y" : 0
+        },
+        "normalizedPosition" : 0.5,
+        "restPoint" : {
+          "x" : 720,
+          "y" : 154
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0.5,
+        "normalizedPositionInput" : 0.5
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "below"
+      },
+      "mappedPosition" : 0.5,
+      "name" : "below, mirrored false, bottom-left origin, position 0.5",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1220,
+          "y" : 94
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 0
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 1330,
+          "y" : 154
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 1,
+        "normalizedPositionInput" : 1
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "below"
+      },
+      "mappedPosition" : 1,
+      "name" : "below, mirrored false, bottom-left origin, position 1.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 0,
+          "y" : 686
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 900
+        },
+        "normalizedPosition" : 0,
+        "restPoint" : {
+          "x" : 110,
+          "y" : 746
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0,
+        "normalizedPositionInput" : 0
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "below"
+      },
+      "mappedPosition" : 0,
+      "name" : "below, mirrored false, top-left origin, position 0.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 178,
+          "y" : 686
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 288,
+          "y" : 900
+        },
+        "normalizedPosition" : 0.2,
+        "restPoint" : {
+          "x" : 288,
+          "y" : 746
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0.2,
+        "normalizedPositionInput" : 0.2
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "below"
+      },
+      "mappedPosition" : 0.2,
+      "name" : "below, mirrored false, top-left origin, position 0.2",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 610,
+          "y" : 686
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 720,
+          "y" : 900
+        },
+        "normalizedPosition" : 0.5,
+        "restPoint" : {
+          "x" : 720,
+          "y" : 746
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0.5,
+        "normalizedPositionInput" : 0.5
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "below"
+      },
+      "mappedPosition" : 0.5,
+      "name" : "below, mirrored false, top-left origin, position 0.5",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1220,
+          "y" : 686
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 900
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 1330,
+          "y" : 746
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 1,
+        "normalizedPositionInput" : 1
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "below"
+      },
+      "mappedPosition" : 1,
+      "name" : "below, mirrored false, top-left origin, position 1.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1220,
+          "y" : 94
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 0
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 1330,
+          "y" : 154
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0,
+        "normalizedPositionInput" : 0
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "below"
+      },
+      "mappedPosition" : 1,
+      "name" : "below, mirrored true, bottom-left origin, position 0.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1042,
+          "y" : 94
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 1152,
+          "y" : 0
+        },
+        "normalizedPosition" : 0.8,
+        "restPoint" : {
+          "x" : 1152,
+          "y" : 154
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0.2,
+        "normalizedPositionInput" : 0.2
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "below"
+      },
+      "mappedPosition" : 0.8,
+      "name" : "below, mirrored true, bottom-left origin, position 0.2",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 610,
+          "y" : 94
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 720,
+          "y" : 0
+        },
+        "normalizedPosition" : 0.5,
+        "restPoint" : {
+          "x" : 720,
+          "y" : 154
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0.5,
+        "normalizedPositionInput" : 0.5
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "below"
+      },
+      "mappedPosition" : 0.5,
+      "name" : "below, mirrored true, bottom-left origin, position 0.5",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 0,
+          "y" : 94
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "normalizedPosition" : 0,
+        "restPoint" : {
+          "x" : 110,
+          "y" : 154
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 1,
+        "normalizedPositionInput" : 1
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "below"
+      },
+      "mappedPosition" : 0,
+      "name" : "below, mirrored true, bottom-left origin, position 1.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1220,
+          "y" : 686
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 900
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 1330,
+          "y" : 746
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0,
+        "normalizedPositionInput" : 0
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "below"
+      },
+      "mappedPosition" : 1,
+      "name" : "below, mirrored true, top-left origin, position 0.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1042,
+          "y" : 686
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 1152,
+          "y" : 900
+        },
+        "normalizedPosition" : 0.8,
+        "restPoint" : {
+          "x" : 1152,
+          "y" : 746
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0.2,
+        "normalizedPositionInput" : 0.2
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "below"
+      },
+      "mappedPosition" : 0.8,
+      "name" : "below, mirrored true, top-left origin, position 0.2",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 610,
+          "y" : 686
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 720,
+          "y" : 900
+        },
+        "normalizedPosition" : 0.5,
+        "restPoint" : {
+          "x" : 720,
+          "y" : 746
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0.5,
+        "normalizedPositionInput" : 0.5
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "below"
+      },
+      "mappedPosition" : 0.5,
+      "name" : "below, mirrored true, top-left origin, position 0.5",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 0,
+          "y" : 686
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 900
+        },
+        "normalizedPosition" : 0,
+        "restPoint" : {
+          "x" : 110,
+          "y" : 746
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 1,
+        "normalizedPositionInput" : 1
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "below"
+      },
+      "mappedPosition" : 0,
+      "name" : "below, mirrored true, top-left origin, position 1.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 0,
+          "y" : 731
+        },
+        "edge" : "top",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 900
+        },
+        "normalizedPosition" : 0,
+        "restPoint" : {
+          "x" : 110,
+          "y" : 791
+        }
+      },
+      "gesture" : {
+        "edge" : "bottom",
+        "normalizedPosition" : 0,
+        "normalizedPositionInput" : 0
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "above"
+      },
+      "mappedPosition" : 0,
+      "name" : "above, mirrored false, bottom-left origin, position 0.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 178,
+          "y" : 731
+        },
+        "edge" : "top",
+        "entryPoint" : {
+          "x" : 288,
+          "y" : 900
+        },
+        "normalizedPosition" : 0.2,
+        "restPoint" : {
+          "x" : 288,
+          "y" : 791
+        }
+      },
+      "gesture" : {
+        "edge" : "bottom",
+        "normalizedPosition" : 0.2,
+        "normalizedPositionInput" : 0.2
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "above"
+      },
+      "mappedPosition" : 0.2,
+      "name" : "above, mirrored false, bottom-left origin, position 0.2",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 610,
+          "y" : 731
+        },
+        "edge" : "top",
+        "entryPoint" : {
+          "x" : 720,
+          "y" : 900
+        },
+        "normalizedPosition" : 0.5,
+        "restPoint" : {
+          "x" : 720,
+          "y" : 791
+        }
+      },
+      "gesture" : {
+        "edge" : "bottom",
+        "normalizedPosition" : 0.5,
+        "normalizedPositionInput" : 0.5
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "above"
+      },
+      "mappedPosition" : 0.5,
+      "name" : "above, mirrored false, bottom-left origin, position 0.5",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1220,
+          "y" : 731
+        },
+        "edge" : "top",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 900
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 1330,
+          "y" : 791
+        }
+      },
+      "gesture" : {
+        "edge" : "bottom",
+        "normalizedPosition" : 1,
+        "normalizedPositionInput" : 1
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "above"
+      },
+      "mappedPosition" : 1,
+      "name" : "above, mirrored false, bottom-left origin, position 1.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 0,
+          "y" : 49
+        },
+        "edge" : "top",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "normalizedPosition" : 0,
+        "restPoint" : {
+          "x" : 110,
+          "y" : 109
+        }
+      },
+      "gesture" : {
+        "edge" : "bottom",
+        "normalizedPosition" : 0,
+        "normalizedPositionInput" : 0
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "above"
+      },
+      "mappedPosition" : 0,
+      "name" : "above, mirrored false, top-left origin, position 0.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 178,
+          "y" : 49
+        },
+        "edge" : "top",
+        "entryPoint" : {
+          "x" : 288,
+          "y" : 0
+        },
+        "normalizedPosition" : 0.2,
+        "restPoint" : {
+          "x" : 288,
+          "y" : 109
+        }
+      },
+      "gesture" : {
+        "edge" : "bottom",
+        "normalizedPosition" : 0.2,
+        "normalizedPositionInput" : 0.2
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "above"
+      },
+      "mappedPosition" : 0.2,
+      "name" : "above, mirrored false, top-left origin, position 0.2",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 610,
+          "y" : 49
+        },
+        "edge" : "top",
+        "entryPoint" : {
+          "x" : 720,
+          "y" : 0
+        },
+        "normalizedPosition" : 0.5,
+        "restPoint" : {
+          "x" : 720,
+          "y" : 109
+        }
+      },
+      "gesture" : {
+        "edge" : "bottom",
+        "normalizedPosition" : 0.5,
+        "normalizedPositionInput" : 0.5
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "above"
+      },
+      "mappedPosition" : 0.5,
+      "name" : "above, mirrored false, top-left origin, position 0.5",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1220,
+          "y" : 49
+        },
+        "edge" : "top",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 0
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 1330,
+          "y" : 109
+        }
+      },
+      "gesture" : {
+        "edge" : "bottom",
+        "normalizedPosition" : 1,
+        "normalizedPositionInput" : 1
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "above"
+      },
+      "mappedPosition" : 1,
+      "name" : "above, mirrored false, top-left origin, position 1.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1220,
+          "y" : 731
+        },
+        "edge" : "top",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 900
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 1330,
+          "y" : 791
+        }
+      },
+      "gesture" : {
+        "edge" : "bottom",
+        "normalizedPosition" : 0,
+        "normalizedPositionInput" : 0
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "above"
+      },
+      "mappedPosition" : 1,
+      "name" : "above, mirrored true, bottom-left origin, position 0.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1042,
+          "y" : 731
+        },
+        "edge" : "top",
+        "entryPoint" : {
+          "x" : 1152,
+          "y" : 900
+        },
+        "normalizedPosition" : 0.8,
+        "restPoint" : {
+          "x" : 1152,
+          "y" : 791
+        }
+      },
+      "gesture" : {
+        "edge" : "bottom",
+        "normalizedPosition" : 0.2,
+        "normalizedPositionInput" : 0.2
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "above"
+      },
+      "mappedPosition" : 0.8,
+      "name" : "above, mirrored true, bottom-left origin, position 0.2",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 610,
+          "y" : 731
+        },
+        "edge" : "top",
+        "entryPoint" : {
+          "x" : 720,
+          "y" : 900
+        },
+        "normalizedPosition" : 0.5,
+        "restPoint" : {
+          "x" : 720,
+          "y" : 791
+        }
+      },
+      "gesture" : {
+        "edge" : "bottom",
+        "normalizedPosition" : 0.5,
+        "normalizedPositionInput" : 0.5
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "above"
+      },
+      "mappedPosition" : 0.5,
+      "name" : "above, mirrored true, bottom-left origin, position 0.5",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 0,
+          "y" : 731
+        },
+        "edge" : "top",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 900
+        },
+        "normalizedPosition" : 0,
+        "restPoint" : {
+          "x" : 110,
+          "y" : 791
+        }
+      },
+      "gesture" : {
+        "edge" : "bottom",
+        "normalizedPosition" : 1,
+        "normalizedPositionInput" : 1
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "above"
+      },
+      "mappedPosition" : 0,
+      "name" : "above, mirrored true, bottom-left origin, position 1.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1220,
+          "y" : 49
+        },
+        "edge" : "top",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 0
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 1330,
+          "y" : 109
+        }
+      },
+      "gesture" : {
+        "edge" : "bottom",
+        "normalizedPosition" : 0,
+        "normalizedPositionInput" : 0
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "above"
+      },
+      "mappedPosition" : 1,
+      "name" : "above, mirrored true, top-left origin, position 0.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1042,
+          "y" : 49
+        },
+        "edge" : "top",
+        "entryPoint" : {
+          "x" : 1152,
+          "y" : 0
+        },
+        "normalizedPosition" : 0.8,
+        "restPoint" : {
+          "x" : 1152,
+          "y" : 109
+        }
+      },
+      "gesture" : {
+        "edge" : "bottom",
+        "normalizedPosition" : 0.2,
+        "normalizedPositionInput" : 0.2
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "above"
+      },
+      "mappedPosition" : 0.8,
+      "name" : "above, mirrored true, top-left origin, position 0.2",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 610,
+          "y" : 49
+        },
+        "edge" : "top",
+        "entryPoint" : {
+          "x" : 720,
+          "y" : 0
+        },
+        "normalizedPosition" : 0.5,
+        "restPoint" : {
+          "x" : 720,
+          "y" : 109
+        }
+      },
+      "gesture" : {
+        "edge" : "bottom",
+        "normalizedPosition" : 0.5,
+        "normalizedPositionInput" : 0.5
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "above"
+      },
+      "mappedPosition" : 0.5,
+      "name" : "above, mirrored true, top-left origin, position 0.5",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 0,
+          "y" : 49
+        },
+        "edge" : "top",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "normalizedPosition" : 0,
+        "restPoint" : {
+          "x" : 110,
+          "y" : 109
+        }
+      },
+      "gesture" : {
+        "edge" : "bottom",
+        "normalizedPosition" : 1,
+        "normalizedPositionInput" : 1
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "above"
+      },
+      "mappedPosition" : 0,
+      "name" : "above, mirrored true, top-left origin, position 1.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 755
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 900
+        },
+        "normalizedPosition" : 0,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 815
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 0,
+        "normalizedPositionInput" : 0
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "left"
+      },
+      "mappedPosition" : 0,
+      "name" : "left, mirrored false, bottom-left origin, position 0.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 660
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 720
+        },
+        "normalizedPosition" : 0.2,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 720
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 0.2,
+        "normalizedPositionInput" : 0.2
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "left"
+      },
+      "mappedPosition" : 0.2,
+      "name" : "left, mirrored false, bottom-left origin, position 0.2",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 390
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 450
+        },
+        "normalizedPosition" : 0.5,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 450
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 0.5,
+        "normalizedPositionInput" : 0.5
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "left"
+      },
+      "mappedPosition" : 0.5,
+      "name" : "left, mirrored false, bottom-left origin, position 0.5",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 70
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 130
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 1,
+        "normalizedPositionInput" : 1
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "left"
+      },
+      "mappedPosition" : 1,
+      "name" : "left, mirrored false, bottom-left origin, position 1.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 25
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "normalizedPosition" : 0,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 85
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 0,
+        "normalizedPositionInput" : 0
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "left"
+      },
+      "mappedPosition" : 0,
+      "name" : "left, mirrored false, top-left origin, position 0.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 120
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 180
+        },
+        "normalizedPosition" : 0.2,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 180
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 0.2,
+        "normalizedPositionInput" : 0.2
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "left"
+      },
+      "mappedPosition" : 0.2,
+      "name" : "left, mirrored false, top-left origin, position 0.2",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 390
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 450
+        },
+        "normalizedPosition" : 0.5,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 450
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 0.5,
+        "normalizedPositionInput" : 0.5
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "left"
+      },
+      "mappedPosition" : 0.5,
+      "name" : "left, mirrored false, top-left origin, position 0.5",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 710
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 900
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 770
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 1,
+        "normalizedPositionInput" : 1
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "left"
+      },
+      "mappedPosition" : 1,
+      "name" : "left, mirrored false, top-left origin, position 1.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 70
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 130
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 0,
+        "normalizedPositionInput" : 0
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "left"
+      },
+      "mappedPosition" : 1,
+      "name" : "left, mirrored true, bottom-left origin, position 0.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 119.99999999999997
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 179.99999999999997
+        },
+        "normalizedPosition" : 0.8,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 179.99999999999997
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 0.2,
+        "normalizedPositionInput" : 0.2
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "left"
+      },
+      "mappedPosition" : 0.8,
+      "name" : "left, mirrored true, bottom-left origin, position 0.2",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 390
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 450
+        },
+        "normalizedPosition" : 0.5,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 450
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 0.5,
+        "normalizedPositionInput" : 0.5
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "left"
+      },
+      "mappedPosition" : 0.5,
+      "name" : "left, mirrored true, bottom-left origin, position 0.5",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 755
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 900
+        },
+        "normalizedPosition" : 0,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 815
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 1,
+        "normalizedPositionInput" : 1
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "left"
+      },
+      "mappedPosition" : 0,
+      "name" : "left, mirrored true, bottom-left origin, position 1.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 710
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 900
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 770
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 0,
+        "normalizedPositionInput" : 0
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "left"
+      },
+      "mappedPosition" : 1,
+      "name" : "left, mirrored true, top-left origin, position 0.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 660
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 720
+        },
+        "normalizedPosition" : 0.8,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 720
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 0.2,
+        "normalizedPositionInput" : 0.2
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "left"
+      },
+      "mappedPosition" : 0.8,
+      "name" : "left, mirrored true, top-left origin, position 0.2",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 390
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 450
+        },
+        "normalizedPosition" : 0.5,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 450
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 0.5,
+        "normalizedPositionInput" : 0.5
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "left"
+      },
+      "mappedPosition" : 0.5,
+      "name" : "left, mirrored true, top-left origin, position 0.5",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 25
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "normalizedPosition" : 0,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 85
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 1,
+        "normalizedPositionInput" : 1
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "left"
+      },
+      "mappedPosition" : 0,
+      "name" : "left, mirrored true, top-left origin, position 1.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1196,
+          "y" : 755
+        },
+        "edge" : "right",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 900
+        },
+        "normalizedPosition" : 0,
+        "restPoint" : {
+          "x" : 1306,
+          "y" : 815
+        }
+      },
+      "gesture" : {
+        "edge" : "left",
+        "normalizedPosition" : 0,
+        "normalizedPositionInput" : 0
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "right"
+      },
+      "mappedPosition" : 0,
+      "name" : "right, mirrored false, bottom-left origin, position 0.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1196,
+          "y" : 660
+        },
+        "edge" : "right",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 720
+        },
+        "normalizedPosition" : 0.2,
+        "restPoint" : {
+          "x" : 1306,
+          "y" : 720
+        }
+      },
+      "gesture" : {
+        "edge" : "left",
+        "normalizedPosition" : 0.2,
+        "normalizedPositionInput" : 0.2
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "right"
+      },
+      "mappedPosition" : 0.2,
+      "name" : "right, mirrored false, bottom-left origin, position 0.2",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1196,
+          "y" : 390
+        },
+        "edge" : "right",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 450
+        },
+        "normalizedPosition" : 0.5,
+        "restPoint" : {
+          "x" : 1306,
+          "y" : 450
+        }
+      },
+      "gesture" : {
+        "edge" : "left",
+        "normalizedPosition" : 0.5,
+        "normalizedPositionInput" : 0.5
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "right"
+      },
+      "mappedPosition" : 0.5,
+      "name" : "right, mirrored false, bottom-left origin, position 0.5",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1196,
+          "y" : 70
+        },
+        "edge" : "right",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 0
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 1306,
+          "y" : 130
+        }
+      },
+      "gesture" : {
+        "edge" : "left",
+        "normalizedPosition" : 1,
+        "normalizedPositionInput" : 1
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "right"
+      },
+      "mappedPosition" : 1,
+      "name" : "right, mirrored false, bottom-left origin, position 1.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1196,
+          "y" : 25
+        },
+        "edge" : "right",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 0
+        },
+        "normalizedPosition" : 0,
+        "restPoint" : {
+          "x" : 1306,
+          "y" : 85
+        }
+      },
+      "gesture" : {
+        "edge" : "left",
+        "normalizedPosition" : 0,
+        "normalizedPositionInput" : 0
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "right"
+      },
+      "mappedPosition" : 0,
+      "name" : "right, mirrored false, top-left origin, position 0.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1196,
+          "y" : 120
+        },
+        "edge" : "right",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 180
+        },
+        "normalizedPosition" : 0.2,
+        "restPoint" : {
+          "x" : 1306,
+          "y" : 180
+        }
+      },
+      "gesture" : {
+        "edge" : "left",
+        "normalizedPosition" : 0.2,
+        "normalizedPositionInput" : 0.2
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "right"
+      },
+      "mappedPosition" : 0.2,
+      "name" : "right, mirrored false, top-left origin, position 0.2",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1196,
+          "y" : 390
+        },
+        "edge" : "right",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 450
+        },
+        "normalizedPosition" : 0.5,
+        "restPoint" : {
+          "x" : 1306,
+          "y" : 450
+        }
+      },
+      "gesture" : {
+        "edge" : "left",
+        "normalizedPosition" : 0.5,
+        "normalizedPositionInput" : 0.5
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "right"
+      },
+      "mappedPosition" : 0.5,
+      "name" : "right, mirrored false, top-left origin, position 0.5",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1196,
+          "y" : 710
+        },
+        "edge" : "right",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 900
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 1306,
+          "y" : 770
+        }
+      },
+      "gesture" : {
+        "edge" : "left",
+        "normalizedPosition" : 1,
+        "normalizedPositionInput" : 1
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "right"
+      },
+      "mappedPosition" : 1,
+      "name" : "right, mirrored false, top-left origin, position 1.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1196,
+          "y" : 70
+        },
+        "edge" : "right",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 0
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 1306,
+          "y" : 130
+        }
+      },
+      "gesture" : {
+        "edge" : "left",
+        "normalizedPosition" : 0,
+        "normalizedPositionInput" : 0
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "right"
+      },
+      "mappedPosition" : 1,
+      "name" : "right, mirrored true, bottom-left origin, position 0.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1196,
+          "y" : 119.99999999999997
+        },
+        "edge" : "right",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 179.99999999999997
+        },
+        "normalizedPosition" : 0.8,
+        "restPoint" : {
+          "x" : 1306,
+          "y" : 179.99999999999997
+        }
+      },
+      "gesture" : {
+        "edge" : "left",
+        "normalizedPosition" : 0.2,
+        "normalizedPositionInput" : 0.2
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "right"
+      },
+      "mappedPosition" : 0.8,
+      "name" : "right, mirrored true, bottom-left origin, position 0.2",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1196,
+          "y" : 390
+        },
+        "edge" : "right",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 450
+        },
+        "normalizedPosition" : 0.5,
+        "restPoint" : {
+          "x" : 1306,
+          "y" : 450
+        }
+      },
+      "gesture" : {
+        "edge" : "left",
+        "normalizedPosition" : 0.5,
+        "normalizedPositionInput" : 0.5
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "right"
+      },
+      "mappedPosition" : 0.5,
+      "name" : "right, mirrored true, bottom-left origin, position 0.5",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1196,
+          "y" : 755
+        },
+        "edge" : "right",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 900
+        },
+        "normalizedPosition" : 0,
+        "restPoint" : {
+          "x" : 1306,
+          "y" : 815
+        }
+      },
+      "gesture" : {
+        "edge" : "left",
+        "normalizedPosition" : 1,
+        "normalizedPositionInput" : 1
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "right"
+      },
+      "mappedPosition" : 0,
+      "name" : "right, mirrored true, bottom-left origin, position 1.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1196,
+          "y" : 710
+        },
+        "edge" : "right",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 900
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 1306,
+          "y" : 770
+        }
+      },
+      "gesture" : {
+        "edge" : "left",
+        "normalizedPosition" : 0,
+        "normalizedPositionInput" : 0
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "right"
+      },
+      "mappedPosition" : 1,
+      "name" : "right, mirrored true, top-left origin, position 0.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1196,
+          "y" : 660
+        },
+        "edge" : "right",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 720
+        },
+        "normalizedPosition" : 0.8,
+        "restPoint" : {
+          "x" : 1306,
+          "y" : 720
+        }
+      },
+      "gesture" : {
+        "edge" : "left",
+        "normalizedPosition" : 0.2,
+        "normalizedPositionInput" : 0.2
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "right"
+      },
+      "mappedPosition" : 0.8,
+      "name" : "right, mirrored true, top-left origin, position 0.2",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1196,
+          "y" : 390
+        },
+        "edge" : "right",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 450
+        },
+        "normalizedPosition" : 0.5,
+        "restPoint" : {
+          "x" : 1306,
+          "y" : 450
+        }
+      },
+      "gesture" : {
+        "edge" : "left",
+        "normalizedPosition" : 0.5,
+        "normalizedPositionInput" : 0.5
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "right"
+      },
+      "mappedPosition" : 0.5,
+      "name" : "right, mirrored true, top-left origin, position 0.5",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1196,
+          "y" : 25
+        },
+        "edge" : "right",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 0
+        },
+        "normalizedPosition" : 0,
+        "restPoint" : {
+          "x" : 1306,
+          "y" : 85
+        }
+      },
+      "gesture" : {
+        "edge" : "left",
+        "normalizedPosition" : 1,
+        "normalizedPositionInput" : 1
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "right"
+      },
+      "mappedPosition" : 0,
+      "name" : "right, mirrored true, top-left origin, position 1.0",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 466,
+          "y" : 94
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 576,
+          "y" : 0
+        },
+        "normalizedPosition" : 0.4,
+        "restPoint" : {
+          "x" : 576,
+          "y" : 154
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0.3,
+        "normalizedPositionInput" : 0.3
+      },
+      "layout" : {
+        "alignmentOffset" : 0.1,
+        "alignmentOffsetInput" : 0.1,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "below"
+      },
+      "mappedPosition" : 0.4,
+      "name" : "offset 0.1, below, position 0.3",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 480
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 540
+        },
+        "normalizedPosition" : 0.4,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 540
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 0.3,
+        "normalizedPositionInput" : 0.3
+      },
+      "layout" : {
+        "alignmentOffset" : 0.1,
+        "alignmentOffsetInput" : 0.1,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "left"
+      },
+      "mappedPosition" : 0.4,
+      "name" : "offset 0.1, left, position 0.3",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1220,
+          "y" : 94
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 0
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 1330,
+          "y" : 154
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0.95,
+        "normalizedPositionInput" : 0.95
+      },
+      "layout" : {
+        "alignmentOffset" : 0.2,
+        "alignmentOffsetInput" : 0.2,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "below"
+      },
+      "mappedPosition" : 1,
+      "name" : "offset 0.2, below, position 0.95",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 70
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 130
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 0.95,
+        "normalizedPositionInput" : 0.95
+      },
+      "layout" : {
+        "alignmentOffset" : 0.2,
+        "alignmentOffsetInput" : 0.2,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "left"
+      },
+      "mappedPosition" : 1,
+      "name" : "offset 0.2, left, position 0.95",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 0,
+          "y" : 94
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "normalizedPosition" : 0,
+        "restPoint" : {
+          "x" : 110,
+          "y" : 154
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0.1,
+        "normalizedPositionInput" : 0.1
+      },
+      "layout" : {
+        "alignmentOffset" : -0.25,
+        "alignmentOffsetInput" : -0.25,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "below"
+      },
+      "mappedPosition" : 0,
+      "name" : "offset -0.25, below, position 0.1",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 755
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 900
+        },
+        "normalizedPosition" : 0,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 815
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 0.1,
+        "normalizedPositionInput" : 0.1
+      },
+      "layout" : {
+        "alignmentOffset" : -0.25,
+        "alignmentOffsetInput" : -0.25,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "left"
+      },
+      "mappedPosition" : 0,
+      "name" : "offset -0.25, left, position 0.1",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1220,
+          "y" : 94
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 0
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 1330,
+          "y" : 154
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0.5,
+        "normalizedPositionInput" : 0.5
+      },
+      "layout" : {
+        "alignmentOffset" : 0.5,
+        "alignmentOffsetInput" : 0.5,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "below"
+      },
+      "mappedPosition" : 1,
+      "name" : "offset 0.5, below, position 0.5",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 70
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 0
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 130
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 0.5,
+        "normalizedPositionInput" : 0.5
+      },
+      "layout" : {
+        "alignmentOffset" : 0.5,
+        "alignmentOffsetInput" : 0.5,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "left"
+      },
+      "mappedPosition" : 1,
+      "name" : "offset 0.5, left, position 0.5",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 897.9999999999999,
+          "y" : 94
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 1007.9999999999999,
+          "y" : 0
+        },
+        "normalizedPosition" : 0.7,
+        "restPoint" : {
+          "x" : 1007.9999999999999,
+          "y" : 154
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0.2,
+        "normalizedPositionInput" : 0.2
+      },
+      "layout" : {
+        "alignmentOffset" : 0.5,
+        "alignmentOffsetInput" : 0.7,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "below"
+      },
+      "mappedPosition" : 0.7,
+      "name" : "offset 0.7, below, position 0.2",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 210.00000000000006
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 270.00000000000006
+        },
+        "normalizedPosition" : 0.7,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 270.00000000000006
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 0.2,
+        "normalizedPositionInput" : 0.2
+      },
+      "layout" : {
+        "alignmentOffset" : 0.5,
+        "alignmentOffsetInput" : 0.7,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "left"
+      },
+      "mappedPosition" : 0.7,
+      "name" : "offset 0.7, left, position 0.2",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 33.99999999999997,
+          "y" : 94
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 143.99999999999997,
+          "y" : 0
+        },
+        "normalizedPosition" : 0.09999999999999998,
+        "restPoint" : {
+          "x" : 143.99999999999997,
+          "y" : 154
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0.6,
+        "normalizedPositionInput" : 0.6
+      },
+      "layout" : {
+        "alignmentOffset" : -0.5,
+        "alignmentOffsetInput" : -0.9,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "below"
+      },
+      "mappedPosition" : 0.09999999999999998,
+      "name" : "offset -0.9, below, position 0.6",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 750
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 810
+        },
+        "normalizedPosition" : 0.09999999999999998,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 810
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 0.6,
+        "normalizedPositionInput" : 0.6
+      },
+      "layout" : {
+        "alignmentOffset" : -0.5,
+        "alignmentOffsetInput" : -0.9,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "left"
+      },
+      "mappedPosition" : 0.09999999999999998,
+      "name" : "offset -0.9, left, position 0.6",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1185.9999999999998,
+          "y" : 49
+        },
+        "edge" : "top",
+        "entryPoint" : {
+          "x" : 1295.9999999999998,
+          "y" : 0
+        },
+        "normalizedPosition" : 0.8999999999999999,
+        "restPoint" : {
+          "x" : 1295.9999999999998,
+          "y" : 109
+        }
+      },
+      "gesture" : {
+        "edge" : "bottom",
+        "normalizedPosition" : 0.3,
+        "normalizedPositionInput" : 0.3
+      },
+      "layout" : {
+        "alignmentOffset" : 0.2,
+        "alignmentOffsetInput" : 0.2,
+        "macDisplayIdentifier" : null,
+        "mirrored" : true,
+        "placement" : "above"
+      },
+      "mappedPosition" : 0.8999999999999999,
+      "name" : "offset 0.2 with mirroring, position 0.3",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1220,
+          "y" : 94
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 0
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 1330,
+          "y" : 154
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 1,
+        "normalizedPositionInput" : 1.7
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "below"
+      },
+      "mappedPosition" : 1,
+      "name" : "gesture position clamped from 1.7",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1196,
+          "y" : 755
+        },
+        "edge" : "right",
+        "entryPoint" : {
+          "x" : 1440,
+          "y" : 900
+        },
+        "normalizedPosition" : 0,
+        "restPoint" : {
+          "x" : 1306,
+          "y" : 815
+        }
+      },
+      "gesture" : {
+        "edge" : "left",
+        "normalizedPosition" : 0,
+        "normalizedPositionInput" : -0.4
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "right"
+      },
+      "mappedPosition" : 0,
+      "name" : "gesture position clamped from -0.4",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        },
+        {
+          "backingScaleFactor" : 1,
+          "frame" : {
+            "height" : 1440,
+            "width" : 2560,
+            "x" : 1440,
+            "y" : 0
+          },
+          "identifier" : "ext",
+          "isMain" : false,
+          "localizedName" : "External",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 1415,
+            "width" : 2560,
+            "x" : 1440,
+            "y" : 0
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 1970,
+          "y" : 24
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 2080,
+          "y" : 0
+        },
+        "normalizedPosition" : 0.25,
+        "restPoint" : {
+          "x" : 2080,
+          "y" : 84
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0.25,
+        "normalizedPositionInput" : 0.25
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : "ext",
+        "mirrored" : false,
+        "placement" : "below"
+      },
+      "mappedPosition" : 0.25,
+      "name" : "configured external display",
+      "restInset" : 24,
+      "selectedDisplay" : "ext",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 1,
+          "frame" : {
+            "height" : 1440,
+            "width" : 2560,
+            "x" : 1440,
+            "y" : 0
+          },
+          "identifier" : "ext",
+          "isMain" : false,
+          "localizedName" : "External",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 1415,
+            "width" : 2560,
+            "x" : 1440,
+            "y" : 0
+          }
+        },
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 24,
+          "y" : 615
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 675
+        },
+        "normalizedPosition" : 0.25,
+        "restPoint" : {
+          "x" : 134,
+          "y" : 675
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 0.25,
+        "normalizedPositionInput" : 0.25
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : "missing",
+        "mirrored" : false,
+        "placement" : "left"
+      },
+      "mappedPosition" : 0.25,
+      "name" : "configured display missing falls back to main",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 1,
+          "frame" : {
+            "height" : 1440,
+            "width" : 2560,
+            "x" : 1440,
+            "y" : 0
+          },
+          "identifier" : "ext",
+          "isMain" : false,
+          "localizedName" : "External",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 1415,
+            "width" : 2560,
+            "x" : 1440,
+            "y" : 0
+          }
+        },
+        {
+          "backingScaleFactor" : 1,
+          "frame" : {
+            "height" : 1080,
+            "width" : 1920,
+            "x" : -200,
+            "y" : 900
+          },
+          "identifier" : "above",
+          "isMain" : false,
+          "localizedName" : "Above",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 1055,
+            "width" : 1920,
+            "x" : -200,
+            "y" : 900
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 3756,
+          "y" : 300
+        },
+        "edge" : "right",
+        "entryPoint" : {
+          "x" : 4000,
+          "y" : 360
+        },
+        "normalizedPosition" : 0.75,
+        "restPoint" : {
+          "x" : 3866,
+          "y" : 360
+        }
+      },
+      "gesture" : {
+        "edge" : "left",
+        "normalizedPosition" : 0.75,
+        "normalizedPositionInput" : 0.75
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "right"
+      },
+      "mappedPosition" : 0.75,
+      "name" : "no main display falls back to first",
+      "restInset" : 24,
+      "selectedDisplay" : "ext",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        },
+        {
+          "backingScaleFactor" : 1,
+          "frame" : {
+            "height" : 1080,
+            "width" : 1920,
+            "x" : -200,
+            "y" : 900
+          },
+          "identifier" : "above",
+          "isMain" : false,
+          "localizedName" : "Above",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 1055,
+            "width" : 1920,
+            "x" : -200,
+            "y" : 900
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : -118,
+          "y" : 1811
+        },
+        "edge" : "top",
+        "entryPoint" : {
+          "x" : -8,
+          "y" : 1980
+        },
+        "normalizedPosition" : 0.1,
+        "restPoint" : {
+          "x" : -8,
+          "y" : 1871
+        }
+      },
+      "gesture" : {
+        "edge" : "bottom",
+        "normalizedPosition" : 0.1,
+        "normalizedPositionInput" : 0.1
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : "above",
+        "mirrored" : false,
+        "placement" : "above"
+      },
+      "mappedPosition" : 0.1,
+      "name" : "display with negative origin",
+      "restInset" : 24,
+      "selectedDisplay" : "above",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+
+      ],
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0.5,
+        "normalizedPositionInput" : 0.5
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "below"
+      },
+      "mappedPosition" : 0.5,
+      "name" : "no displays",
+      "restInset" : 24,
+      "selectedDisplay" : null,
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 1000,
+        "width" : 2000
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 1000,
+          "width" : 2000,
+          "x" : 0,
+          "y" : 70
+        },
+        "edge" : "bottom",
+        "entryPoint" : {
+          "x" : 720,
+          "y" : 0
+        },
+        "normalizedPosition" : 0.5,
+        "restPoint" : {
+          "x" : 1000,
+          "y" : 570
+        }
+      },
+      "gesture" : {
+        "edge" : "top",
+        "normalizedPosition" : 0.5,
+        "normalizedPositionInput" : 0.5
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "below"
+      },
+      "mappedPosition" : 0.5,
+      "name" : "card larger than visible frame",
+      "restInset" : 24,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : false,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 25
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 0,
+          "y" : 710
+        },
+        "edge" : "left",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 900
+        },
+        "normalizedPosition" : 1,
+        "restPoint" : {
+          "x" : 110,
+          "y" : 770
+        }
+      },
+      "gesture" : {
+        "edge" : "right",
+        "normalizedPosition" : 1,
+        "normalizedPositionInput" : 1
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "left"
+      },
+      "mappedPosition" : 1,
+      "name" : "zero rest inset at corner",
+      "restInset" : 0,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    },
+    {
+      "cardSize" : {
+        "height" : 120,
+        "width" : 220
+      },
+      "displays" : [
+        {
+          "backingScaleFactor" : 2,
+          "frame" : {
+            "height" : 900,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 0
+          },
+          "identifier" : "main",
+          "isMain" : true,
+          "localizedName" : "Built-in",
+          "originIsBottomLeft" : true,
+          "visibleFrame" : {
+            "height" : 805,
+            "width" : 1440,
+            "x" : 0,
+            "y" : 70
+          }
+        }
+      ],
+      "expected" : {
+        "cardFrame" : {
+          "height" : 120,
+          "width" : 220,
+          "x" : 0,
+          "y" : 255
+        },
+        "edge" : "top",
+        "entryPoint" : {
+          "x" : 0,
+          "y" : 900
+        },
+        "normalizedPosition" : 0,
+        "restPoint" : {
+          "x" : 110,
+          "y" : 315
+        }
+      },
+      "gesture" : {
+        "edge" : "bottom",
+        "normalizedPosition" : 0,
+        "normalizedPositionInput" : 0
+      },
+      "layout" : {
+        "alignmentOffset" : 0,
+        "alignmentOffsetInput" : 0,
+        "macDisplayIdentifier" : null,
+        "mirrored" : false,
+        "placement" : "above"
+      },
+      "mappedPosition" : 0,
+      "name" : "large rest inset",
+      "restInset" : 500,
+      "selectedDisplay" : "main",
+      "tolerance" : 1e-06
+    }
+  ],
+  "kind" : "coordinate-mapper",
+  "version" : 1
+}

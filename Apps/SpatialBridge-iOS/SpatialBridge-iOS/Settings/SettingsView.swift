@@ -22,7 +22,7 @@ struct SettingsView: View {
         Form {
             Section {
                 if model.trustedPeers.isEmpty {
-                    Text("No paired Macs").foregroundStyle(.secondary)
+                    Text("No paired computers").foregroundStyle(.secondary)
                 }
                 ForEach(model.trustedPeers) { peer in
                     HStack {
@@ -48,12 +48,12 @@ struct SettingsView: View {
                     .accessibilityAction(named: "Unpair") { model.unpair(peer) }
                     .accessibilityAction(named: "Make preferred") { model.setPreferred(peer) }
                 }
-                Button("Pair Another Mac", systemImage: "plus") { showPairing = true }
+                Button("Pair Another Computer", systemImage: "plus") { showPairing = true }
                     .accessibilityIdentifier("settings.pair")
             } header: {
-                Text("Paired Macs")
+                Text("Paired computers")
             } footer: {
-                Text("Swipe a Mac to unpair it. Unpair on the Mac too to remove trust on both sides.")
+                Text("Swipe a computer to unpair it. Unpair on the computer too to remove trust on both sides.")
             }
 
             Section {
@@ -124,14 +124,14 @@ struct SettingsView: View {
         .sheet(isPresented: $showPairing) {
             NavigationStack {
                 DiscoverPeersView()
-                    .navigationTitle("Pair a Mac")
+                    .navigationTitle("Pair a Computer")
                     .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { showPairing = false } } }
             }
         }
         .confirmationDialog("Reset Spatial Bridge?", isPresented: $confirmReset, titleVisibility: .visible) {
             Button("Unpair All and Reset", role: .destructive) { model.resetEverything() }
         } message: {
-            Text("This unpairs every Mac, clears history and restores default settings.")
+            Text("This unpairs every computer, clears history and restores default settings.")
         }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("settings.form")
@@ -174,7 +174,7 @@ struct PrivacyDetailsView: View {
     var body: some View {
         List {
             ExplainerRow(icon: "photo", title: "Photos", text: "You pick items with the system photo picker. Spatial Bridge gets only those items and never needs full library access.")
-            ExplainerRow(icon: "wifi", title: "Local Network", text: "Used to find and connect to your Mac. Files travel directly between your devices, encrypted.")
+            ExplainerRow(icon: "wifi", title: "Local Network", text: "Used to find and connect to your computer. Files travel directly between your devices, encrypted.")
             ExplainerRow(icon: "key", title: "Keys", text: "Pairing keys are stored in the Keychain on this device only. Unpairing deletes them.")
             ExplainerRow(icon: "clock", title: "History", text: "Only names, sizes and outcomes are kept, on this device. You can turn it off or clear it.")
             ExplainerRow(icon: "icloud.slash", title: "No cloud", text: "There is no account and no server. Nothing is uploaded.")

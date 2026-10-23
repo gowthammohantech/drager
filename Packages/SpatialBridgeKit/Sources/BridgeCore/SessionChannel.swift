@@ -92,6 +92,36 @@ public actor SessionChannel {
         try await withBridgeTimeout(timeout) { try await self.receiveControl() }
     }
 
+    /// A decoded control message together with the exact payload bytes it was
+    /// decoded from. The pairing transcript hashes those bytes (ADR-014).
+    public struct ReceivedControlFrame: Sendable, Hashable {
+        public let message: ControlMessage
+        public let payload: Data
+
+        public init(message: ControlMessage, payload: Data) {
+            self.message = message
+            self.payload = payload
+        }
+    }
+
+    /// Next frame, which must be a control message, plus its raw payload.
+    public func receiveControlFrame() async throws -> ReceivedControlFrame {
+        let frame = try await receive()
+        guard case .control(let data) = frame else {
+            throw BridgeError(.protocolMismatch, detail: "unexpected chunk")
+        }
+        do {
+            return ReceivedControlFrame(message: try ControlMessageCoder.decode(data), payload: data)
+        } catch {
+            throw BridgeError(.protocolMismatch, detail: "undecodable control message")
+        }
+    }
+
+    /// Next control message and its raw payload, with a deadline.
+    public func receiveControlFrame(timeout: Duration) async throws -> ReceivedControlFrame {
+        try await withBridgeTimeout(timeout) { try await self.receiveControlFrame() }
+    }
+
     public func send(_ message: ControlMessage) async throws {
         try await send(.control(try ControlMessageCoder.encode(message)))
     }
@@ -100,6 +130,10 @@ public actor SessionChannel {
         if isClosed { throw closeReason ?? BridgeError(.peerLost) }
         do {
             try await transport.send(frame)
+        } catch is CancellationError {
+            // The caller was cancelled before the frame went out; the link is
+            // still fine, so keep it open (a CANCEL may follow on it).
+            throw CancellationError()
         } catch {
             let bridge = BridgeError.wrap(error, networkContext: true)
             await close(reason: bridge)

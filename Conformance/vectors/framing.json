@@ -1,0 +1,178 @@
+{
+  "cases" : [
+    {
+      "frameType" : 1,
+      "hex" : "0100000000",
+      "name" : "control empty",
+      "payload" : "",
+      "payloadLength" : 0
+    },
+    {
+      "frameType" : 1,
+      "hex" : "0100000003010203",
+      "name" : "control 3 bytes (FrameCodecTests.layout)",
+      "payload" : "010203",
+      "payloadLength" : 3
+    },
+    {
+      "frameType" : 1,
+      "hex" : "010000003c7b22626f6479223a7b2273656e744174223a313736303030303030303132332c2273657175656e6365223a317d2c226b696e64223a2250494e47227d",
+      "name" : "control PING message",
+      "payload" : "7b22626f6479223a7b2273656e744174223a313736303030303030303132332c2273657175656e6365223a317d2c226b696e64223a2250494e47227d",
+      "payloadLength" : 60
+    },
+    {
+      "frameType" : 2,
+      "hex" : "020000001d0102030405060708090a0b0c0d0e0f10010203040102030405060708ff",
+      "name" : "chunk layout (FrameCodecTests.layout)",
+      "offset" : 72623859790382856,
+      "payload" : "ff",
+      "payloadLength" : 1,
+      "sequence" : 16909060,
+      "transferID" : "01020304-0506-0708-090A-0B0C0D0E0F10"
+    },
+    {
+      "frameType" : 2,
+      "hex" : "020000001c3f2504e04f8941d39a0c0305e82c3301000000000000000000000000",
+      "name" : "chunk empty payload",
+      "offset" : 0,
+      "payload" : "",
+      "payloadLength" : 0,
+      "sequence" : 0,
+      "transferID" : "3F2504E0-4F89-41D3-9A0C-0305E82C3301"
+    },
+    {
+      "frameType" : 2,
+      "hex" : "020000001fffffffffffffffffffffffffffffffffffffffffffffffffffffffff007f80",
+      "name" : "chunk max uint fields",
+      "offset" : 18446744073709551615,
+      "payload" : "007f80",
+      "payloadLength" : 3,
+      "sequence" : 4294967295,
+      "transferID" : "FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF"
+    },
+    {
+      "frameLength" : 65541,
+      "frameSha256" : "cee912685ecc1be82892f8b7a49c5151bfa22e8e2a9adbc34b5db4dff1d729ca",
+      "frameType" : 1,
+      "headerHex" : "0100010000",
+      "name" : "control max size 65536",
+      "payloadLength" : 65536,
+      "payloadPattern" : "indexMod256",
+      "payloadSha256" : "7daca2095d0438260fa849183dfc67faa459fdf4936e1bc91eec6b281b27e4c2"
+    },
+    {
+      "frameLength" : 262177,
+      "frameSha256" : "3745a1e6ae8f2a8a8a0828ffc2b4cb739718b75d759fd3081286f397b439f8b8",
+      "frameType" : 2,
+      "headerHex" : "020004001c3f2504e04f8941d39a0c0305e82c33010000000300000000000c0000",
+      "name" : "chunk 256 KiB",
+      "offset" : 786432,
+      "payloadLength" : 262144,
+      "payloadPattern" : "indexMod256",
+      "payloadSha256" : "2312394bd99545d9de131c24efb781e765ac1aec243f2ed9347597a793a415e9",
+      "sequence" : 3,
+      "transferID" : "3F2504E0-4F89-41D3-9A0C-0305E82C3301"
+    },
+    {
+      "frameLength" : 524321,
+      "frameSha256" : "70790e0a401d9b643fd69ef0ecd2ab29bfaafd35d0fe182f089b0623fbd54b76",
+      "frameType" : 2,
+      "headerHex" : "020008001c3f2504e04f8941d39a0c0305e82c3301000000040000000000100000",
+      "name" : "chunk max 512 KiB",
+      "offset" : 1048576,
+      "payloadLength" : 524288,
+      "payloadPattern" : "indexMod256",
+      "payloadSha256" : "33bc8aab40703678c3ebe94d2dd8f2afff285dd901f9234e841e4679f8204fd5",
+      "sequence" : 4,
+      "transferID" : "3F2504E0-4F89-41D3-9A0C-0305E82C3301"
+    },
+    {
+      "bridgeErrorCode" : "E012",
+      "direction" : "decode",
+      "error" : "unknownType",
+      "errorValue" : 9,
+      "hex" : "0900000000",
+      "invalid" : true,
+      "name" : "unknown type 0x09"
+    },
+    {
+      "bridgeErrorCode" : "E012",
+      "direction" : "decode",
+      "error" : "unknownType",
+      "errorValue" : 0,
+      "hex" : "0000000003010203",
+      "invalid" : true,
+      "name" : "unknown type 0x00"
+    },
+    {
+      "bridgeErrorCode" : "E012",
+      "direction" : "decode",
+      "error" : "lengthExceedsLimit",
+      "errorValue" : 65537,
+      "hex" : "0100010001",
+      "invalid" : true,
+      "name" : "oversize control 65537"
+    },
+    {
+      "bridgeErrorCode" : "E012",
+      "direction" : "decode",
+      "error" : "lengthExceedsLimit",
+      "errorValue" : 524317,
+      "hex" : "020008001d",
+      "invalid" : true,
+      "name" : "oversize chunk 28+524289"
+    },
+    {
+      "bridgeErrorCode" : "E012",
+      "direction" : "decode",
+      "error" : "lengthExceedsLimit",
+      "errorValue" : 4294967295,
+      "hex" : "01ffffffff",
+      "invalid" : true,
+      "name" : "oversize length 0xFFFFFFFF"
+    },
+    {
+      "bridgeErrorCode" : "E012",
+      "direction" : "decode",
+      "error" : "malformedChunk",
+      "hex" : "020000000401020304",
+      "invalid" : true,
+      "name" : "chunk shorter than its 28-byte header"
+    },
+    {
+      "direction" : "decode",
+      "error" : "incomplete",
+      "hex" : "01000000",
+      "invalid" : true,
+      "name" : "truncated header (4 of 5 bytes)"
+    },
+    {
+      "direction" : "decode",
+      "error" : "incomplete",
+      "hex" : "01000000030102",
+      "invalid" : true,
+      "name" : "truncated payload (2 of 3 bytes)"
+    },
+    {
+      "direction" : "encode",
+      "error" : "oversizedControl",
+      "errorValue" : 65537,
+      "frameType" : 1,
+      "invalid" : true,
+      "name" : "encode control 65537 bytes",
+      "payloadLength" : 65537
+    },
+    {
+      "direction" : "encode",
+      "error" : "oversizedChunk",
+      "errorValue" : 524289,
+      "frameType" : 2,
+      "invalid" : true,
+      "name" : "encode chunk 524289 bytes",
+      "payloadLength" : 524289
+    }
+  ],
+  "kind" : "framing",
+  "version" : 1
+}

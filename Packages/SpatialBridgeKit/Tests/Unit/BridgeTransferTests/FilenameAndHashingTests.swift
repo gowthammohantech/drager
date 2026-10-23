@@ -83,6 +83,21 @@ struct TransferPolicyTests {
         #expect(code(offer(version: 99)) == .protocolMismatch)
     }
 
+    @Test("ADR-015: a denied extension is rejected even when labelled public.data")
+    func deniedByExtension() {
+        func code(_ o: TransferOffer) -> BridgeError.Code? {
+            do { try TransferPolicy.default.validate(o); return nil } catch { return (error as? BridgeError)?.code }
+        }
+        let data = UTType.data.identifier
+        #expect(code(offer(type: data, name: "x.sh")) == .unsupportedFile)
+        #expect(code(offer(type: data, name: "x.app")) == .unsupportedFile)
+        #expect(code(offer(type: UTType.jpeg.identifier, name: "x.sh")) == .unsupportedFile)
+        // Honest generic labels for harmless files still pass.
+        #expect(code(offer(type: data, name: "photo.jpg")) == nil)
+        #expect(code(offer(type: data, name: "notes.unknownext")) == nil)
+        #expect(code(offer(type: data, name: "README")) == nil)
+    }
+
     @Test("Allow-list restricts to conforming types")
     func allowList() {
         let policy = TransferPolicy(allowedTypes: [.image])

@@ -43,6 +43,42 @@ struct PairingCryptoTests {
         #expect(a.preSharedKey != a.confirmKey)
     }
 
+    @Test("ADR-014: for Swift-produced HELLOs the wire-byte hash equals the old re-encode hash")
+    func wireBytesMatchLegacyHash() throws {
+        let p = try makeParties()
+        let legacy = try p.transcript.hash()
+        let wire = PairingTranscript(
+            initiatorHello: p.transcript.initiatorHello,
+            initiatorHelloPayload: try ControlMessageCoder.encode(.hello(p.transcript.initiatorHello)),
+            responderHello: p.transcript.responderHello,
+            responderHelloPayload: try ControlMessageCoder.encode(.hello(p.transcript.responderHello)),
+            initiatorEphemeralPublicKey: p.transcript.initiatorEphemeralPublicKey,
+            responderEphemeralPublicKey: p.transcript.responderEphemeralPublicKey,
+            initiatorSigningPublicKey: p.transcript.initiatorSigningPublicKey,
+            responderSigningPublicKey: p.transcript.responderSigningPublicKey,
+            initiatorChallenge: p.transcript.initiatorChallenge,
+            responderChallenge: p.transcript.responderChallenge
+        )
+        #expect(try wire.hash() == legacy)
+    }
+
+    @Test("ADR-014: a HELLO with an unknown key hashes its wire bytes, not a lossy re-encoding")
+    func wireBytesKeepUnknownKeys() throws {
+        let p = try makeParties()
+        let canonical = String(decoding: try ControlMessageCoder.encode(.hello(p.transcript.initiatorHello)), as: UTF8.self)
+        // A newer peer adds a field; Swift drops it on decode, so re-encoding loses it.
+        let extended = Data(canonical.replacingOccurrences(of: #","kind":"HELLO"}"#, with: #","kind":"HELLO","zFuture":true}"#).utf8)
+        #expect(extended != Data(canonical.utf8))
+        guard case .hello(let decoded) = try ControlMessageCoder.decode(extended) else {
+            Issue.record("not a HELLO")
+            return
+        }
+        var wire = p.transcript
+        wire.initiatorHello = decoded
+        wire.initiatorHelloPayload = extended
+        #expect(try wire.hash() != p.transcript.hash())
+    }
+
     @Test("A tampered transcript changes the SAS (MITM detection)")
     func tamperedTranscript() throws {
         let p = try makeParties()

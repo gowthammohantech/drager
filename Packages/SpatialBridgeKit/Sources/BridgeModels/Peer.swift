@@ -24,9 +24,81 @@ public struct PeerID: Hashable, Codable, Sendable, RawRepresentable, CustomStrin
     public var shortDescription: String { String(rawValue.prefix(8)) }
 }
 
-public enum DevicePlatform: String, Codable, Sendable, Hashable, CaseIterable {
-    case iOS
-    case macOS
+/// Operating system a device runs, as sent in HELLO and the `plat` TXT key.
+///
+/// An open string value (ADR-015): values this build doesn't know decode and
+/// re-encode unchanged, so a HELLO from a newer platform never fails to decode.
+/// On the wire it is a plain JSON string.
+public struct DevicePlatform: RawRepresentable, Codable, Sendable, Hashable, CaseIterable, CustomStringConvertible {
+    public let rawValue: String
+
+    public init(rawValue: String) {
+        self.rawValue = rawValue
+    }
+
+    public static let iOS = DevicePlatform(rawValue: "iOS")
+    public static let macOS = DevicePlatform(rawValue: "macOS")
+    public static let android = DevicePlatform(rawValue: "android")
+    public static let windows = DevicePlatform(rawValue: "windows")
+
+    /// The values this build knows. Other values are still valid.
+    public static let allCases: [DevicePlatform] = [.iOS, .macOS, .android, .windows]
+
+    /// `true` for one of `allCases`.
+    public var isKnown: Bool { Self.allCases.contains(self) }
+
+    /// Phones and tablets, as opposed to computers. `nil` when unknown.
+    public var isHandheld: Bool? {
+        switch self {
+        case .iOS, .android: true
+        case .macOS, .windows: false
+        default: nil
+        }
+    }
+
+    public var description: String { rawValue }
+
+    /// Name for UI copy: "iPhone", "Mac", "Android phone", "Windows PC".
+    /// Unknown platforms fall back to "device".
+    public var displayName: String {
+        switch self {
+        case .iOS: "iPhone"
+        case .macOS: "Mac"
+        case .android: "Android phone"
+        case .windows: "Windows PC"
+        default: "device"
+        }
+    }
+
+    /// Generic noun for UI copy when the brand doesn't matter: "phone",
+    /// "computer", or "device" when unknown.
+    public var genericNoun: String {
+        switch isHandheld {
+        case true?: "phone"
+        case false?: "computer"
+        case nil: "device"
+        }
+    }
+
+    /// SF Symbol name for the platform's icon. A plain string, so this module stays UI-free.
+    public var symbolName: String {
+        switch self {
+        case .iOS: "iphone"
+        case .macOS: "laptopcomputer"
+        case .android: "smartphone"
+        case .windows: "pc"
+        default: "questionmark"
+        }
+    }
+
+    public init(from decoder: any Decoder) throws {
+        rawValue = try decoder.singleValueContainer().decode(String.self)
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(rawValue)
+    }
 }
 
 /// Human-readable device description exchanged in HELLO. Never authenticated on
@@ -156,7 +228,7 @@ public enum PeerConnectionState: Sendable, Hashable {
         switch self {
         case .idle: "Idle"
         case .permissionPending: "Waiting for permission"
-        case .discovering: "Looking for Macs"
+        case .discovering: "Looking for computers"
         case .pairing: "Pairing"
         case .authenticating: "Authenticating"
         case .connected: "Connected"

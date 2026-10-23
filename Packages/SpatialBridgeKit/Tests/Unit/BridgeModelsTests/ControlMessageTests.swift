@@ -97,6 +97,52 @@ struct TransferStateTests {
     }
 }
 
+@Suite("Open device platform (ADR-015)")
+struct DevicePlatformTests {
+    private func helloJSON(platform: String) -> String {
+        #"{"body":{"capabilities":["transfer.v1","gesture.v1","pair.v1"],"device":{"displayName":"Pixel","model":"m","peerID":"0123456789abcdef0123456789abcdef","platform":"\#(platform)"},"protocolVersion":1,"sessionNonce":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="},"kind":"HELLO"}"#
+    }
+
+    @Test("HELLOs from any platform decode and re-encode byte-identically", arguments: ["iOS", "macOS", "android", "windows", "beos"])
+    func helloRoundTrip(platform: String) throws {
+        let json = Data(helloJSON(platform: platform).utf8)
+        guard case .hello(let hello) = try ControlMessageCoder.decode(json) else {
+            Issue.record("not a HELLO")
+            return
+        }
+        #expect(hello.device.platform.rawValue == platform)
+        #expect(try ControlMessageCoder.encode(.hello(hello)) == json)
+    }
+
+    @Test("Known values, plain-string encoding and display helpers")
+    func knownValues() throws {
+        #expect(DevicePlatform.allCases.map(\.rawValue) == ["iOS", "macOS", "android", "windows"])
+        #expect(DevicePlatform(rawValue: "android") == .android)
+        #expect(!DevicePlatform(rawValue: "beos").isKnown)
+        #expect(String(decoding: try JSONEncoder().encode(DevicePlatform.windows), as: UTF8.self) == #""windows""#)
+        #expect(try JSONDecoder().decode(DevicePlatform.self, from: Data(#""beos""#.utf8)).rawValue == "beos")
+        #expect(DevicePlatform.iOS.symbolName == "iphone")
+        #expect(DevicePlatform.macOS.symbolName == "laptopcomputer")
+        #expect(DevicePlatform.android.symbolName == "smartphone")
+        #expect(DevicePlatform.windows.symbolName == "pc")
+        #expect(DevicePlatform(rawValue: "beos").symbolName == "questionmark")
+        #expect(DevicePlatform.android.genericNoun == "phone")
+        #expect(DevicePlatform.windows.genericNoun == "computer")
+        #expect(DevicePlatform(rawValue: "beos").genericNoun == "device")
+    }
+
+    @Test("User-facing error copy doesn't assume Apple devices")
+    func neutralCopy() {
+        for code in BridgeError.Code.allCases {
+            for text in [code.userMessage, code.recoverySuggestion] {
+                #expect(!text.contains("Mac"))
+                #expect(!text.contains("iPhone"))
+            }
+        }
+        #expect(!PeerConnectionState.discovering.displayName.contains("Mac"))
+    }
+}
+
 @Suite("Model invariants")
 struct ModelInvariantTests {
     @Test("ExitGesture clamps inputs")

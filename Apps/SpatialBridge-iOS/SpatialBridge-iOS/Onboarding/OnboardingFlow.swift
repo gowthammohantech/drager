@@ -100,8 +100,8 @@ private struct WelcomeStep: View {
                 withAnimation(.easeInOut(duration: 1.6).repeatForever(autoreverses: true)) { float = true }
             }
             VStack(spacing: Tokens.Spacing.m) {
-                Text("Throw files to your Mac").font(.largeTitle.bold()).multilineTextAlignment(.center)
-                Text("Pick a photo or file, flick it toward your Mac, and watch it land. Everything stays on your local network.")
+                Text("Throw files to your computer").font(.largeTitle.bold()).multilineTextAlignment(.center)
+                Text("Pick a photo or file, flick it toward your computer, and watch it land. Everything stays on your local network.")
                     .font(.body).foregroundStyle(.secondary).multilineTextAlignment(.center)
             }
             Spacer()
@@ -121,12 +121,12 @@ private struct LocalNetworkStep: View {
         ScrollView {
             VStack(alignment: .leading, spacing: Tokens.Spacing.xl) {
                 Image(systemName: "wifi").font(.system(size: 48)).foregroundStyle(.tint).accessibilityHidden(true)
-                Text("Find your Mac on this network").font(.title.bold())
+                Text("Find your computer on this network").font(.title.bold())
                 VStack(alignment: .leading, spacing: Tokens.Spacing.l) {
                     ExplainerRow(icon: "dot.radiowaves.left.and.right", title: "Local network access",
-                                 text: "iOS will ask to let Spatial Bridge find devices on your Wi-Fi. It's needed to discover and connect to your Mac.")
+                                 text: "iOS will ask to let Spatial Bridge find devices on your Wi-Fi. It's needed to discover and connect to your computer.")
                     ExplainerRow(icon: "lock.shield", title: "Private and direct",
-                                 text: "Files go straight to your Mac over an encrypted connection. No account, no cloud, no upload.")
+                                 text: "Files go straight to your computer over an encrypted connection. No account, no cloud, no upload.")
                     ExplainerRow(icon: "photo", title: "Only what you pick",
                                  text: "You choose each photo or file with the system picker. Spatial Bridge never reads your whole library.")
                 }
@@ -173,7 +173,7 @@ private struct DiscoverStep: View {
                     .accessibilityIdentifier("onboarding.discover.continue")
             }
         }
-        .navigationTitle("Pair with your Mac")
+        .navigationTitle("Pair with your computer")
         .navigationBarTitleDisplayMode(.inline)
     }
 }

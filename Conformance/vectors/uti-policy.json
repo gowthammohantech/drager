@@ -1,0 +1,367 @@
+{
+  "cases" : [
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.jpeg",
+      "filename" : "a.jpg",
+      "name" : "a.jpg as public.jpeg"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.jpeg",
+      "filename" : "a.jpeg",
+      "name" : "a.jpeg as public.jpeg"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.png",
+      "filename" : "a.png",
+      "name" : "a.png as public.png"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.heic",
+      "filename" : "a.heic",
+      "name" : "a.heic as public.heic"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "com.compuserve.gif",
+      "filename" : "a.gif",
+      "name" : "a.gif as com.compuserve.gif"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "public.jpeg",
+      "errorCode" : "E006",
+      "filename" : "a.JPG",
+      "name" : "a.JPG as public.jpeg"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "org.webmproject.webp",
+      "filename" : "a.webp",
+      "name" : "a.webp as org.webmproject.webp"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "com.apple.quicktime-movie",
+      "filename" : "a.mov",
+      "name" : "a.mov as com.apple.quicktime-movie"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.mpeg-4",
+      "filename" : "a.mp4",
+      "name" : "a.mp4 as public.mpeg-4"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "com.adobe.pdf",
+      "filename" : "a.pdf",
+      "name" : "a.pdf as com.adobe.pdf"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.plain-text",
+      "filename" : "a.txt",
+      "name" : "a.txt as public.plain-text"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.json",
+      "filename" : "a.json",
+      "name" : "a.json as public.json"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "org.openxmlformats.wordprocessingml.document",
+      "filename" : "a.docx",
+      "name" : "a.docx as org.openxmlformats.wordprocessingml.document"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.zip-archive",
+      "filename" : "a.zip",
+      "name" : "a.zip as public.zip-archive"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "com.apple.disk-image-udif",
+      "filename" : "a.dmg",
+      "name" : "a.dmg as com.apple.disk-image-udif"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.data",
+      "filename" : "a.jpg",
+      "name" : "a.jpg as public.data"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "public.data",
+      "errorCode" : "E006",
+      "filename" : "a.sh",
+      "name" : "a.sh as public.data"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.data",
+      "filename" : "a.exe",
+      "name" : "a.exe as public.data"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "public.data",
+      "errorCode" : "E006",
+      "filename" : "a.app",
+      "name" : "a.app as public.data"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "public.data",
+      "errorCode" : "E006",
+      "filename" : "a.command",
+      "name" : "a.command as public.data"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "public.data",
+      "errorCode" : "E006",
+      "filename" : "a.py",
+      "name" : "a.py as public.data"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "public.data",
+      "errorCode" : "E006",
+      "filename" : "a.scpt",
+      "name" : "a.scpt as public.data"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.data",
+      "filename" : "a.bin",
+      "name" : "a.bin as public.data"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.data",
+      "filename" : "a.bat",
+      "name" : "a.bat as public.data"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.data",
+      "filename" : "a.ps1",
+      "name" : "a.ps1 as public.data"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.data",
+      "filename" : "a.msi",
+      "name" : "a.msi as public.data"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.data",
+      "filename" : "a.lnk",
+      "name" : "a.lnk as public.data"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.data",
+      "filename" : "a.js",
+      "name" : "a.js as public.data"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.data",
+      "filename" : "a.pkg",
+      "name" : "a.pkg as public.data"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.data",
+      "filename" : "a.dmg",
+      "name" : "a.dmg as public.data"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.data",
+      "filename" : "a.zip",
+      "name" : "a.zip as public.data"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.data",
+      "filename" : "a",
+      "name" : "a as public.data"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.data",
+      "filename" : "Received file",
+      "name" : "Received file as public.data"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "public.data",
+      "errorCode" : "E006",
+      "filename" : "a.SH",
+      "name" : "a.SH as public.data"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "public.unix-executable",
+      "errorCode" : "E006",
+      "filename" : "a",
+      "name" : "a as public.unix-executable"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "com.apple.application-bundle",
+      "errorCode" : "E006",
+      "filename" : "a.app",
+      "name" : "a.app as com.apple.application-bundle"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "com.apple.application",
+      "errorCode" : "E006",
+      "filename" : "a.app",
+      "name" : "a.app as com.apple.application"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "com.microsoft.windows-executable",
+      "filename" : "a.exe",
+      "name" : "a.exe as com.microsoft.windows-executable"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "public.executable",
+      "filename" : "a.exe",
+      "name" : "a.exe as public.executable"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "public.shell-script",
+      "errorCode" : "E006",
+      "filename" : "a.sh",
+      "name" : "a.sh as public.shell-script"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "public.zsh-script",
+      "errorCode" : "E006",
+      "filename" : "a.zsh",
+      "name" : "a.zsh as public.zsh-script"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "public.python-script",
+      "errorCode" : "E006",
+      "filename" : "a.py",
+      "name" : "a.py as public.python-script"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "public.ruby-script",
+      "errorCode" : "E006",
+      "filename" : "a.rb",
+      "name" : "a.rb as public.ruby-script"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "public.perl-script",
+      "errorCode" : "E006",
+      "filename" : "a.pl",
+      "name" : "a.pl as public.perl-script"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "com.apple.applescript.script",
+      "errorCode" : "E006",
+      "filename" : "a.scpt",
+      "name" : "a.scpt as com.apple.applescript.script"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "com.apple.applescript.text",
+      "errorCode" : "E006",
+      "filename" : "a.applescript",
+      "name" : "a.applescript as com.apple.applescript.text"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "com.netscape.javascript-source",
+      "filename" : "a.js",
+      "name" : "a.js as com.netscape.javascript-source"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "com.apple.terminal.shell-script",
+      "errorCode" : "E006",
+      "filename" : "a.command",
+      "name" : "a.command as com.apple.terminal.shell-script"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "public.shell-script",
+      "errorCode" : "E006",
+      "filename" : "a.jpg",
+      "name" : "a.jpg as public.shell-script"
+    },
+    {
+      "allowedOnMac" : true,
+      "contentType" : "dyn.ah62d4rv4ge80e5pe",
+      "filename" : "a.xyz",
+      "name" : "a.xyz as dyn.ah62d4rv4ge80e5pe"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "dyn.ah62d4rv4ge80e5pe",
+      "errorCode" : "E006",
+      "filename" : "a.sh",
+      "name" : "a.sh as dyn.ah62d4rv4ge80e5pe"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "com.example.unknown",
+      "errorCode" : "E006",
+      "filename" : "a.xyz",
+      "name" : "a.xyz as com.example.unknown"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "not.a.type",
+      "errorCode" : "E006",
+      "filename" : "a.jpg",
+      "name" : "a.jpg as not.a.type"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "",
+      "errorCode" : "E006",
+      "filename" : "a.jpg",
+      "name" : "a.jpg as (empty)"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "public.jpeg",
+      "errorCode" : "E006",
+      "filename" : "../a.jpg",
+      "name" : "../a.jpg as public.jpeg"
+    },
+    {
+      "allowedOnMac" : false,
+      "contentType" : "public.data",
+      "errorCode" : "E006",
+      "filename" : ".env",
+      "name" : ".env as public.data"
+    }
+  ],
+  "kind" : "uti-policy",
+  "version" : 1
+}

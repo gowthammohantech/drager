@@ -10,7 +10,7 @@ import BridgeTransfer
 import SwiftUI
 import UIKit
 
-/// Lists Macs on the network: paired ones and ones accepting pairing (BR-02).
+/// Lists computers on the network: paired ones and ones accepting pairing (BR-02).
 struct DiscoverPeersView: View {
     @Environment(AppModel.self) private var model
     @State private var showTroubleshooting = false
@@ -21,7 +21,7 @@ struct DiscoverPeersView: View {
                 Section {
                     StateMessageView(
                         systemImage: "wifi.exclamationmark", title: "Local Network access is off",
-                        message: "Turn on Local Network for Spatial Bridge in Settings to find your Mac.",
+                        message: "Turn on Local Network for Spatial Bridge in Settings to find your computer.",
                         tint: Tokens.Palette.danger, actionTitle: "Open Settings",
                         action: { UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!) }
                     )
@@ -37,8 +37,8 @@ struct DiscoverPeersView: View {
                     HStack(spacing: Tokens.Spacing.m) {
                         ProgressView()
                         VStack(alignment: .leading) {
-                            Text("Looking for Macs…").font(.body)
-                            Text("Open Spatial Bridge on your Mac and keep both devices on the same Wi-Fi.")
+                            Text("Looking for computers…").font(.body)
+                            Text("Open Spatial Bridge on your computer and keep both devices on the same Wi-Fi.")
                                 .font(.footnote).foregroundStyle(.secondary)
                         }
                     }
@@ -48,16 +48,16 @@ struct DiscoverPeersView: View {
                     ForEach(pairable) { peer in
                         Button { model.pair(with: peer) } label: {
                             PeerRow(name: peer.displayName, subtitle: peer.isCompatible ? "Ready to pair" : "Needs an update",
-                                    systemImage: "desktopcomputer", trailing: "Pair")
+                                    systemImage: peer.platform?.symbolName ?? "desktopcomputer", trailing: "Pair")
                         }
                         .disabled(!peer.isCompatible)
                         .accessibilityHint("Starts pairing. You'll compare a code on both screens.")
                     }
                 }
             } header: {
-                Text("Nearby Macs")
+                Text("Nearby computers")
             } footer: {
-                Button("Can't find your Mac?") { showTroubleshooting = true }.font(.footnote)
+                Button("Can't find your computer?") { showTroubleshooting = true }.font(.footnote)
             }
 
             if model.hasPairedMac {
@@ -65,7 +65,7 @@ struct DiscoverPeersView: View {
                     ForEach(model.trustedPeers) { peer in
                         PeerRow(name: peer.displayName,
                                 subtitle: model.link.peer?.peerID == peer.peerID ? model.link.state.displayName : "Paired",
-                                systemImage: "checkmark.seal.fill", trailing: nil)
+                                systemImage: peer.platform.symbolName, trailing: nil)
                     }
                 }
             }
@@ -106,10 +106,10 @@ struct TroubleshootingView: View {
         NavigationStack {
             List {
                 Section {
-                    ExplainerRow(icon: "macbook", title: "Open the Mac app", text: "Spatial Bridge must be running on your Mac with Available turned on.")
+                    ExplainerRow(icon: "laptopcomputer", title: "Open Spatial Bridge on the computer", text: "Spatial Bridge must be running on your Mac or PC with Available turned on.")
                     ExplainerRow(icon: "wifi", title: "Same network", text: "Both devices need to be on the same Wi-Fi. Guest networks often block devices from seeing each other.")
                     ExplainerRow(icon: "network.badge.shield.half.filled", title: "VPNs and firewalls", text: "Some VPNs and router settings block local discovery. Try pausing the VPN.")
-                    ExplainerRow(icon: "hand.raised", title: "Local Network permission", text: "On iPhone: Settings › Privacy & Security › Local Network. On Mac: System Settings › Privacy & Security › Local Network.")
+                    ExplainerRow(icon: "hand.raised", title: "Local Network permission", text: "On iPhone: Settings › Privacy & Security › Local Network. On Mac: System Settings › Privacy & Security › Local Network. On Windows, allow Spatial Bridge through the firewall on private networks.")
                 }
             }
             .navigationTitle("Troubleshooting")
@@ -142,7 +142,7 @@ struct PairingSheet: View {
                     Image(systemName: "checkmark.seal.fill").font(.system(size: 64)).foregroundStyle(Tokens.Palette.success)
                         .accessibilityHidden(true)
                     Text("Paired with \(peer.displayName)").font(.title2.bold()).multilineTextAlignment(.center)
-                    Text("You can now throw files to this Mac.").foregroundStyle(.secondary)
+                    Text("You can now throw files to this \(peer.platform.genericNoun).").foregroundStyle(.secondary)
                     Spacer()
                     PrimaryButton(title: "Done") { model.dismissPairing() }
                         .accessibilityIdentifier("pairing.done")
@@ -187,14 +187,14 @@ private struct CodeComparison: View {
                 .accessibilityLabel(Text("Code \(prompt.shortAuthenticationString.map(String.init).joined(separator: " "))"))
                 .accessibilityIdentifier("pairing.code")
             VStack(spacing: Tokens.Spacing.xs) {
-                Label(prompt.peer.displayName, systemImage: "desktopcomputer").font(.subheadline)
+                Label(prompt.peer.displayName, systemImage: prompt.peer.platform.symbolName).font(.subheadline)
                 Text("Device ID \(prompt.peerFingerprint)").font(.caption.monospaced()).foregroundStyle(.secondary)
             }
             Spacer()
             if waiting {
                 HStack(spacing: Tokens.Spacing.s) {
                     ProgressView()
-                    Text("Waiting for you to confirm on the Mac…").font(.subheadline).foregroundStyle(.secondary)
+                    Text("Waiting for you to confirm on \(prompt.peer.displayName)…").font(.subheadline).foregroundStyle(.secondary)
                 }
                 .accessibilityElement(children: .combine)
             } else {

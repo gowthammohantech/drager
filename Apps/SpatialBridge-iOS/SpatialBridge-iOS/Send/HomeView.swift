@@ -67,7 +67,7 @@ struct HomeView: View {
         .sheet(isPresented: $showPairing) {
             NavigationStack {
                 DiscoverPeersView()
-                    .navigationTitle("Pair a Mac")
+                    .navigationTitle("Pair a Computer")
                     .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { showPairing = false } } }
             }
         }
@@ -89,7 +89,7 @@ private struct StatusCard: View {
                     .symbolEffect(.pulse, isActive: model.link.state == .discovering || model.link.state == .authenticating)
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: Tokens.Spacing.xs) {
-                    Text(model.link.peer?.displayName ?? (model.hasPairedMac ? "Your Mac" : "No Mac paired"))
+                    Text(model.link.peer?.displayName ?? (model.hasPairedMac ? "Your computer" : "No computer paired"))
                         .font(.headline)
                         .accessibilityIdentifier("home.macName")
                     ConnectionBadge(state: model.link.state, quality: model.link.quality)
@@ -97,7 +97,7 @@ private struct StatusCard: View {
                 Spacer()
             }
             if !model.hasPairedMac {
-                PrimaryButton(title: "Pair a Mac", systemImage: "plus") { showPairing = true }
+                PrimaryButton(title: "Pair a Computer", systemImage: "plus") { showPairing = true }
                     .accessibilityIdentifier("home.pair")
             } else if let code = model.link.lastError, !model.link.isConnected {
                 ErrorBanner(error: BridgeError(code), retry: model.reconnect)
@@ -128,7 +128,7 @@ private struct SendStage: View {
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(Text("\(item.filename), \(item.kindDescription)"))
             .accessibilityHint("Flick toward the \(model.settings.settings.layout.exitEdge.displayName.lowercased()) edge to send, or use the Send button.")
-            .accessibilityAction(named: "Send to Mac") { model.send(item, gesture: nil) }
+            .accessibilityAction(named: "Send to computer") { model.send(item, gesture: nil) }
             .accessibilityIdentifier("home.throwSurface")
 
             if model.transfer.phase != .idle {
@@ -138,7 +138,7 @@ private struct SendStage: View {
             Button {
                 model.send(item, gesture: nil)
             } label: {
-                Label("Send to \(model.link.peer?.displayName ?? "Mac")", systemImage: "paperplane.fill")
+                Label("Send to \(model.link.peer?.displayName ?? "computer")", systemImage: "paperplane.fill")
                     .frame(maxWidth: .infinity, minHeight: Tokens.Size.minTouch)
             }
             .buttonStyle(.borderedProminent)

@@ -9,17 +9,18 @@ The Swift implementation is the reference. If this document and the vectors in `
 ## 1. Canonical JSON (control frames, type 0x01)
 - The top level is `{"body":{...},"kind":"KIND"}`. Kinds are listed in PROTOCOL.md; `PONG` reuses the `PING` body.
 - **Key order:** keys are sorted by Unicode code point at every level. Output is compact, with no whitespace.
-- **Strings:** UTF-8. Non-ASCII characters are written raw, never as `\uXXXX`. `/` is **not** escaped.
+- **Strings:** UTF-8. Non-ASCII characters are written raw, never as `\uXXXX`. `/` is **not** escaped. Strings are not NFC-normalized.
   - `"` and `\` are escaped.
-  - C0 control characters use the escape forms shown in `vectors/canonical-json.json`.
+  - C0 controls: `\b \t \n \f \r` for those five, lowercase `\u00XX` for the rest.
+  - DEL, NEL, U+2028 and U+2029 are written raw.
 - **`Data`:** standard base64 with `=` padding and no line breaks. An empty `Data` is `""`; for example, the responder's `PAIR_CONFIRM.transcriptSignature` is empty.
-- **Dates:** integer milliseconds since the Unix epoch, computed as `round(seconds × 1000)`.
+- **Dates:** integer milliseconds since the Unix epoch. Swift stores dates relative to 2001, so a few half-millisecond values don't round naively. Cases marked `matchesNaiveRounding: false` in `canonical-json.json` show them. Ports encode their own millisecond integers and decode by reading the integer.
 - **UUIDs:** uppercase canonical strings, `8-4-4-4-12`. Lowercase is accepted on input.
 - **Peer IDs:** 32 lowercase hex characters, `hex(SHA256(ed25519_public_key)[0..16])`. Compare them as plain strings.
 - **Optionals:** a nil optional is **omitted**, never written as `null`. This applies to `TransferReject.message`, `TransferErrorMessage.transferID` and `.message`, and `TransferOffer.gesture`.
 - **Error codes:** strings `"E001"` to `"E014"`. **Never send a code or kind outside this set**, because older peers fail to decode the whole message.
 - **Platform values:** `iOS`, `macOS`, `android`, `windows` (ADR-015). Receivers must accept unknown values.
-- **Numbers:** integers have no fraction or exponent. Doubles (gesture fields only) use the shortest round-trip form. They are not part of any hash.
+- **Numbers:** integers have no fraction or exponent. Unsigned 64-bit fields (for example, chunk offsets in vectors) can exceed Int64. Doubles (gesture fields only) use the shortest round-trip form. They are not part of any hash.
 - **Decoding:** unknown keys are ignored. Payloads larger than 65 536 bytes are rejected before parsing.
 
 ## 2. Binary layouts
@@ -43,7 +44,7 @@ CryptoKit Ed25519 signatures are not deterministic, so signature vectors are **v
 ## 4. Behaviour
 | Rule | Value |
 |---|---|
-| HELLO capabilities | pairing: `pair.v1` appended; session: `session.v1` appended; defaults `transfer.v1`, `gesture.v1`. `protocolVersion == 1`, nonce of 32 bytes, otherwise `ERROR E012`. |
+| HELLO capabilities | pairing: exactly `["pair.v1"]`; session: defaults `transfer.v1`, `gesture.v1` with `session.v1` appended. `protocolVersion == 1`, nonce of 32 bytes, otherwise `ERROR E012`. |
 | Handshake timeout | 30 s (pairing messages, TLS, transfer offer reply) |
 | Session auth timeout | 15 s |
 | Pairing user decision | 120 s |
@@ -53,6 +54,9 @@ CryptoKit Ed25519 signatures are not deterministic, so signature vectors are **v
 | Replay | a known transfer ID gets its recorded outcome; a replayed success returns `COMMITTED` with no new file |
 | Success | the sender shows success **only** after `COMMITTED` |
 | Free space | must be at least size + 64 MiB |
+| Offered filenames | must already equal `FilenameSanitizer.sanitize` output, so the extension is **lowercase** (`a.JPG` → E006). Senders sanitize before offering. |
+| Windows names | `CON.txt`, `a<b>.txt` and the like pass `isSafe`; the Windows receiver maps them to a valid save name (ADR-015). |
+| Mac policy | the Mac does not deny Windows executables (`.exe`, `.msi`, `.bat`, `.ps1`, `.lnk`, `.js`); the Windows receiver applies its own extension denylist. |
 
 ## 5. Shared CLI contract (`sb-swift`, `sb-jvm`, `sb-dotnet`)
 These tools are for testing only and are never shipped in an app. Every command writes JSON-lines events to stdout. Events never contain filenames, file contents, PSKs or seeds; a PSK appears only as `pskFingerprint = hex(SHA256(psk))[0..16]`.

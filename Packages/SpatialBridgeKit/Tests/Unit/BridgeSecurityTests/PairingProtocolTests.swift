@@ -105,6 +105,98 @@ struct PairingProtocolTests {
         #expect(result.initiator.failureCode == .pairingRejected)
     }
 
+    /// Plays the initiator by hand so the HELLO can carry `helloBytes` exactly
+    /// as a non-Swift peer might emit them. Returns the SAS it derived.
+    private func handRolledInitiator(
+        channel: SessionChannel, phone: TestPeer, mac: TestPeer, helloBytes: Data, hello: Hello
+    ) async throws -> String {
+        try await channel.send(.control(helloBytes))
+        let reply = try await channel.receiveControlFrame(timeout: .seconds(5))
+        guard case .hello(let theirHello) = reply.message else { throw BridgeError(.protocolMismatch) }
+        let ephemeral = PairingCrypto.makeEphemeralKey()
+        let request = PairRequest(
+            ephemeralPublicKey: ephemeral.publicKey.rawRepresentation,
+            signingPublicKey: phone.identity.publicKeyData,
+            displayName: phone.device.displayName,
+            challenge: SecureRandom.bytes(32)
+        )
+        try await channel.send(.pairRequest(request))
+        guard case .pairResponse(let response) = try await channel.receiveControl(timeout: .seconds(5)) else {
+            throw BridgeError(.protocolMismatch)
+        }
+        let transcript = PairingTranscript(
+            initiatorHello: hello,
+            initiatorHelloPayload: helloBytes,
+            responderHello: theirHello,
+            responderHelloPayload: reply.payload,
+            initiatorEphemeralPublicKey: request.ephemeralPublicKey,
+            responderEphemeralPublicKey: response.ephemeralPublicKey,
+            initiatorSigningPublicKey: phone.identity.publicKeyData,
+            responderSigningPublicKey: response.signingPublicKey,
+            initiatorChallenge: request.challenge,
+            responderChallenge: response.challenge
+        )
+        let keys = try PairingCrypto.derive(ephemeralPrivateKey: ephemeral, peerEphemeralPublicKey: response.ephemeralPublicKey, transcript: transcript)
+        // The responder signed its transcript hash; it verifies only if both hashed the same bytes.
+        guard DeviceIdentity.verify(signature: response.transcriptSignature, over: keys.transcriptHash, publicKey: response.signingPublicKey) else {
+            throw BridgeError(.authenticationFailed, detail: "transcript mismatch")
+        }
+        try await channel.send(.pairConfirm(PairConfirm(
+            challengeResponse: PairingCrypto.confirmation(keys: keys, role: .initiator, approvedPeer: mac.identity.peerID),
+            approvedPeerID: mac.identity.peerID,
+            transcriptSignature: try phone.identity.sign(keys.transcriptHash)
+        )))
+        guard case .pairConfirm = try await channel.receiveControl(timeout: .seconds(5)) else {
+            throw BridgeError(.protocolMismatch)
+        }
+        await channel.close()
+        return keys.shortAuthenticationString
+    }
+
+    @Test("ADR-014: an unknown HELLO key or non-canonical key order still gives both sides the same SAS", arguments: [
+        "unknown-key", "key-order",
+    ])
+    func nonCanonicalHello(variant: String) async throws {
+        let phone = TestPeer.iPhone()
+        let mac = TestPeer.mac()
+        let hello = Hello(device: phone.device, capabilities: Hello.defaultCapabilities + [Hello.pairingCapability], sessionNonce: SecureRandom.bytes(32))
+        let body = String(decoding: try ControlMessageCoder.makeEncoder().encode(hello), as: UTF8.self)
+        let json = switch variant {
+        case "unknown-key": #"{"body":"# + body.dropLast() + #","zFuture":{"a":[1,2]}},"kind":"HELLO","extra":"x"}"#
+        default: #"{ "kind": "HELLO", "body": "# + body + "}"
+        }
+        let helloBytes = Data(json.utf8)
+        #expect(helloBytes != (try ControlMessageCoder.encode(.hello(hello))))
+
+        let (a, b) = FakeFrameTransport.pair()
+        let ci = SessionChannel(transport: a, configuration: .handshake)
+        let cr = SessionChannel(transport: b, configuration: .handshake)
+        let decision = ScriptedDecision(approve: true)
+        async let initiatorSAS = handRolledInitiator(channel: ci, phone: phone, mac: mac, helloBytes: helloBytes, hello: hello)
+        async let outcome = PairingProtocol.runResponder(
+            channel: cr, identity: mac.identity, device: mac.device, rateLimiter: PairingRateLimiter(), decide: decision.handler
+        )
+        let (sas, trusted) = try await (initiatorSAS, outcome)
+        withExtendedLifetime((a, b)) {}
+        #expect(decision.recordedPrompts.first?.shortAuthenticationString == sas)
+        #expect(trusted.trustedPeer.peerID == phone.identity.peerID)
+    }
+
+    @Test("Peers on new platforms pair and keep their platform value")
+    func pairsWithAndroidAndUnknownPlatforms() async throws {
+        for initiatorPeer in [TestPeer.android(), TestPeer(name: "Box", platform: DevicePlatform(rawValue: "beos"))] {
+            let responderPeer = TestPeer.windows()
+            let (ci, cr, a, b) = channels()
+            async let i = PairingProtocol.runInitiator(channel: ci, identity: initiatorPeer.identity, device: initiatorPeer.device, decide: ScriptedDecision(approve: true).handler)
+            async let r = PairingProtocol.runResponder(channel: cr, identity: responderPeer.identity, device: responderPeer.device, rateLimiter: PairingRateLimiter(), decide: ScriptedDecision(approve: true).handler)
+            let (io, ro) = try await (i, r)
+            withExtendedLifetime((a, b)) {}
+            #expect(io.trustedPeer.platform == .windows)
+            #expect(ro.trustedPeer.platform == initiatorPeer.device.platform)
+            #expect(io.preSharedKey == ro.preSharedKey)
+        }
+    }
+
     @Test("Protocol version mismatch fails with E012")
     func versionMismatch() async {
         let faults = FakeFrameTransport.Faults(interceptor: { frame in

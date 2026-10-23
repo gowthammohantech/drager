@@ -27,8 +27,8 @@ final class SpatialBridgeiOSUITests: XCTestCase {
         next.tap()
         // Discovery shows the searching state (no Macs in the test environment).
         XCTAssertTrue(element(app, "discover.searching").waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["Can't find your Mac?"].exists)
-        app.buttons["Can't find your Mac?"].tap()
+        XCTAssertTrue(app.buttons["Can't find your computer?"].exists)
+        app.buttons["Can't find your computer?"].tap()
         XCTAssertTrue(app.navigationBars["Troubleshooting"].waitForExistence(timeout: 5))
     }
 
@@ -36,7 +36,7 @@ final class SpatialBridgeiOSUITests: XCTestCase {
         let app = launch(["-skip-onboarding"])
         let name = element(app, "home.macName")
         XCTAssertTrue(name.waitForExistence(timeout: 5))
-        XCTAssertEqual(name.label, "No Mac paired")
+        XCTAssertEqual(name.label, "No computer paired")
         XCTAssertTrue(app.buttons["home.pair"].exists)
         XCTAssertTrue(element(app, "home.empty").exists)
         XCTAssertTrue(app.buttons["home.photos"].exists)
@@ -53,14 +53,14 @@ final class SpatialBridgeiOSUITests: XCTestCase {
     func testSettingsControlsAndPersistence() throws {
         let app = launch(["-skip-onboarding"])
         app.tabBars.buttons["Settings"].tap()
-        XCTAssertTrue(app.staticTexts["No paired Macs"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["No paired computers"].waitForExistence(timeout: 5))
         let slider = app.sliders["settings.sensitivity"]
         XCTAssertTrue(slider.exists)
         slider.adjust(toNormalizedSliderPosition: 1.0)
         XCTAssertTrue(app.staticTexts["Easy"].waitForExistence(timeout: 2))
         app.buttons["Calibration"].tap()
         XCTAssertTrue(app.navigationBars["Calibration"].waitForExistence(timeout: 5))
-        app.buttons["Left of the Mac"].tap()
+        app.buttons["Left of the computer"].tap()
         XCTAssertTrue(app.staticTexts.containing(NSPredicate(format: "label CONTAINS 'right edge of your iPhone'")).firstMatch.waitForExistence(timeout: 2))
     }
 

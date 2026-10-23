@@ -74,6 +74,19 @@ struct FileStoreTests {
         #expect(await store.all().isEmpty)
     }
 
+    @Test("Trusted peers with new or unknown platforms persist unchanged")
+    func openPlatformsPersist() async throws {
+        let url = tempURL("peers-platforms.json")
+        let store = TrustedPeerStore(url: url)
+        let windows = PeerID(rawValue: String(repeating: "c", count: 32))
+        let future = PeerID(rawValue: String(repeating: "d", count: 32))
+        try await store.upsert(TrustedPeer(peerID: windows, displayName: "PC", platform: .windows, model: "x", signingPublicKey: Data(repeating: 1, count: 32)))
+        try await store.upsert(TrustedPeer(peerID: future, displayName: "Box", platform: DevicePlatform(rawValue: "beos"), model: "y", signingPublicKey: Data(repeating: 2, count: 32)))
+        let reloaded = TrustedPeerStore(url: url)
+        #expect(await reloaded.peer(windows)?.platform == .windows)
+        #expect(await reloaded.peer(future)?.platform.rawValue == "beos")
+    }
+
     @Test("JSON store survives reload and delete")
     func jsonStore() async throws {
         let url = tempURL("value.json")

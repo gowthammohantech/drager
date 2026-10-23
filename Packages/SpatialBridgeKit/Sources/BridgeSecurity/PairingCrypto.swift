@@ -22,7 +22,42 @@ public struct PairingTranscript: Sendable, Hashable {
     public var responderSigningPublicKey: Data
     public var initiatorChallenge: Data
     public var responderChallenge: Data
+    /// Exact HELLO payload bytes as they crossed the wire (ADR-014): what this
+    /// side sent for its own HELLO and what it received for the peer's. When
+    /// `nil`, `hash()` falls back to re-encoding the decoded HELLO, which gives
+    /// the same bytes for Swift-produced HELLOs.
+    public var initiatorHelloPayload: Data?
+    public var responderHelloPayload: Data?
 
+    /// Binds the transcript to the HELLO wire bytes. Use this from the handshake.
+    public init(
+        initiatorHello: Hello,
+        initiatorHelloPayload: Data,
+        responderHello: Hello,
+        responderHelloPayload: Data,
+        initiatorEphemeralPublicKey: Data,
+        responderEphemeralPublicKey: Data,
+        initiatorSigningPublicKey: Data,
+        responderSigningPublicKey: Data,
+        initiatorChallenge: Data,
+        responderChallenge: Data
+    ) {
+        self.init(
+            initiatorHello: initiatorHello,
+            responderHello: responderHello,
+            initiatorEphemeralPublicKey: initiatorEphemeralPublicKey,
+            responderEphemeralPublicKey: responderEphemeralPublicKey,
+            initiatorSigningPublicKey: initiatorSigningPublicKey,
+            responderSigningPublicKey: responderSigningPublicKey,
+            initiatorChallenge: initiatorChallenge,
+            responderChallenge: responderChallenge
+        )
+        self.initiatorHelloPayload = initiatorHelloPayload
+        self.responderHelloPayload = responderHelloPayload
+    }
+
+    /// Re-encodes the HELLOs for the transcript. Matches the wire bytes only
+    /// when both peers encode canonically like Swift; prefer the payload initializer.
     public init(
         initiatorHello: Hello,
         responderHello: Hello,
@@ -43,7 +78,8 @@ public struct PairingTranscript: Sendable, Hashable {
         self.responderChallenge = responderChallenge
     }
 
-    /// SHA-256 over a canonical, length-prefixed, labelled encoding.
+    /// SHA-256 over a length-prefixed, labelled encoding. The HELLO entries are
+    /// the wire payloads when known (ADR-014). Label order is fixed.
     public func hash() throws -> Data {
         var hasher = SHA256()
         func absorb(_ label: String, _ data: Data) {
@@ -53,8 +89,8 @@ public struct PairingTranscript: Sendable, Hashable {
             hasher.update(data: data)
         }
         absorb("sb-pair-v1", Data())
-        absorb("ihello", try ControlMessageCoder.encode(.hello(initiatorHello)))
-        absorb("rhello", try ControlMessageCoder.encode(.hello(responderHello)))
+        absorb("ihello", try initiatorHelloPayload ?? ControlMessageCoder.encode(.hello(initiatorHello)))
+        absorb("rhello", try responderHelloPayload ?? ControlMessageCoder.encode(.hello(responderHello)))
         absorb("ieph", initiatorEphemeralPublicKey)
         absorb("reph", responderEphemeralPublicKey)
         absorb("isig", initiatorSigningPublicKey)

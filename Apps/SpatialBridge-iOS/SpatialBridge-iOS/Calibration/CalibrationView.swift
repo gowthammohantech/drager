@@ -37,7 +37,7 @@ struct CalibrationView: View {
             } header: {
                 Text("Your iPhone is…")
             } footer: {
-                Text("You'll flick toward the \(settings.settings.layout.exitEdge.displayName.lowercased()) edge of your iPhone, and files arrive from the \(settings.settings.layout.arrivalEdge.displayName.lowercased()) edge of your Mac.")
+                Text("You'll flick toward the \(settings.settings.layout.exitEdge.displayName.lowercased()) edge of your iPhone, and files arrive from the \(settings.settings.layout.arrivalEdge.displayName.lowercased()) edge of your computer.")
             }
             Section {
                 VStack(alignment: .leading) {
@@ -54,7 +54,7 @@ struct CalibrationView: View {
             } header: {
                 Text("Fine-tune")
             } footer: {
-                Text("Shift where files appear along the Mac's edge. This is your preference; Spatial Bridge doesn't sense where your devices physically are.")
+                Text("Shift where files appear along the computer's edge. This is your preference; Spatial Bridge doesn't sense where your devices physically are.")
             }
         }
     }
@@ -83,7 +83,7 @@ struct ArrangementDiagram: View {
             }
         }
         .accessibilityElement()
-        .accessibilityLabel(Text("iPhone \(layout.placement.displayName.lowercased()); files arrive from the \(layout.arrivalEdge.displayName.lowercased()) edge of the Mac"))
+        .accessibilityLabel(Text("iPhone \(layout.placement.displayName.lowercased()); files arrive from the \(layout.arrivalEdge.displayName.lowercased()) edge of the computer"))
     }
 
     private func phoneRect(around mac: CGRect, in size: CGSize) -> CGRect {

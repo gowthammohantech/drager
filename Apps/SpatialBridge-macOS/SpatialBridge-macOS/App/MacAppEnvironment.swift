@@ -294,7 +294,7 @@ final class MacAppModel {
         panel.canCreateDirectories = true
         panel.allowsMultipleSelection = false
         panel.prompt = "Choose"
-        panel.message = "Choose where Spatial Bridge saves files from your iPhone."
+        panel.message = "Choose where Spatial Bridge saves files from your phone."
         panel.directoryURL = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first
         NSApp.activate()
         guard panel.runModal() == .OK, let url = panel.url else { return }
@@ -386,7 +386,7 @@ final class MacAppModel {
         case .failed: return "Network unavailable"
         case .stopped: return "Starting…"
         case .advertising:
-            return connectedPeers.isEmpty ? "Waiting for iPhone" : "Connected to \(connectedPeers.map(\.displayName).joined(separator: ", "))"
+            return connectedPeers.isEmpty ? "Waiting for phone" : "Connected to \(connectedPeers.map(\.displayName).joined(separator: ", "))"
         }
     }
 

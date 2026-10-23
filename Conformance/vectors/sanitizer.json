@@ -1,0 +1,1141 @@
+{
+  "cases" : [
+    {
+      "contentType" : null,
+      "input" : "../../etc/passwd",
+      "isSafe" : false,
+      "name" : "ported: parent traversal",
+      "op" : "sanitize",
+      "sanitized" : "passwd",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 6
+    },
+    {
+      "contentType" : null,
+      "input" : "..\\..\\win.ini",
+      "isSafe" : false,
+      "name" : "ported: backslash traversal",
+      "op" : "sanitize",
+      "sanitized" : "win.ini",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 7
+    },
+    {
+      "contentType" : null,
+      "input" : "/Users/x/Desktop/photo.jpeg",
+      "isSafe" : false,
+      "name" : "ported: absolute path",
+      "op" : "sanitize",
+      "sanitized" : "photo.jpeg",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 10
+    },
+    {
+      "contentType" : null,
+      "input" : "a/b/c.txt",
+      "isSafe" : false,
+      "name" : "ported: relative path",
+      "op" : "sanitize",
+      "sanitized" : "c.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 5
+    },
+    {
+      "contentType" : null,
+      "input" : "..",
+      "isSafe" : false,
+      "name" : "ported: dot dot",
+      "op" : "sanitize",
+      "sanitized" : "Received file",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 13
+    },
+    {
+      "contentType" : null,
+      "input" : ".",
+      "isSafe" : false,
+      "name" : "ported: dot",
+      "op" : "sanitize",
+      "sanitized" : "Received file",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 13
+    },
+    {
+      "contentType" : null,
+      "input" : "",
+      "isSafe" : false,
+      "name" : "ported: empty",
+      "op" : "sanitize",
+      "sanitized" : "Received file",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 13
+    },
+    {
+      "contentType" : null,
+      "input" : ".hidden",
+      "isSafe" : false,
+      "name" : "ported: hidden",
+      "op" : "sanitize",
+      "sanitized" : "hidden",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 6
+    },
+    {
+      "contentType" : null,
+      "input" : "...dots.txt",
+      "isSafe" : false,
+      "name" : "ported: leading dots",
+      "op" : "sanitize",
+      "sanitized" : "dots.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 8
+    },
+    {
+      "contentType" : null,
+      "input" : "colon:name.pdf",
+      "isSafe" : false,
+      "name" : "ported: colon",
+      "op" : "sanitize",
+      "sanitized" : "colonname.pdf",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 13
+    },
+    {
+      "contentType" : null,
+      "input" : "nul\u0000byte.png",
+      "isSafe" : false,
+      "name" : "ported: NUL byte",
+      "op" : "sanitize",
+      "sanitized" : "nulbyte.png",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 11
+    },
+    {
+      "contentType" : null,
+      "input" : "tab\tchar.txt",
+      "isSafe" : false,
+      "name" : "ported: tab",
+      "op" : "sanitize",
+      "sanitized" : "tabchar.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 11
+    },
+    {
+      "contentType" : "public.jpeg",
+      "input" : "IMG_0001",
+      "isSafe" : true,
+      "name" : "ported: extension from jpeg",
+      "op" : "sanitize",
+      "sanitized" : "IMG_0001.jpeg",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 13
+    },
+    {
+      "contentType" : "public.mpeg-4",
+      "input" : "clip",
+      "isSafe" : true,
+      "name" : "ported: extension from mpeg-4",
+      "op" : "sanitize",
+      "sanitized" : "clip.mp4",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 8
+    },
+    {
+      "contentType" : "public.data",
+      "input" : "Received file",
+      "isSafe" : true,
+      "name" : "ported: public.data adds nothing",
+      "op" : "sanitize",
+      "sanitized" : "Received file",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 13
+    },
+    {
+      "contentType" : null,
+      "input" : "éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé.jpeg",
+      "isSafe" : false,
+      "name" : "ported: long e-acute",
+      "op" : "sanitize",
+      "sanitized" : "ééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé.jpeg",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 255
+    },
+    {
+      "contentType" : null,
+      "input" : "Photo 2.jpeg",
+      "isSafe" : true,
+      "name" : "ported: isSafe sanitized name",
+      "op" : "sanitize",
+      "sanitized" : "Photo 2.jpeg",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 12
+    },
+    {
+      "contentType" : null,
+      "input" : "../x.jpeg",
+      "isSafe" : false,
+      "name" : "ported: isSafe traversal",
+      "op" : "sanitize",
+      "sanitized" : "x.jpeg",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 6
+    },
+    {
+      "contentType" : null,
+      "input" : ".env",
+      "isSafe" : false,
+      "name" : "ported: isSafe dotfile",
+      "op" : "sanitize",
+      "sanitized" : "env",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 3
+    },
+    {
+      "contentType" : null,
+      "input" : "Café.txt",
+      "isSafe" : true,
+      "name" : "NFC: decomposed e-acute",
+      "op" : "sanitize",
+      "sanitized" : "Café.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 9
+    },
+    {
+      "contentType" : null,
+      "input" : "Ångström.pdf",
+      "isSafe" : true,
+      "name" : "NFC: decomposed A-ring",
+      "op" : "sanitize",
+      "sanitized" : "Ångström.pdf",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 14
+    },
+    {
+      "contentType" : null,
+      "input" : "가.txt",
+      "isSafe" : true,
+      "name" : "NFC: Hangul jamo",
+      "op" : "sanitize",
+      "sanitized" : "가.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 7
+    },
+    {
+      "contentType" : null,
+      "input" : "Café.txt",
+      "isSafe" : true,
+      "name" : "NFC: already composed",
+      "op" : "sanitize",
+      "sanitized" : "Café.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 9
+    },
+    {
+      "contentType" : null,
+      "input" : "a\\b\\c.txt",
+      "isSafe" : false,
+      "name" : "separator: backslashes",
+      "op" : "sanitize",
+      "sanitized" : "c.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 5
+    },
+    {
+      "contentType" : null,
+      "input" : "photos/",
+      "isSafe" : false,
+      "name" : "separator: trailing slash",
+      "op" : "sanitize",
+      "sanitized" : "photos",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 6
+    },
+    {
+      "contentType" : null,
+      "input" : "/",
+      "isSafe" : false,
+      "name" : "separator: only slash",
+      "op" : "sanitize",
+      "sanitized" : "Received file",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 13
+    },
+    {
+      "contentType" : null,
+      "input" : "\\",
+      "isSafe" : false,
+      "name" : "separator: only backslash",
+      "op" : "sanitize",
+      "sanitized" : "Received file",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 13
+    },
+    {
+      "contentType" : null,
+      "input" : "a/../b.txt",
+      "isSafe" : false,
+      "name" : "separator: dot dot in middle",
+      "op" : "sanitize",
+      "sanitized" : "b.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 5
+    },
+    {
+      "contentType" : null,
+      "input" : "a/b/..",
+      "isSafe" : false,
+      "name" : "separator: ends in dot dot",
+      "op" : "sanitize",
+      "sanitized" : "Received file",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 13
+    },
+    {
+      "contentType" : null,
+      "input" : "C:\\Users\\x\\report.docx",
+      "isSafe" : false,
+      "name" : "separator: Windows drive path",
+      "op" : "sanitize",
+      "sanitized" : "report.docx",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 11
+    },
+    {
+      "contentType" : null,
+      "input" : "a/b\\c/d.txt",
+      "isSafe" : false,
+      "name" : "separator: mixed",
+      "op" : "sanitize",
+      "sanitized" : "d.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 5
+    },
+    {
+      "contentType" : null,
+      "input" : ".jpeg",
+      "isSafe" : false,
+      "name" : "dots: dot extension only",
+      "op" : "sanitize",
+      "sanitized" : "jpeg",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 4
+    },
+    {
+      "contentType" : "public.jpeg",
+      "input" : ".jpeg",
+      "isSafe" : false,
+      "name" : "dots: dot extension with type",
+      "op" : "sanitize",
+      "sanitized" : "jpeg.jpeg",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 9
+    },
+    {
+      "contentType" : null,
+      "input" : "..txt",
+      "isSafe" : false,
+      "name" : "dots: double dot txt",
+      "op" : "sanitize",
+      "sanitized" : "txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 3
+    },
+    {
+      "contentType" : null,
+      "input" : "...",
+      "isSafe" : false,
+      "name" : "dots: three dots",
+      "op" : "sanitize",
+      "sanitized" : "Received file",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 13
+    },
+    {
+      "contentType" : null,
+      "input" : " .hidden",
+      "isSafe" : false,
+      "name" : "dots: space then dot",
+      "op" : "sanitize",
+      "sanitized" : "hidden",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 6
+    },
+    {
+      "contentType" : null,
+      "input" : ". name.txt",
+      "isSafe" : false,
+      "name" : "dots: dot then space",
+      "op" : "sanitize",
+      "sanitized" : "name.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 8
+    },
+    {
+      "contentType" : null,
+      "input" : "file.",
+      "isSafe" : true,
+      "name" : "dots: trailing dot",
+      "op" : "sanitize",
+      "sanitized" : "file.",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 5
+    },
+    {
+      "contentType" : null,
+      "input" : "file...",
+      "isSafe" : true,
+      "name" : "dots: trailing dots",
+      "op" : "sanitize",
+      "sanitized" : "file...",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 7
+    },
+    {
+      "contentType" : null,
+      "input" : "archive.tar.gz",
+      "isSafe" : true,
+      "name" : "dots: tar.gz",
+      "op" : "sanitize",
+      "sanitized" : "archive.tar.gz",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 14
+    },
+    {
+      "contentType" : null,
+      "input" : ".tar.gz",
+      "isSafe" : false,
+      "name" : "dots: leading dot tar.gz",
+      "op" : "sanitize",
+      "sanitized" : "tar.gz",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 6
+    },
+    {
+      "contentType" : null,
+      "input" : "\u0001a\u001fb.txt",
+      "isSafe" : false,
+      "name" : "control: C0 mix",
+      "op" : "sanitize",
+      "sanitized" : "ab.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 6
+    },
+    {
+      "contentType" : null,
+      "input" : "line\nbreak.txt",
+      "isSafe" : false,
+      "name" : "control: newline",
+      "op" : "sanitize",
+      "sanitized" : "linebreak.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 13
+    },
+    {
+      "contentType" : null,
+      "input" : "cr\rname.txt",
+      "isSafe" : false,
+      "name" : "control: carriage return",
+      "op" : "sanitize",
+      "sanitized" : "crname.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 10
+    },
+    {
+      "contentType" : null,
+      "input" : "ab.txt",
+      "isSafe" : false,
+      "name" : "control: DEL",
+      "op" : "sanitize",
+      "sanitized" : "ab.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 6
+    },
+    {
+      "contentType" : null,
+      "input" : "ab.txt",
+      "isSafe" : true,
+      "name" : "control: C1 NEL in middle",
+      "op" : "sanitize",
+      "sanitized" : "ab.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 8
+    },
+    {
+      "contentType" : null,
+      "input" : "lead.txt",
+      "isSafe" : false,
+      "name" : "control: C1 NEL leading",
+      "op" : "sanitize",
+      "sanitized" : "lead.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 8
+    },
+    {
+      "contentType" : null,
+      "input" : "name.txt ",
+      "isSafe" : false,
+      "name" : "control: U+2028 trailing",
+      "op" : "sanitize",
+      "sanitized" : "name.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 8
+    },
+    {
+      "contentType" : null,
+      "input" : "‮gnp.exe",
+      "isSafe" : true,
+      "name" : "control: RTL override kept",
+      "op" : "sanitize",
+      "sanitized" : "‮gnp.exe",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 10
+    },
+    {
+      "contentType" : null,
+      "input" : "a​b.txt",
+      "isSafe" : true,
+      "name" : "control: zero width space kept",
+      "op" : "sanitize",
+      "sanitized" : "a​b.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 9
+    },
+    {
+      "contentType" : null,
+      "input" : "a:b:c.txt",
+      "isSafe" : false,
+      "name" : "colon: several",
+      "op" : "sanitize",
+      "sanitized" : "abc.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 7
+    },
+    {
+      "contentType" : null,
+      "input" : ":",
+      "isSafe" : false,
+      "name" : "colon: only",
+      "op" : "sanitize",
+      "sanitized" : "Received file",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 13
+    },
+    {
+      "contentType" : null,
+      "input" : "a.tx:t",
+      "isSafe" : false,
+      "name" : "colon: in extension",
+      "op" : "sanitize",
+      "sanitized" : "a.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 5
+    },
+    {
+      "contentType" : "public.png",
+      "input" : "IMG",
+      "isSafe" : true,
+      "name" : "uti: png",
+      "op" : "sanitize",
+      "sanitized" : "IMG.png",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 7
+    },
+    {
+      "contentType" : "public.heic",
+      "input" : "IMG",
+      "isSafe" : true,
+      "name" : "uti: heic",
+      "op" : "sanitize",
+      "sanitized" : "IMG.heic",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 8
+    },
+    {
+      "contentType" : "com.adobe.pdf",
+      "input" : "doc",
+      "isSafe" : true,
+      "name" : "uti: pdf",
+      "op" : "sanitize",
+      "sanitized" : "doc.pdf",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 7
+    },
+    {
+      "contentType" : "public.plain-text",
+      "input" : "notes",
+      "isSafe" : true,
+      "name" : "uti: plain text",
+      "op" : "sanitize",
+      "sanitized" : "notes.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 9
+    },
+    {
+      "contentType" : "public.zip-archive",
+      "input" : "bundle",
+      "isSafe" : true,
+      "name" : "uti: zip",
+      "op" : "sanitize",
+      "sanitized" : "bundle.zip",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 10
+    },
+    {
+      "contentType" : "com.apple.quicktime-movie",
+      "input" : "clip",
+      "isSafe" : true,
+      "name" : "uti: quicktime",
+      "op" : "sanitize",
+      "sanitized" : "clip.mov",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 8
+    },
+    {
+      "contentType" : "not.a.type",
+      "input" : "file",
+      "isSafe" : true,
+      "name" : "uti: unknown identifier",
+      "op" : "sanitize",
+      "sanitized" : "file",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 4
+    },
+    {
+      "contentType" : "dyn.ah62d4rv4ge80e5pe",
+      "input" : "file",
+      "isSafe" : true,
+      "name" : "uti: dyn type",
+      "op" : "sanitize",
+      "sanitized" : "file.bmd",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 8
+    },
+    {
+      "contentType" : "",
+      "input" : "file",
+      "isSafe" : true,
+      "name" : "uti: empty string",
+      "op" : "sanitize",
+      "sanitized" : "file",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 4
+    },
+    {
+      "contentType" : "public.png",
+      "input" : "a.jpg",
+      "isSafe" : true,
+      "name" : "uti: existing extension wins",
+      "op" : "sanitize",
+      "sanitized" : "a.jpg",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 5
+    },
+    {
+      "contentType" : "public.jpeg",
+      "input" : "",
+      "isSafe" : false,
+      "name" : "uti: empty name gets fallback and extension",
+      "op" : "sanitize",
+      "sanitized" : "Received file.jpeg",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 18
+    },
+    {
+      "contentType" : "public.jpeg",
+      "input" : ".",
+      "isSafe" : false,
+      "name" : "uti: dot name gets fallback and extension",
+      "op" : "sanitize",
+      "sanitized" : "Received file.jpeg",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 18
+    },
+    {
+      "contentType" : null,
+      "input" : "a.JPG",
+      "isSafe" : false,
+      "name" : "ext: uppercase lowered",
+      "op" : "sanitize",
+      "sanitized" : "a.jpg",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 5
+    },
+    {
+      "contentType" : null,
+      "input" : "a.p@g",
+      "isSafe" : false,
+      "name" : "ext: punctuation removed",
+      "op" : "sanitize",
+      "sanitized" : "a.pg",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 4
+    },
+    {
+      "contentType" : null,
+      "input" : "a.b c",
+      "isSafe" : true,
+      "name" : "ext: space removed",
+      "op" : "sanitize",
+      "sanitized" : "a.b c",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 5
+    },
+    {
+      "contentType" : null,
+      "input" : "a.x-y_z",
+      "isSafe" : true,
+      "name" : "ext: dash and underscore kept",
+      "op" : "sanitize",
+      "sanitized" : "a.x-y_z",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 7
+    },
+    {
+      "contentType" : null,
+      "input" : "a.ÜNÏ",
+      "isSafe" : false,
+      "name" : "ext: non-ASCII letters kept and lowered",
+      "op" : "sanitize",
+      "sanitized" : "a.ünï",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 7
+    },
+    {
+      "contentType" : null,
+      "input" : "a.abcdefghijklmnop",
+      "isSafe" : true,
+      "name" : "ext: 16 characters kept",
+      "op" : "sanitize",
+      "sanitized" : "a.abcdefghijklmnop",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 18
+    },
+    {
+      "contentType" : null,
+      "input" : "a.abcdefghijklmnopq",
+      "isSafe" : false,
+      "name" : "ext: 17 characters truncated",
+      "op" : "sanitize",
+      "sanitized" : "a.abcdefghijklmnop",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 18
+    },
+    {
+      "contentType" : null,
+      "input" : "a.@@",
+      "isSafe" : false,
+      "name" : "ext: only punctuation",
+      "op" : "sanitize",
+      "sanitized" : "a",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 1
+    },
+    {
+      "contentType" : null,
+      "input" : "a.😀",
+      "isSafe" : false,
+      "name" : "ext: emoji",
+      "op" : "sanitize",
+      "sanitized" : "a",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 1
+    },
+    {
+      "contentType" : null,
+      "input" : "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.txt",
+      "isSafe" : true,
+      "name" : "truncate: 251 ASCII + .txt fits exactly",
+      "op" : "sanitize",
+      "sanitized" : "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 255
+    },
+    {
+      "contentType" : null,
+      "input" : "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.txt",
+      "isSafe" : false,
+      "name" : "truncate: 252 ASCII + .txt",
+      "op" : "sanitize",
+      "sanitized" : "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 255
+    },
+    {
+      "contentType" : null,
+      "input" : "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "isSafe" : false,
+      "name" : "truncate: 300 ASCII no extension",
+      "op" : "sanitize",
+      "sanitized" : "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 255
+    },
+    {
+      "contentType" : null,
+      "input" : "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀.png",
+      "isSafe" : false,
+      "name" : "truncate: 4-byte emoji",
+      "op" : "sanitize",
+      "sanitized" : "😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀😀.png",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 252
+    },
+    {
+      "contentType" : null,
+      "input" : "👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧.txt",
+      "isSafe" : false,
+      "name" : "truncate: ZWJ family grapheme clusters",
+      "op" : "sanitize",
+      "sanitized" : "👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧👨‍👩‍👧.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 238
+    },
+    {
+      "contentType" : null,
+      "input" : "🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪.txt",
+      "isSafe" : false,
+      "name" : "truncate: flags",
+      "op" : "sanitize",
+      "sanitized" : "🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪🇩🇪.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 252
+    },
+    {
+      "contentType" : null,
+      "input" : "éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé.txt",
+      "isSafe" : false,
+      "name" : "truncate: decomposed e-acute (NFC first)",
+      "op" : "sanitize",
+      "sanitized" : "ééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 254
+    },
+    {
+      "contentType" : null,
+      "input" : "á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃.txt",
+      "isSafe" : false,
+      "name" : "truncate: combining stack",
+      "op" : "sanitize",
+      "sanitized" : "á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃á̂̃.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 250
+    },
+    {
+      "contentType" : null,
+      "input" : "日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日.txt",
+      "isSafe" : false,
+      "name" : "truncate: CJK 3-byte",
+      "op" : "sanitize",
+      "sanitized" : "日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日日.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 253
+    },
+    {
+      "contentType" : null,
+      "input" : "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.abcdefghijklmnopqrstuvwxyz",
+      "isSafe" : false,
+      "name" : "truncate: long extension and long stem",
+      "op" : "sanitize",
+      "sanitized" : "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc.abcdefghijklmnop",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 255
+    },
+    {
+      "contentType" : null,
+      "input" : " ",
+      "isSafe" : false,
+      "name" : "empty: space",
+      "op" : "sanitize",
+      "sanitized" : "Received file",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 13
+    },
+    {
+      "contentType" : null,
+      "input" : "   \t ",
+      "isSafe" : false,
+      "name" : "empty: whitespace mix",
+      "op" : "sanitize",
+      "sanitized" : "Received file",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 13
+    },
+    {
+      "contentType" : null,
+      "input" : "\n",
+      "isSafe" : false,
+      "name" : "empty: newline",
+      "op" : "sanitize",
+      "sanitized" : "Received file",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 13
+    },
+    {
+      "contentType" : null,
+      "input" : " .txt",
+      "isSafe" : false,
+      "name" : "empty: space dot txt",
+      "op" : "sanitize",
+      "sanitized" : "txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 3
+    },
+    {
+      "contentType" : null,
+      "input" : "  a  .txt",
+      "isSafe" : false,
+      "name" : "whitespace: inner spaces kept",
+      "op" : "sanitize",
+      "sanitized" : "a  .txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 7
+    },
+    {
+      "contentType" : null,
+      "input" : "a.txt ",
+      "isSafe" : false,
+      "name" : "whitespace: trailing space after extension",
+      "op" : "sanitize",
+      "sanitized" : "a.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 5
+    },
+    {
+      "contentType" : null,
+      "input" : " a.txt ",
+      "isSafe" : false,
+      "name" : "whitespace: no-break space",
+      "op" : "sanitize",
+      "sanitized" : "a.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 5
+    },
+    {
+      "contentType" : null,
+      "input" : "CON.txt",
+      "isSafe" : true,
+      "name" : "windows: CON.txt",
+      "op" : "sanitize",
+      "sanitized" : "CON.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 7
+    },
+    {
+      "contentType" : null,
+      "input" : "con",
+      "isSafe" : true,
+      "name" : "windows: con",
+      "op" : "sanitize",
+      "sanitized" : "con",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 3
+    },
+    {
+      "contentType" : null,
+      "input" : "NUL",
+      "isSafe" : true,
+      "name" : "windows: NUL",
+      "op" : "sanitize",
+      "sanitized" : "NUL",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 3
+    },
+    {
+      "contentType" : null,
+      "input" : "PRN.doc",
+      "isSafe" : true,
+      "name" : "windows: PRN.doc",
+      "op" : "sanitize",
+      "sanitized" : "PRN.doc",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 7
+    },
+    {
+      "contentType" : null,
+      "input" : "AUX",
+      "isSafe" : true,
+      "name" : "windows: AUX",
+      "op" : "sanitize",
+      "sanitized" : "AUX",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 3
+    },
+    {
+      "contentType" : null,
+      "input" : "COM1.txt",
+      "isSafe" : true,
+      "name" : "windows: COM1.txt",
+      "op" : "sanitize",
+      "sanitized" : "COM1.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 8
+    },
+    {
+      "contentType" : null,
+      "input" : "LPT9",
+      "isSafe" : true,
+      "name" : "windows: LPT9",
+      "op" : "sanitize",
+      "sanitized" : "LPT9",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 4
+    },
+    {
+      "contentType" : null,
+      "input" : "CONIN$",
+      "isSafe" : true,
+      "name" : "windows: CONIN$",
+      "op" : "sanitize",
+      "sanitized" : "CONIN$",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 6
+    },
+    {
+      "contentType" : null,
+      "input" : "a<b>.txt",
+      "isSafe" : true,
+      "name" : "windows: angle brackets",
+      "op" : "sanitize",
+      "sanitized" : "a<b>.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 8
+    },
+    {
+      "contentType" : null,
+      "input" : "what?.txt",
+      "isSafe" : true,
+      "name" : "windows: question mark",
+      "op" : "sanitize",
+      "sanitized" : "what?.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 9
+    },
+    {
+      "contentType" : null,
+      "input" : "star*.txt",
+      "isSafe" : true,
+      "name" : "windows: asterisk",
+      "op" : "sanitize",
+      "sanitized" : "star*.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 9
+    },
+    {
+      "contentType" : null,
+      "input" : "pipe|.txt",
+      "isSafe" : true,
+      "name" : "windows: pipe",
+      "op" : "sanitize",
+      "sanitized" : "pipe|.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 9
+    },
+    {
+      "contentType" : null,
+      "input" : "quote\".txt",
+      "isSafe" : true,
+      "name" : "windows: double quote",
+      "op" : "sanitize",
+      "sanitized" : "quote\".txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 10
+    },
+    {
+      "contentType" : null,
+      "input" : "name. ",
+      "isSafe" : false,
+      "name" : "windows: trailing dot and space",
+      "op" : "sanitize",
+      "sanitized" : "name.",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 5
+    },
+    {
+      "contentType" : null,
+      "input" : "IMG_0001.jpeg",
+      "isSafe" : true,
+      "name" : "plain: simple",
+      "op" : "sanitize",
+      "sanitized" : "IMG_0001.jpeg",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 13
+    },
+    {
+      "contentType" : null,
+      "input" : "My Photo 2.jpeg",
+      "isSafe" : true,
+      "name" : "plain: spaces",
+      "op" : "sanitize",
+      "sanitized" : "My Photo 2.jpeg",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 15
+    },
+    {
+      "contentType" : null,
+      "input" : "Résumé 📄.pdf",
+      "isSafe" : true,
+      "name" : "plain: unicode",
+      "op" : "sanitize",
+      "sanitized" : "Résumé 📄.pdf",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 17
+    },
+    {
+      "contentType" : null,
+      "input" : "README",
+      "isSafe" : true,
+      "name" : "plain: no extension",
+      "op" : "sanitize",
+      "sanitized" : "README",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 6
+    },
+    {
+      "contentType" : null,
+      "input" : "Received file",
+      "isSafe" : true,
+      "name" : "plain: fallback name itself",
+      "op" : "sanitize",
+      "sanitized" : "Received file",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 13
+    },
+    {
+      "attempt" : 1,
+      "candidate" : "IMG.jpeg",
+      "input" : "IMG.jpeg",
+      "name" : "candidate: IMG.jpeg attempt 1",
+      "op" : "candidate"
+    },
+    {
+      "attempt" : 2,
+      "candidate" : "IMG 2.jpeg",
+      "input" : "IMG.jpeg",
+      "name" : "candidate: IMG.jpeg attempt 2",
+      "op" : "candidate"
+    },
+    {
+      "attempt" : 3,
+      "candidate" : "README 3",
+      "input" : "README",
+      "name" : "candidate: README attempt 3",
+      "op" : "candidate"
+    },
+    {
+      "attempt" : 2,
+      "candidate" : "archive.tar 2.gz",
+      "input" : "archive.tar.gz",
+      "name" : "candidate: archive.tar.gz attempt 2",
+      "op" : "candidate"
+    },
+    {
+      "attempt" : 12,
+      "candidate" : "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.txt",
+      "input" : "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.txt",
+      "name" : "candidate: aaaaaaaaaaaaaaaaaaaa attempt 12",
+      "op" : "candidate"
+    }
+  ],
+  "kind" : "sanitizer",
+  "version" : 1
+}

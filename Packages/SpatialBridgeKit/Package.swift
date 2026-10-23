@@ -111,6 +111,15 @@ let package = Package(
             ],
             path: "Tests/Integration/BridgeIntegrationTests"
         ),
+
+        // MARK: Conformance vectors (Conformance/vectors/*.json; SB_WRITE_VECTORS=1 regenerates)
+        .testTarget(
+            name: "VectorExportTests",
+            dependencies: [
+                "BridgeModels", "BridgeNetworking", "BridgeSecurity", "BridgeTransfer", "BridgeCalibration",
+            ],
+            path: "Tests/Conformance/VectorExportTests"
+        ),
     ],
     swiftLanguageModes: [.v6]
 )

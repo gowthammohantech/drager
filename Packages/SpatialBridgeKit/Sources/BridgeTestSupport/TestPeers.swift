@@ -16,11 +16,23 @@ public struct TestPeer: Sendable {
         let identity = try! IdentityStore(secrets: secrets).loadOrCreate()
         self.identity = identity
         self.secrets = secrets
-        self.device = DeviceInfo(peerID: identity.peerID, displayName: name, platform: platform, model: platform == .iOS ? "iPhone18,2" : "Mac16,1")
+        self.device = DeviceInfo(peerID: identity.peerID, displayName: name, platform: platform, model: Self.model(for: platform))
     }
 
     public static func iPhone(_ name: String = "Test iPhone") -> TestPeer { TestPeer(name: name, platform: .iOS) }
     public static func mac(_ name: String = "Test Mac") -> TestPeer { TestPeer(name: name, platform: .macOS) }
+    public static func android(_ name: String = "Test Android") -> TestPeer { TestPeer(name: name, platform: .android) }
+    public static func windows(_ name: String = "Test PC") -> TestPeer { TestPeer(name: name, platform: .windows) }
+
+    static func model(for platform: DevicePlatform) -> String {
+        switch platform {
+        case .iOS: "iPhone18,2"
+        case .macOS: "Mac16,1"
+        case .android: "Pixel 9"
+        case .windows: "Surface Laptop 7"
+        default: "Unknown"
+        }
+    }
 
     public var asTrusted: TrustedPeer {
         TrustedPeer(peerID: device.peerID, displayName: device.displayName, platform: device.platform, model: device.model, signingPublicKey: identity.publicKeyData)
