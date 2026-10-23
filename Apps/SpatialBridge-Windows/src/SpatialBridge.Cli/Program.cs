@@ -11,6 +11,7 @@ try
         "pair-initiate" => await PairCommands.InitiateAsync(parsed),
         "pair-respond" => await PairCommands.RespondAsync(parsed),
         "send" => await SendCommand.RunAsync(parsed),
+        "unpair" => UnpairCommand.Run(parsed),
         _ => throw new UsageException($"unknown command {parsed.Command}"),
     };
 }

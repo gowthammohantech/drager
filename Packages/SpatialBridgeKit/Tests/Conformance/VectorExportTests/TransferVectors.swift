@@ -131,6 +131,25 @@ enum SanitizerVectors {
             ("plain: no extension", "README", nil),
         ]
         c.append(("plain: fallback name itself", FilenameSanitizer.fallbackBaseName, nil))
+        // Found by the Kotlin/.NET fuzzers (lane H1): each once broke sanitize(sanitize(x)) == sanitize(x),
+        // isSafe(sanitize(x)) or the 255-byte cap.
+        c += [
+            ("fuzz: junk extension after trailing ideographic space", "a*\u{3000}.@\u{FFFF}@", "com.adobe.pdf"),
+            ("fuzz: junk extension after trailing space", "a .@", nil),
+            ("fuzz: junk extension exposes inner extension", "a.b😀.😀", nil),
+            ("fuzz: backslash with combining mark", "\\\u{338}~_<.~.-👩", nil),
+            ("fuzz: slash with combining mark", "x/\u{301}y.txt", nil),
+            ("fuzz: dot space dot", ". .hidden", "public.png"),
+            ("fuzz: space dot space dot", " . . .x.txt", nil),
+            ("fuzz: control between base and marks", "A\u{1}\u{323}\u{30A}.txt", nil),
+            ("fuzz: truncation cuts the space that hid an extension", String(repeating: "x", count: 252) + ".b~ " + String(repeating: "y", count: 20), nil),
+            ("fuzz: truncation leaves trailing space", String(repeating: "x", count: 254) + " y", nil),
+            ("fuzz: 16 heavy graphemes in extension", "a." + String(repeating: "a" + String(repeating: "\u{301}", count: 20), count: 16), nil),
+            ("fuzz: extension with ideographic space", "a.b\u{3000}c", nil),
+            ("fuzz: extension with no-break space", "a.b\u{A0}c", nil),
+            ("fuzz: extension with line separator", "a.b\u{2028}c", nil),
+            ("fuzz: uppercase dotted I extension", "a.\u{130}\u{1E9E}", nil),
+        ]
         return c
     }
 

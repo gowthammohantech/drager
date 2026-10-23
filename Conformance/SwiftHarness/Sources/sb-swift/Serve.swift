@@ -24,6 +24,7 @@ actor Server {
     let staging: StagingArea
     let ledger = TransferOutcomeLedger()
     let rateLimiter = PairingRateLimiter()
+    let unpairs: UnpairWatcher
     private var pairingListener: NWListener?
     private var sessionListener: NWListener?
     private var sessionPort: UInt16 = 0
@@ -37,9 +38,12 @@ actor Server {
         try FileManager.default.createDirectory(at: dest, withIntermediateDirectories: true)
         destination = FolderDestinationStore(folder: dest)
         staging = try StagingArea(directory: state.directory.appendingPathComponent("staging", isDirectory: true))
+        unpairs = UnpairWatcher(state: state)
     }
 
     func start(pairingPort: UInt16, sessionPort: UInt16) async throws -> (UInt16, UInt16) {
+        // Like ReceiverService at launch: drop partial files left over from earlier runs (24 h retention).
+        staging.purge(olderThan: timeouts.limits.stagingRetention)
         let (pairing, pPort) = try await Net.listen(host: host, port: pairingPort, parameters: NetworkParameters.pairing()) { [weak self] connection in
             Task { await self?.handlePairing(connection) }
         }
@@ -88,11 +92,34 @@ actor Server {
                 rateLimiter: rateLimiter, timeouts: timeouts.pairing, decide: Decision.handler(approve: approve)
             )
             try await state.remember(outcome)
+            await unpairs.add(outcome.trustedPeer.peerID)
             try await restartSessionListener()
             PairCommands.paired(outcome)
         } catch {
             Out.event("pairFailed", ["code": bridgeCode(error).rawValue])
         }
+    }
+
+    /// Runs until cancelled, applying unpairs made by other processes on this state.
+    func watchUnpairs() async {
+        while !Task.isCancelled {
+            try? await Task.sleep(for: UnpairWatcher.interval)
+            for peer in await unpairs.poll() {
+                await applyUnpair(peer)
+            }
+        }
+    }
+
+    /// Another process ran `unpair` on our state: drop the cached trust entry and rebind the
+    /// session listener without the PSK, so the next session from that peer fails E004.
+    func applyUnpair(_ peer: PeerID) async {
+        try? await state.trusted.remove(peer)
+        do {
+            try await restartSessionListener()
+        } catch {
+            Out.error(bridgeCode(error))
+        }
+        Out.event("unpaired", ["peerID": peer.rawValue])
     }
 
     private func handleSession(_ connection: NWConnection) async {
@@ -169,9 +196,8 @@ enum ServeCommand {
             let server = try Server(state: state, host: host, approve: approve, timeouts: HarnessTimeouts(testMode: args.flag("test-mode")), dest: dest)
             let (pairingPort, boundSession) = try await server.start(pairingPort: port, sessionPort: sessionPort)
             Out.event("listening", ["pairingPort": Int(pairingPort), "sessionPort": Int(boundSession)])
-            while true {
-                try? await Task.sleep(for: .seconds(3600))
-            }
+            await server.watchUnpairs()
+            return 0
         } catch let usage as UsageError {
             Out.log(usage.message)
             return 64

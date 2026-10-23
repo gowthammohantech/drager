@@ -190,7 +190,12 @@ internal static class JsonElementExtensions
 
     public static uint UInt(this JsonElement e, string name) => e.Prop(name).GetUInt32();
 
-    public static double Dbl(this JsonElement e, string name) => e.Prop(name).GetDouble();
+    /// <summary>Like Swift's JSONDecoder, a number that overflows Double (<c>1e309</c>) is undecodable, not infinity.</summary>
+    public static double Dbl(this JsonElement e, string name)
+    {
+        var d = e.Prop(name).GetDouble();
+        return double.IsFinite(d) ? d : throw new FormatException("number out of range");
+    }
 
     public static Guid Uuid(this JsonElement e) => Uuids.TryParse(e.Str(), out var id) ? id : throw new FormatException("uuid");
 

@@ -26,6 +26,60 @@ internal sealed class HarnessState
     public FileSecretStore Secrets { get; }
     public FileTrustedPeerStore Trusted { get; }
     public string Staging => Path.Combine(Dir, "staging");
+
+    /// <summary>Peers that currently have a pair PSK on disk.</summary>
+    public HashSet<string> PairedPeers() =>
+        [.. Secrets.Keys(BridgeProtocol.SecretKey.PairPskPrefix).Select(k => k[BridgeProtocol.SecretKey.PairPskPrefix.Length..])];
+}
+
+/// <summary>
+/// <c>unpair --state DIR --peer PEERID</c>: forgets a peer (pair PSK and trust entry). Idempotent. A <c>serve</c> on the
+/// same state notices within <see cref="WatchIntervalMs"/> and prints its own <c>unpaired</c>.
+/// </summary>
+internal static class UnpairCommand
+{
+    public const int WatchIntervalMs = 200;
+
+    public static int Run(Args args)
+    {
+        var state = new HarnessState(args.Required("state"));
+        var peer = args.Required("peer");
+        if (!PeerIds.IsValid(peer)) throw new UsageException("--peer must be a peer ID (32 lowercase hex characters)");
+        state.Secrets.DeletePsk(peer);
+        state.Trusted.Remove(peer);
+        Out.Event("unpaired", ("peerID", peer));
+        return 0;
+    }
+
+    /// <summary>
+    /// Polls the state for PSKs another process removed. The baseline also holds every peer this process paired
+    /// (<paramref name="paired"/>), so an unpair that lands between a pairing and the next poll is still noticed.
+    /// </summary>
+    public static async Task WatchAsync(HarnessState state, System.Collections.Concurrent.ConcurrentDictionary<string, bool> paired, Func<string, Task> removed, CancellationToken cancellationToken = default)
+    {
+        var known = state.PairedPeers();
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            await Task.Delay(WatchIntervalMs, cancellationToken).ConfigureAwait(false);
+            // Merge local pairings before reading the disk: their PSK was written before the event, so it is on disk.
+            foreach (var peer in paired.Keys)
+            {
+                known.Add(peer);
+                paired.TryRemove(peer, out _);
+            }
+            HashSet<string> now;
+            try
+            {
+                now = state.PairedPeers();
+            }
+            catch (IOException)
+            {
+                continue;
+            }
+            foreach (var peer in known.Except(now).Order(StringComparer.Ordinal)) await removed(peer).ConfigureAwait(false);
+            known = now;
+        }
+    }
 }
 
 /// <summary>Shorter timeouts for fault runs (<c>--test-mode</c>), matching sb-swift.</summary>
@@ -149,6 +203,7 @@ internal static class ServeCommand
             state.Secrets,
             state.Trusted);
         service.PairingApprover = (_, _) => Task.FromResult(approve);
+        var pairedHere = new System.Collections.Concurrent.ConcurrentDictionary<string, bool>(StringComparer.Ordinal);
         service.PairingActivityRaised += (_, activity) =>
         {
             switch (activity)
@@ -157,6 +212,7 @@ internal static class ServeCommand
                     Out.Event("sas", ("code", p.Prompt.ShortAuthenticationString));
                     break;
                 case PairingActivity.Succeeded s:
+                    pairedHere[s.Peer.PeerID] = true;
                     Out.Event("paired", ("peerID", s.Peer.PeerID), ("pskFingerprint", s.PskFingerprint));
                     break;
                 case PairingActivity.Failed f:
@@ -193,7 +249,13 @@ internal static class ServeCommand
         await service.SetAllowPairingAsync(true);
         await service.SetAvailableAsync(true);
         Out.Event("listening", ("pairingPort", service.PairingPort), ("sessionPort", service.SessionPort));
-        await Task.Delay(Timeout.Infinite);
+        // The service caches PSKs, so an unpair by another process is applied here: it drops the key and trust
+        // entry and closes that peer's live sessions; the next session from it fails E004.
+        await UnpairCommand.WatchAsync(state, pairedHere, async peer =>
+        {
+            await service.UnpairAsync(peer);
+            Out.Event("unpaired", ("peerID", peer));
+        });
         return 0;
     }
 }

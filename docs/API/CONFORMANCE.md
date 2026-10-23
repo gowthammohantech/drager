@@ -67,9 +67,12 @@ These tools are for testing only and are never shipped in an app. Every command 
 <cli> pair-initiate --state DIR --connect HOST:PORT --decision approve|reject [--test-mode]
 <cli> pair-respond  --state DIR --listen 127.0.0.1:0 --decision approve|reject [--test-mode]
 <cli> send      --state DIR --connect HOST:PORT --file PATH [--content-type UTI] [--transfer-id UUID] [--fault NAME]
+<cli> unpair    --state DIR --peer PEERID
 ```
 - `--state DIR` holds the identity seed and the trusted peers as JSON. These files are test-only and unencrypted.
-- `serve` advertises nothing. It prints `{"event":"listening","pairingPort":N,"sessionPort":M}`.
+- `serve` advertises nothing. It prints `{"event":"listening","pairingPort":N,"sessionPort":M}`. Before it listens, it deletes `<state>/staging/*.sbpart` files whose mtime is 24 h old or older, like the apps' receivers do at launch.
+- `unpair` removes `PEERID`'s trust entry and pair PSK from `--state`, prints `{"event":"unpaired","peerID":PEERID}` and exits 0. It is idempotent: an unknown peer also exits 0. A malformed `--peer` is a usage error (exit 64).
+  - A `serve` running on the same state directory picks the change up while it runs. It polls the state's PSKs about every 200 ms, prints its own `unpaired` `{peerID}`, and refuses that peer's next session with E004 on both sides. The interop matrix's `after-unpair` scenario checks this.
 - **Events:**
   - `listening`
   - `sas` `{code}`
@@ -79,6 +82,7 @@ These tools are for testing only and are never shipped in an app. Every command 
   - `progress` `{offset}`
   - `committed` `{transferID, byteCount, sha256Hex}`
   - `error` `{code}`
+  - `unpaired` `{peerID}`
   - `done`
 - **Exit code:** 0 on success. On failure, the numeric part of the error code (E004 → 4).
 - **Faults for `send`:**

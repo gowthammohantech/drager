@@ -14,28 +14,75 @@ object FilenameSanitizer {
     const val MAX_UTF8_BYTES = 255
     const val FALLBACK_BASE_NAME = "Received file"
 
+    /** Longest extension kept, in UTF-8 bytes, after the 16-grapheme cap. */
+    const val MAX_EXTENSION_UTF8_BYTES = 64
+
+    /** A fixed point: `sanitize(sanitize(x)) == sanitize(x)` and `isSafe(sanitize(x))` for every x. */
     fun sanitize(name: String, contentType: String? = null): String {
-        val components = splitPath(name)
-        var base = components.lastOrNull() ?: ""
-        base = Normalizer.normalize(base, Normalizer.Form.NFC)
+        // Split on the separator code points themselves, not on grapheme clusters (`\` + U+0338 is
+        // one cluster but still a separator).
+        var base = splitPath(name).lastOrNull() ?: ""
+        // Filter before normalizing so removing a control cannot leave a non-NFC sequence.
         base = buildString {
             base.codePoints().forEach { cp -> if (cp >= 0x20 && cp != 0x7F && cp != ':'.code) appendCodePoint(cp) }
         }
-        base = trimWhitespace(base)
-        while (base.isNotEmpty() && graphemes(base).first() == ".") base = base.substring(1)
-        base = trimWhitespace(base)
+        base = Normalizer.normalize(base, Normalizer.Form.NFC)
+        // Trim and strip leading dots until neither changes anything (`. .x` must not yield `.x`).
+        while (true) {
+            var next = trimWhitespace(base)
+            while (next.isNotEmpty() && graphemes(next).first() == ".") next = next.substring(1)
+            if (next == base) break
+            base = next
+        }
         if (base.isEmpty() || base == "." || base == "..") base = FALLBACK_BASE_NAME
+        return finish(base, contentType)
+    }
 
-        var stem = deletingPathExtension(base)
-        var ext = pathExtension(base)
-        if (stem.isEmpty()) stem = FALLBACK_BASE_NAME
-        if (ext.isEmpty() && contentType != null) UtiMap.preferredExtension(contentType)?.let { ext = it }
-        ext = buildString {
-            ext.codePoints().forEach { cp -> if (isAlphanumeric(cp) || cp == '-'.code || cp == '_'.code) appendCodePoint(cp) }
-        }.lowercase(Locale.ROOT)
-        val extGraphemes = graphemes(ext)
-        if (extGraphemes.size > 16) ext = extGraphemes.take(16).joinToString("")
-        return truncate(stem, ext)
+    /** Splits off and cleans the extension, then caps the length; loops on a strictly shorter base. */
+    private fun finish(start: String, initialContentType: String?): String {
+        var base = start
+        var contentType = initialContentType
+        while (true) {
+            var stem = deletingPathExtension(base)
+            val rawExt = pathExtension(base)
+            if (stem.isEmpty()) stem = FALLBACK_BASE_NAME
+            var ext = cleanExtension(rawExt)
+            if (rawExt.isNotEmpty() && ext.isEmpty()) {
+                // An all-junk extension is dropped with its dot; the stem may hide another one.
+                base = trimTrailingWhitespace(stem)
+                continue
+            }
+            if (ext.isEmpty() && contentType != null) UtiMap.preferredExtension(contentType)?.let { ext = cleanExtension(it) }
+            val suffix = if (ext.isEmpty()) "" else ".$ext"
+            val budget = MAX_UTF8_BYTES - utf8Length(suffix)
+            if (utf8Length(stem) <= budget) return stem + suffix
+            var trimmed = trimTrailingWhitespace(trimToUtf8(stem, budget))
+            if (trimmed.isEmpty()) trimmed = FALLBACK_BASE_NAME
+            if (ext.isEmpty() && pathExtension(trimmed).isNotEmpty()) {
+                // The cut exposed an extension (it removed the space that hid one).
+                base = trimmed
+                contentType = null
+                continue
+            }
+            return trimmed + suffix
+        }
+    }
+
+    /** Conservative charset, lowercase, NFC, at most 16 graphemes and [MAX_EXTENSION_UTF8_BYTES]. */
+    private fun cleanExtension(raw: String): String {
+        val kept = buildString {
+            raw.codePoints().forEach { cp -> if (isAlphanumeric(cp) || cp == '-'.code || cp == '_'.code) appendCodePoint(cp) }
+        }
+        var ext = Normalizer.normalize(kept.lowercase(Locale.ROOT), Normalizer.Form.NFC)
+        val clusters = graphemes(ext)
+        if (clusters.size > 16) ext = clusters.take(16).joinToString("")
+        return trimToUtf8(ext, MAX_EXTENSION_UTF8_BYTES)
+    }
+
+    private fun trimTrailingWhitespace(text: String): String {
+        var end = text.length
+        while (end > 0 && isWhitespace(text.codePointBefore(end))) end -= Character.charCount(text.codePointBefore(end))
+        return text.substring(0, end)
     }
 
     /**
@@ -77,21 +124,8 @@ object FilenameSanitizer {
 
     private fun utf8Length(text: String): Int = text.toByteArray(Charsets.UTF_8).size
 
-    /** Swift `split(whereSeparator:)` on Characters equal to `/` or `\`, dropping empty pieces. */
-    private fun splitPath(name: String): List<String> {
-        val out = ArrayList<String>()
-        val current = StringBuilder()
-        for (cluster in graphemes(name)) {
-            if (cluster == "/" || cluster == "\\") {
-                if (current.isNotEmpty()) out += current.toString()
-                current.clear()
-            } else {
-                current.append(cluster)
-            }
-        }
-        if (current.isNotEmpty()) out += current.toString()
-        return out
-    }
+    /** Splits on the code points `/` and `\\`, dropping empty pieces. */
+    private fun splitPath(name: String): List<String> = name.split('/', '\\').filter { it.isNotEmpty() }
 
     /** `CharacterSet.whitespacesAndNewlines`: Z*, U+0009–U+000D and U+0085. */
     private fun isWhitespace(cp: Int): Boolean = cp in 0x09..0x0D || cp == 0x85 || when (Character.getType(cp)) {

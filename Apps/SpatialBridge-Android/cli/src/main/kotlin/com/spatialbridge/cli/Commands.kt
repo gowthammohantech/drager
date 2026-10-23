@@ -3,6 +3,7 @@ package com.spatialbridge.cli
 import com.spatialbridge.core.BridgeErrorCode
 import com.spatialbridge.core.DevicePlatform
 import com.spatialbridge.core.model.BridgeException
+import com.spatialbridge.core.model.BridgeProtocol
 import com.spatialbridge.core.model.ControlMessage
 import com.spatialbridge.core.model.ControlMessageCoder
 import com.spatialbridge.core.model.DeviceInfo
@@ -31,7 +32,7 @@ import com.spatialbridge.core.transfer.SendPhase
 import com.spatialbridge.core.transfer.TransferSender
 import com.spatialbridge.core.transfer.UtiMap
 import com.spatialbridge.core.util.pskFingerprint
-import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.io.FileInputStream
@@ -43,7 +44,7 @@ import java.util.UUID
 /** `--state DIR`: test-only, unencrypted `secrets.json`, `trusted-peers.json` and `staging/`. */
 class CliState(path: String) {
     val directory = File(path).apply { mkdirs() }
-    private val secrets = FileSecretStore(File(directory, "secrets.json"))
+    val secrets = FileSecretStore(File(directory, "secrets.json"))
     val identity = IdentityStore(secrets).loadOrCreate()
     val pairSecrets = PairSecretStore(secrets)
     val trusted = FileTrustedPeerStore(File(directory, "trusted-peers.json"))
@@ -53,6 +54,78 @@ class CliState(path: String) {
     suspend fun remember(outcome: PairingOutcome) {
         pairSecrets.store(outcome.preSharedKey, outcome.trustedPeer.peerID)
         trusted.upsert(outcome.trustedPeer)
+    }
+
+    /** Removes [peerID]'s pair PSK and trust entry (`unpair`). */
+    suspend fun forget(peerID: String) {
+        pairSecrets.remove(peerID)
+        trusted.remove(peerID)
+    }
+
+    /** Peers that currently have a pair PSK on disk. */
+    fun pairedPeers(): Set<String> =
+        secrets.keys(BridgeProtocol.SecretKey.PAIR_PSK_PREFIX).map { it.removePrefix(BridgeProtocol.SecretKey.PAIR_PSK_PREFIX) }.toSet()
+}
+
+/**
+ * `unpair --state DIR --peer PEERID`: forgets a peer. Idempotent. A `serve` on the same state reads
+ * keys and trust from disk for every connection, and its [UnpairWatcher] reports the change.
+ */
+object Unpair {
+    private val PEER_ID = Regex("^[0-9a-f]{32}$")
+
+    fun run(args: Args): Int = runBlocking {
+        val state = CliState(args.required("state"))
+        val peer = args.required("peer")
+        if (!PEER_ID.matches(peer)) throw UsageError("--peer must be a peer ID (32 lowercase hex characters)")
+        state.forget(peer)
+        Out.event("unpaired", mapOf("peerID" to peer))
+        0
+    }
+}
+
+/**
+ * Polls the state for pair PSKs removed by another process and prints `unpaired` for each. The
+ * baseline also holds every peer this process paired ([add]), so an unpair that lands between a
+ * pairing and the next poll is still noticed.
+ */
+class UnpairWatcher(private val state: CliState) {
+    private val known: MutableSet<String> = java.util.Collections.synchronizedSet(runCatching { state.pairedPeers() }.getOrDefault(emptySet()).toMutableSet())
+
+    fun add(peerID: String) {
+        known += peerID
+    }
+
+    suspend fun run() {
+        while (true) {
+            delay(200)
+            // Snapshot before reading the disk: a local pairing writes its PSK before add(), so it is on disk.
+            val snapshot = synchronized(known) { known.toSet() }
+            val now = runCatching { state.pairedPeers() }.getOrNull() ?: continue
+            val removed = (snapshot - now).sorted()
+            synchronized(known) {
+                known.removeAll(removed.toSet())
+                known.addAll(now)
+            }
+            for (peer in removed) {
+                // Keys and trust are read from disk per connection, so the next session already fails.
+                runCatching { state.trusted.remove(peer) }
+                Out.event("unpaired", mapOf("peerID" to peer))
+            }
+        }
+    }
+}
+
+/** Staged partial files older than this are deleted when `serve` starts (CONFORMANCE.md §4, like `StagingArea.purge`). */
+private const val STAGING_RETENTION_MILLIS = 24L * 60 * 60 * 1000
+
+/**
+ * Deletes `*.sbpart` files in [staging] whose mtime is at least [STAGING_RETENTION_MILLIS] old.
+ * `JvmReceiverHost` does not purge on start, so the CLI does it like ReceiverService on Apple and .NET.
+ */
+private fun purgeStaging(staging: File, nowMillis: Long = System.currentTimeMillis()) {
+    staging.listFiles { f -> f.isFile && f.name.endsWith(".sbpart") }?.forEach { f ->
+        if (nowMillis - f.lastModified() >= STAGING_RETENTION_MILLIS) f.delete()
     }
 }
 
@@ -141,12 +214,17 @@ object Serve {
         val (host, port) = args.hostPort("listen")
         val dest = File(args.required("dest")).apply { mkdirs() }
         val sessionPort = args.optional("session-port")?.toIntOrNull() ?: 0
+        val unpairs = UnpairWatcher(state)
+        purgeStaging(state.staging)
         val receiver = JvmReceiverHost(
             state.identity, state.device, state.pairSecrets, state.trusted, dest, state.staging, decider(args),
             limits(args), timeouts(args),
         ) { event ->
             when (event) {
-                is JvmReceiverHost.Event.Paired -> Out.event("paired", mapOf("peerID" to event.peerID, "pskFingerprint" to pskFingerprint(event.psk)))
+                is JvmReceiverHost.Event.Paired -> {
+                    unpairs.add(event.peerID)
+                    Out.event("paired", mapOf("peerID" to event.peerID, "pskFingerprint" to pskFingerprint(event.psk)))
+                }
                 is JvmReceiverHost.Event.PairFailed -> Out.event("pairFailed", mapOf("code" to event.code.wire))
                 is JvmReceiverHost.Event.SessionReady -> Out.event("sessionReady", mapOf("peerID" to event.peerID))
                 is JvmReceiverHost.Event.SessionFailed -> Out.error(event.code)
@@ -164,7 +242,8 @@ object Serve {
         }
         val (pairingPort, boundSession) = receiver.start(host, port, sessionPort)
         Out.event("listening", mapOf("pairingPort" to pairingPort, "sessionPort" to boundSession))
-        awaitCancellation()
+        unpairs.run()
+        0
     }
 }
 

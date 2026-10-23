@@ -23,13 +23,60 @@ object CanonicalJson {
 
     private val parser = Json { isLenient = false }
 
-    /** Parses UTF-8 JSON. Throws [IllegalArgumentException] on malformed input. */
+    /**
+     * Parses strict RFC 8259 UTF-8 JSON. Throws [IllegalArgumentException] on malformed input.
+     *
+     * kotlinx's tree parser keeps any unquoted token as a literal, so `1f`, `0x10`, `NaN` or `+1`
+     * would otherwise reach the number accessors (where `toDouble` accepts them). Strings must be
+     * valid Unicode: an escaped lone surrogate (`"\ud800"`) is refused, as Swift and .NET do.
+     */
     fun parse(bytes: ByteArray): JsonElement {
-        val text = Charsets.UTF_8.newDecoder().decode(java.nio.ByteBuffer.wrap(bytes)).toString()
-        return try {
+        val text = try {
+            Charsets.UTF_8.newDecoder().decode(java.nio.ByteBuffer.wrap(bytes)).toString()
+        } catch (e: java.nio.charset.CharacterCodingException) {
+            throw IllegalArgumentException("invalid UTF-8", e)
+        }
+        val root = try {
             parser.parseToJsonElement(text)
         } catch (e: Exception) {
             throw IllegalArgumentException("malformed JSON", e)
+        }
+        requireStrict(root)
+        return root
+    }
+
+    private val NUMBER = Regex("-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?(?:[eE][+-]?[0-9]+)?")
+
+    /** Iterative, so a deeply nested document cannot overflow the stack. */
+    private fun requireStrict(root: JsonElement) {
+        val pending = ArrayDeque<JsonElement>().apply { add(root) }
+        while (pending.isNotEmpty()) {
+            when (val e = pending.removeLast()) {
+                is JsonObject -> e.forEach { (key, value) ->
+                    requireScalarValues(key)
+                    pending.add(value)
+                }
+                is JsonArray -> pending.addAll(e)
+                JsonNull -> Unit
+                is JsonPrimitive -> when {
+                    e.isString -> requireScalarValues(e.content)
+                    e.content == "true" || e.content == "false" -> Unit
+                    !NUMBER.matches(e.content) -> throw IllegalArgumentException("invalid literal")
+                }
+            }
+        }
+    }
+
+    private fun requireScalarValues(text: String) {
+        var i = 0
+        while (i < text.length) {
+            val c = text[i]
+            if (Character.isHighSurrogate(c) && i + 1 < text.length && Character.isLowSurrogate(text[i + 1])) {
+                i += 2
+                continue
+            }
+            if (Character.isSurrogate(c)) throw IllegalArgumentException("lone surrogate")
+            i++
         }
     }
 

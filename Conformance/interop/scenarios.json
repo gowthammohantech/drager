@@ -46,6 +46,9 @@
      "doc": "Sender state trusted by a different server"},
     {"id": "pair-reject", "kind": "pair-reject", "expect": "E003", "timeout": 30,
      "doc": "Responder rejects: E003 on both sides"},
-    {"id": "after-unpair", "kind": "skip", "reason": "no CLI implements an unpair command (CONFORMANCE.md §5 has none)"}
+    {"id": "staging-purge", "kind": "staging-purge", "staleHours": 48, "timeout": 30,
+     "doc": "Before a fresh serve starts, plant a 48 h old and a new <UUID>.sbpart in <state>/staging; only the old one may be removed (24 h retention)"},
+    {"id": "after-unpair", "kind": "after-unpair", "expect": "E004", "timeout": 30, "requires": "pair-approve",
+     "doc": "Receiver runs `unpair` on the running serve's state; serve picks it up live; the next send fails E004 on both sides. Must stay last: it unpairs the main client"}
   ]
 }

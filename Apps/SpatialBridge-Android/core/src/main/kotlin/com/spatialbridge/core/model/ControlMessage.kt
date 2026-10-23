@@ -273,6 +273,7 @@ object ControlMessageCoder {
     private fun JsonObject.double(key: String): Double {
         val p = field(key) as? JsonPrimitive ?: throw IllegalArgumentException("expected number")
         require(!p.isString) { "expected number" }
-        return p.content.toDouble()
+        // Like Swift's JSONDecoder: a number that overflows Double (1e309) is undecodable, not infinity.
+        return p.content.toDouble().also { require(it.isFinite()) { "number out of range" } }
     }
 }

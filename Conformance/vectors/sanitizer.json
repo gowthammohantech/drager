@@ -1101,6 +1101,156 @@
       "sanitizedUtf8Length" : 13
     },
     {
+      "contentType" : "com.adobe.pdf",
+      "input" : "a*　.@￿@",
+      "isSafe" : false,
+      "name" : "fuzz: junk extension after trailing ideographic space",
+      "op" : "sanitize",
+      "sanitized" : "a*.pdf",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 6
+    },
+    {
+      "contentType" : null,
+      "input" : "a .@",
+      "isSafe" : false,
+      "name" : "fuzz: junk extension after trailing space",
+      "op" : "sanitize",
+      "sanitized" : "a",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 1
+    },
+    {
+      "contentType" : null,
+      "input" : "a.b😀.😀",
+      "isSafe" : false,
+      "name" : "fuzz: junk extension exposes inner extension",
+      "op" : "sanitize",
+      "sanitized" : "a.b",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 3
+    },
+    {
+      "contentType" : null,
+      "input" : "\\̸~_<.~.-👩",
+      "isSafe" : false,
+      "name" : "fuzz: backslash with combining mark",
+      "op" : "sanitize",
+      "sanitized" : "̸~_<.~.-",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 9
+    },
+    {
+      "contentType" : null,
+      "input" : "x/́y.txt",
+      "isSafe" : false,
+      "name" : "fuzz: slash with combining mark",
+      "op" : "sanitize",
+      "sanitized" : "́y.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 7
+    },
+    {
+      "contentType" : "public.png",
+      "input" : ". .hidden",
+      "isSafe" : false,
+      "name" : "fuzz: dot space dot",
+      "op" : "sanitize",
+      "sanitized" : "hidden.png",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 10
+    },
+    {
+      "contentType" : null,
+      "input" : " . . .x.txt",
+      "isSafe" : false,
+      "name" : "fuzz: space dot space dot",
+      "op" : "sanitize",
+      "sanitized" : "x.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 5
+    },
+    {
+      "contentType" : null,
+      "input" : "A\u0001̣̊.txt",
+      "isSafe" : false,
+      "name" : "fuzz: control between base and marks",
+      "op" : "sanitize",
+      "sanitized" : "Ạ̊.txt",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 9
+    },
+    {
+      "contentType" : null,
+      "input" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.b~ yyyyyyyyyyyyyyyyyyyy",
+      "isSafe" : false,
+      "name" : "fuzz: truncation cuts the space that hid an extension",
+      "op" : "sanitize",
+      "sanitized" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.b",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 254
+    },
+    {
+      "contentType" : null,
+      "input" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx y",
+      "isSafe" : false,
+      "name" : "fuzz: truncation leaves trailing space",
+      "op" : "sanitize",
+      "sanitized" : "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 254
+    },
+    {
+      "contentType" : null,
+      "input" : "a.á́́́́́́́́́́́́́́́́́́́á́́́́́́́́́́́́́́́́́́́á́́́́́́́́́́́́́́́́́́́á́́́́́́́́́́́́́́́́́́́á́́́́́́́́́́́́́́́́́́́á́́́́́́́́́́́́́́́́́́́á́́́́́́́́́́́́́́́́́́́á́́́́́́́́́́́́́́́́́́́á́́́́́́́́́́́́́́́́́́́á́́́́́́́́́́́́́́́́́́́á́́́́́́́́́́́́́́́́́́́á́́́́́́́́́́́́́́́́́́́á́́́́́́́́́́́́́́́́́́́á́́́́́́́́́́́́́́́́́́́á́́́́́́́́́́́́́́́́́́́á́́́́́́́́́́́́́́́́́́́",
+      "isSafe" : false,
+      "name" : "fuzz: 16 heavy graphemes in extension",
+      "op" : "sanitize",
+      "sanitized" : "a.á́́́́́́́́́́́́́́́́́́́",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 42
+    },
+    {
+      "contentType" : null,
+      "input" : "a.b　c",
+      "isSafe" : false,
+      "name" : "fuzz: extension with ideographic space",
+      "op" : "sanitize",
+      "sanitized" : "a.bc",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 4
+    },
+    {
+      "contentType" : null,
+      "input" : "a.b c",
+      "isSafe" : false,
+      "name" : "fuzz: extension with no-break space",
+      "op" : "sanitize",
+      "sanitized" : "a.bc",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 4
+    },
+    {
+      "contentType" : null,
+      "input" : "a.b c",
+      "isSafe" : false,
+      "name" : "fuzz: extension with line separator",
+      "op" : "sanitize",
+      "sanitized" : "a.bc",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 4
+    },
+    {
+      "contentType" : null,
+      "input" : "a.İẞ",
+      "isSafe" : false,
+      "name" : "fuzz: uppercase dotted I extension",
+      "op" : "sanitize",
+      "sanitized" : "a.i̇ß",
+      "sanitizedIsSafe" : true,
+      "sanitizedUtf8Length" : 7
+    },
+    {
       "attempt" : 1,
       "candidate" : "IMG.jpeg",
       "input" : "IMG.jpeg",

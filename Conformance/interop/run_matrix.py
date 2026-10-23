@@ -139,10 +139,12 @@ def kill_group(proc: subprocess.Popen):
 class Server:
     """A running `serve` with a background reader collecting JSON-lines events."""
 
-    def __init__(self, runner: Runner, tool: str, root: Path, name: str, decision: str):
+    def __init__(self, runner: Runner, tool: str, root: Path, name: str, decision: str, before_start=None):
         self.tool, self.name = tool, name
         self.state, self.dest = root / f"{name}-state", root / f"{name}-dest"
         self.dest.mkdir(parents=True, exist_ok=True)
+        if before_start:
+            before_start(self)
         self.events: list[dict] = []
         self.cond = threading.Condition()
         self.log = (runner.logdir / f"serve-{name}-{tool}.log").open("w")
@@ -445,6 +447,71 @@ def sc_pair_reject(ctx: PairContext, sc) -> str:
     return f"{code} both sides"
 
 
+def unpair_and_check(ctx: PairContext, tool: str, state: Path, peer: str, timeout: float, tag: str) -> ToolRun:
+    """Runs `<tool> unpair` and checks its event, exit code and that the state files forgot `peer`."""
+    run = ctx.runner.run(tool, ["unpair", "--state", str(state), "--peer", peer], timeout, tag)
+    check(not run.timed_out and run.code == 0, f"{tool} unpair: {run.summary()}")
+    ev = first(run.events, "unpaired")
+    check(ev and ev.get("peerID") == peer, f"{tool} unpair printed {run.events}, want unpaired {peer}")
+    for name in ("secrets.json", "trusted-peers.json"):
+        path = state / name
+        check(not path.exists() or peer not in path.read_text(errors="replace"), f"{tool} unpair left {peer} in {name}")
+    return run
+
+
+def sc_after_unpair(ctx: PairContext, sc) -> str:
+    srv = ctx.main_server()
+    client_id = getattr(ctx, "client_peer_id", None)
+    check(client_id and ctx.server_peer_id, "peer IDs from pair-approve are missing")
+    mark = srv.mark()
+    # The receiver forgets the sender while `serve` keeps running on the same state directory.
+    unpair_and_check(ctx, ctx.responder, srv.state, client_id, sc["timeout"], sc["id"] + "-unpair")
+    seen = srv.wait(lambda e: e.get("event") == "unpaired" and e.get("peerID") == client_id, mark, 10)
+    check(seen, f"running {ctx.responder} serve did not report the unpair: {srv.since(mark)}")
+    path, _ = ctx.files.get(1024)
+    before, mark = srv.dest_files(), srv.mark()
+    run = ctx.send(ctx.client_state, srv.session_port, path, sc["timeout"], sc["id"])
+    check(not first(run.events, "sessionReady"), "sender reached sessionReady after the receiver unpaired it")
+    check(not [e for e in srv.since(mark) if e.get("event") == "sessionReady"], "receiver accepted an unpaired sender")
+    detail = expect_error(ctx, srv, mark, run, sc["expect"], before)
+    # The sender's CLI can unpair too; afterwards it has no trusted peer left.
+    unpair_and_check(ctx, ctx.initiator, ctx.client_state, ctx.server_peer_id, sc["timeout"], sc["id"] + "-unpair-sender")
+    return f"live unpair picked up by serve; {detail}; sender-side unpair ok"
+
+
+# `<transferID>.sbpart` as each implementation names its partial files.
+PART_NAME = {"swift": str.upper, "dotnet": str.upper, "jvm": str.lower}
+
+
+def sc_staging_purge(ctx: PairContext, sc) -> str:
+    """A fresh `serve` deletes staged partial files older than the 24 h retention, and only those."""
+    name = PART_NAME.get(ctx.responder, str.upper)
+    planted = {}
+
+    def plant(srv: Server):
+        staging = srv.state / "staging"
+        staging.mkdir(parents=True, exist_ok=True)
+        os.chmod(staging, 0o700)
+        old_age = time.time() - sc.get("staleHours", 48) * 3600
+        for label in ("stale", "fresh"):
+            path = staging / (name(str(uuid.uuid4())) + ".sbpart")
+            path.write_bytes(os.urandom(64))
+            os.chmod(path, 0o600)
+            if label == "stale":
+                os.utime(path, (old_age, old_age))
+            planted[label] = path
+
+    srv = Server(ctx.runner, ctx.responder, ctx.root, "purge", "approve", before_start=plant)
+    ctx.extra_servers.append(srv)
+    for _ in range(30):
+        if not planted["stale"].exists():
+            break
+        time.sleep(0.1)
+    check(not planted["stale"].exists(), f"{ctx.responder} serve kept a {sc.get('staleHours', 48)} h old .sbpart")
+    check(planted["fresh"].exists(), f"{ctx.responder} serve deleted a fresh .sbpart")
+    return "stale .sbpart removed at start, fresh one kept"
+
+
 KINDS = {
     "pair-approve": sc_pair_approve,
     "send": sc_send,
@@ -453,6 +520,8 @@ KINDS = {
     "denied-type": sc_denied_type,
     "unknown-identity": sc_unknown_identity,
     "pair-reject": sc_pair_reject,
+    "after-unpair": sc_after_unpair,
+    "staging-purge": sc_staging_purge,
 }
 
 

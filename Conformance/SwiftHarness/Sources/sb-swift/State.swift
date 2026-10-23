@@ -80,6 +80,12 @@ struct HarnessState: Sendable {
         try await trusted.upsert(outcome.trustedPeer)
     }
 
+    /// Removes `peer`'s pair PSK and trust entry (`unpair`).
+    func forget(_ peer: PeerID) async throws {
+        try pairSecrets.remove(peer: peer)
+        try await trusted.remove(peer)
+    }
+
     func sessionKeys() async -> [(identity: PeerID, preSharedKey: Data)] {
         var keys: [(identity: PeerID, preSharedKey: Data)] = []
         for peer in await trusted.all() {

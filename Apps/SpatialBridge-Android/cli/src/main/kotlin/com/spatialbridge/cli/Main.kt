@@ -13,7 +13,8 @@ fun main(argv: Array<String>) {
             "pair-respond" -> Pairing.respond(args)
             "serve" -> Serve.run(args)
             "send" -> Send.run(args)
-            else -> throw UsageError("usage: sb-jvm tls-echo|serve|pair-initiate|pair-respond|send ...")
+            "unpair" -> Unpair.run(args)
+            else -> throw UsageError("usage: sb-jvm tls-echo|serve|pair-initiate|pair-respond|send|unpair ...")
         }
     } catch (e: UsageError) {
         Out.log(e.message ?: "usage error")

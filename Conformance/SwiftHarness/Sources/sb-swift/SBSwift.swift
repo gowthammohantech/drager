@@ -20,6 +20,7 @@ struct SBSwift {
         case "pair-respond": code = await PairCommands.respond(args)
         case "serve": code = await ServeCommand.run(args)
         case "send": code = await SendCommand.run(args)
+        case "unpair": code = await UnpairCommand.run(args)
         case "-h", "--help", "help":
             print(usageText)
             code = 0
@@ -39,5 +40,6 @@ struct SBSwift {
       sb-swift pair-respond --state DIR --listen 127.0.0.1:0 --decision approve|reject [--test-mode]
       sb-swift send --state DIR --connect HOST:PORT --file PATH [--content-type UTI] [--transfer-id UUID]
                     [--peer PEERID] [--fault corrupt-chunk|out-of-order|cancel-mid|oversize-offer|unsafe-name|stall] [--test-mode]
+      sb-swift unpair --state DIR --peer PEERID
     """
 }

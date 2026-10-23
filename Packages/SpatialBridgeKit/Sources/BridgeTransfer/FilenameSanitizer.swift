@@ -7,38 +7,103 @@ public enum FilenameSanitizer {
     public static let maxUTF8Bytes = 255
     public static let fallbackBaseName = "Received file"
 
+    /// Longest extension kept, in UTF-8 bytes (after the 16-character cap), so a few heavy
+    /// grapheme clusters cannot push the name past `maxUTF8Bytes`.
+    public static let maxExtensionUTF8Bytes = 64
+
     /// Sanitizes `name`:
     /// - strips directory components, path separators, colons, NUL and control characters
     /// - rejects `.`/`..` and leading dots (hidden files)
     /// - NFC-normalizes and caps at 255 UTF-8 bytes while preserving the extension
     /// - adds an extension from `contentType` if the name has none
+    ///
+    /// The result is a fixed point: `sanitize(sanitize(x)) == sanitize(x)` and
+    /// `isSafe(sanitize(x))` hold for every input (fuzzed by the Kotlin and .NET ports).
     public static func sanitize(_ name: String, contentType: String? = nil) -> String {
         // Only the last path component counts; anything that looks like a path is hostile.
-        var base = name.split(whereSeparator: { $0 == "/" || $0 == "\\" }).last.map(String.init) ?? ""
+        // Split on scalars, not Characters: `\` or `/` followed by a combining mark is one
+        // Character but still a separator to the file system.
+        let pieces = name.unicodeScalars.split(whereSeparator: { $0 == "/" || $0 == "\\" })
+        var base = pieces.last.map { String(String.UnicodeScalarView($0)) } ?? ""
+        // Filter before normalizing so removing a control cannot leave a non-NFC sequence.
+        base = String(String.UnicodeScalarView(base.unicodeScalars.filter { scalar in
+            !(scalar.value < 0x20 || scalar.value == 0x7F) && scalar != ":"
+        }))
         base = base.precomposedStringWithCanonicalMapping
-        base = String(base.unicodeScalars.filter { scalar in
-            !(scalar.value < 0x20 || scalar.value == 0x7F) && scalar != ":" && scalar != "\u{0}"
-        })
-        base = base.trimmingCharacters(in: .whitespacesAndNewlines)
-        while base.hasPrefix(".") { base.removeFirst() }
-        base = base.trimmingCharacters(in: .whitespacesAndNewlines)
+        // Trim and strip leading dots until neither changes anything (`. .x` must not yield `.x`).
+        while true {
+            var next = base.trimmingCharacters(in: .whitespacesAndNewlines)
+            while next.hasPrefix(".") { next.removeFirst() }
+            if next == base { break }
+            base = next
+        }
         if base.isEmpty || base == "." || base == ".." {
             base = fallbackBaseName
         }
+        return finish(base, contentType: contentType)
+    }
 
-        var stem = (base as NSString).deletingPathExtension
-        var ext = (base as NSString).pathExtension
-        if stem.isEmpty {
-            stem = fallbackBaseName
+    /// Splits off and cleans the extension, then caps the length. Loops (on a strictly shorter
+    /// base) whenever the output would split differently on a second pass.
+    private static func finish(_ start: String, contentType: String?) -> String {
+        var base = start
+        var contentType = contentType
+        while true {
+            var stem = (base as NSString).deletingPathExtension
+            let rawExt = (base as NSString).pathExtension
+            if stem.isEmpty {
+                stem = fallbackBaseName
+            }
+            var ext = cleanExtension(rawExt)
+            if !rawExt.isEmpty, ext.isEmpty {
+                // The extension was all junk: drop it with its dot, then look again, since the
+                // stem may end in whitespace or carry an extension of its own.
+                base = trimTrailingWhitespace(stem)
+                continue
+            }
+            if ext.isEmpty, let type = contentType, let preferred = UTType(type)?.preferredFilenameExtension {
+                ext = cleanExtension(preferred)
+            }
+            let suffix = ext.isEmpty ? "" : ".\(ext)"
+            let budget = maxUTF8Bytes - suffix.utf8.count
+            if stem.utf8.count <= budget {
+                return stem + suffix
+            }
+            var trimmed = stem
+            while trimmed.utf8.count > budget, !trimmed.isEmpty {
+                trimmed.removeLast()
+            }
+            trimmed = trimTrailingWhitespace(trimmed)
+            if trimmed.isEmpty { trimmed = fallbackBaseName }
+            if ext.isEmpty, !(trimmed as NSString).pathExtension.isEmpty {
+                // The cut exposed an extension (it removed the space that hid one); sanitize
+                // the shorter name as is.
+                base = trimmed
+                contentType = nil
+                continue
+            }
+            return trimmed + suffix
         }
-        if ext.isEmpty, let contentType, let preferred = UTType(contentType)?.preferredFilenameExtension {
-            ext = preferred
-        }
-        // Extensions are restricted to a conservative charset.
-        ext = String(ext.unicodeScalars.filter { CharacterSet.alphanumerics.contains($0) || $0 == "-" || $0 == "_" }).lowercased()
+    }
+
+    /// Extensions are restricted to a conservative charset, lowercase, NFC, at most 16
+    /// characters and `maxExtensionUTF8Bytes`.
+    private static func cleanExtension(_ raw: String) -> String {
+        let kept = raw.unicodeScalars.filter { CharacterSet.alphanumerics.contains($0) || $0 == "-" || $0 == "_" }
+        var ext = String(String.UnicodeScalarView(kept)).lowercased().precomposedStringWithCanonicalMapping
         if ext.count > 16 { ext = String(ext.prefix(16)) }
+        while ext.utf8.count > maxExtensionUTF8Bytes, !ext.isEmpty {
+            ext.removeLast()
+        }
+        return ext
+    }
 
-        return truncate(stem: stem, ext: ext)
+    private static func trimTrailingWhitespace(_ text: String) -> String {
+        var scalars = Array(text.unicodeScalars)
+        while let last = scalars.last, CharacterSet.whitespacesAndNewlines.contains(last) {
+            scalars.removeLast()
+        }
+        return String(String.UnicodeScalarView(scalars))
     }
 
     /// `IMG.jpeg`, attempt 2 → `IMG 2.jpeg`.
@@ -75,7 +140,7 @@ public enum FilenameSanitizer {
 
     /// `true` if `name` is exactly what `sanitize` would produce — used to validate incoming offers.
     public static func isSafe(_ name: String) -> Bool {
-        sanitize(name) == name && !name.contains("/") && !name.contains("\\")
+        sanitize(name) == name && !name.unicodeScalars.contains(where: { $0 == "/" || $0 == "\\" })
     }
 }
 
