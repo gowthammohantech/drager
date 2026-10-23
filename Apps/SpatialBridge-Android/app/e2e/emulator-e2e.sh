@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 # Emulator end-to-end run (XP2a): Android app (real core, real UI) -> `sb-swift serve` on the host.
 #
-#   app/e2e/emulator-e2e.sh [--bind 127.0.0.1|0.0.0.0] [--serve PATH_TO_sb-swift] [--keep-emulator]
+#   app/e2e/emulator-e2e.sh [--bind 127.0.0.1|0.0.0.0] [--serve PATH_TO_sb-swift] [--keep-emulator] [--release]
+#
+# --release installs the R8-minified release build (debug-signed, `-PsbTestBuildType=release`) instead
+# of the debug build, so the run also checks that BouncyCastle's TLS client survives shrinking.
 #
 # Boots the Pixel_7_Pro AVD headless if no emulator is attached, installs the debug app and its test
 # APK, starts `serve` with auto-approve, runs EmulatorE2ETest with the serve ports, then checks:
@@ -21,11 +24,14 @@ AVD="${AVD:-Pixel_7_Pro}"
 BIND="127.0.0.1"
 SERVE_BIN="$REPO/Conformance/SwiftHarness/.build/out/Products/Release/sb-swift"
 KEEP=0
+VARIANT=Debug
+GRADLE_PROPS=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --bind) BIND="$2"; shift 2 ;;
     --serve) SERVE_BIN="$2"; shift 2 ;;
     --keep-emulator) KEEP=1; shift ;;
+    --release) VARIANT=Release; GRADLE_PROPS=(-PsbTestBuildType=release -PsbDebugSignRelease); shift ;;
     *) echo "unknown argument: $1" >&2; exit 64 ;;
   esac
 done
@@ -54,8 +60,11 @@ if ! "$ADB" devices | grep -q '^emulator-.*device$'; then
   until [[ "$("$ADB" shell getprop sys.boot_completed 2>/dev/null | tr -d '\r')" == "1" ]]; do sleep 2; done
 fi
 
-echo "== installing app + test APKs"
-(cd "$ANDROID_ROOT" && ./gradlew -q :app:installDebug :app:installDebugAndroidTest)
+echo "== installing app + test APKs ($VARIANT)"
+# Debug and release share the application ID and (here) the debug key; start from a clean install.
+"$ADB" uninstall com.gowthammohan.spatialbridge.android >/dev/null 2>&1 || true
+"$ADB" uninstall com.gowthammohan.spatialbridge.android.test >/dev/null 2>&1 || true
+(cd "$ANDROID_ROOT" && ./gradlew -q ${GRADLE_PROPS[@]+"${GRADLE_PROPS[@]}"} ":app:install$VARIANT" ":app:install${VARIANT}AndroidTest")
 
 echo "== starting sb-swift serve on $BIND"
 mkdir -p "$WORK/state" "$WORK/dest"
@@ -93,7 +102,7 @@ print(" ".join(e["code"] for e in map(json.loads, open(sys.argv[1])) if e.get("e
 
 fail=0
 check() { if [[ "$2" == "$3" && -n "$2" ]]; then echo "PASS $1 ($2)"; else echo "FAIL $1: app='$2' serve='$3'"; fail=1; fi; }
-echo "== results (bind $BIND)"
+echo "== results (bind $BIND, $VARIANT build)"
 check "SAS shown == serve sas" "$APP_SAS" "$SERVE_SAS"
 check "sha256 source == serve committed" "$APP_SHA" "${SERVE_SHA:-}"
 check "byteCount source == serve committed" "$APP_BYTES" "${SERVE_BYTES:-}"

@@ -124,7 +124,9 @@ class EmulatorE2ETest {
         report("peerID", (paired as PairingState.Paired).peerID)
         compose.onNodeWithTag("pairing.done").performClick()
         compose.waitUntil(TIMEOUT) { model.trustedPeers.value.any { it.peerID == paired.peerID } }
-        compose.onNodeWithTag("overlay.back").performClick()
+        // Done closes the Pair overlay and returns to Home.
+        compose.waitUntilDoesNotExist(hasTestTag("overlay.back"), TIMEOUT)
+        waitForTag("home.status")
 
         // 1. A 3 MiB file with an uppercase extension: offered as `E2E Payload.bin`, must commit.
         val payload = Random(42).nextBytes(3 * 1024 * 1024 + 123)

@@ -32,6 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
@@ -124,6 +125,28 @@ class SenderFlowTest {
         waitForTag("transfer.success")
         compose.onNodeWithTag("transfer.success").assertTextContains("Saved on Studio Mac")
         compose.onNodeWithTag("home.recent").assertExists()
+    }
+
+    @Test
+    fun pairingFromHomeDoneClosesPairOverlay() {
+        val model = launch(fastScript(), AppSettings(hasCompletedOnboarding = true))
+        waitForTag("home.pair")
+        compose.onNodeWithTag("home.pair").performClick()
+        waitForTag("overlay.back")
+        waitForTag("discover.peer.${mac.peerID}")
+        compose.onNodeWithTag("discover.peer.${mac.peerID}").performClick()
+        waitForTag("pairing.match")
+        compose.onNodeWithTag("pairing.match").performClick()
+        waitForTag("pairing.done")
+        compose.onNodeWithTag("pairing.done").performClick()
+
+        // Back on Home with the new computer, not left on the Pair screen.
+        compose.waitUntilDoesNotExist(hasTestTag("overlay.back"), timeout)
+        compose.waitUntilDoesNotExist(hasTestTag("pairing.sheet"), timeout)
+        waitForTag("home.status")
+        compose.onNodeWithTag("home.peerName").assertTextContains("Studio Mac")
+        compose.onNodeWithTag("discover.list").assertDoesNotExist()
+        compose.runOnIdle { assertEquals(mac.peerID, model.settings.value.preferredPeerID) }
     }
 
     @Test

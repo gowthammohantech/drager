@@ -65,6 +65,11 @@ class AppModel(
     private val clock: () -> Long = System::currentTimeMillis,
     /** Where pairing and unpairing run (crypto, socket and key-store work). Production passes `Dispatchers.Default`. */
     private val work: CoroutineContext = EmptyCoroutineContext,
+    /**
+     * The last step of [resetEverything]: wipes what only the platform graph owns (identity seed, pair
+     * keys, trust file, remembered manual peers) and rebuilds the graph, so the next start has a new identity.
+     */
+    private val platformReset: suspend () -> Unit = {},
 ) {
     val settings: StateFlow<AppSettings> = settingsStore.settings
     val peers: StateFlow<List<DiscoveredPeer>> = facade.peers
@@ -322,16 +327,28 @@ class AppModel(
 
     fun clearHistory() = historyStore.clear()
 
-    /** Unpairs everything, clears history, staged files and settings (Settings › Reset). */
+    /**
+     * Settings › Reset: cancels any pairing or transfer, unpairs everything, clears history, staged
+     * files and settings, then [platformReset] deletes the identity, pair keys, trust file and
+     * remembered manual peers.
+     */
     fun resetEverything() {
         scope.launch {
-            withContext(work) { trustedPeers.value.forEach { facade.unpair(it.peerID) } }
+            cancelPairing()
+            transferJob?.cancel()
+            if (transferUi.value.phase.isActive) facade.cancelTransfer()
+            withContext(work) {
+                // Stored peers too, not only the ones discovery currently shows.
+                val ids = (trustedPeers.value.map { it.peerID } + facade.trustedPeers.value.map { it.peerID }).toSet()
+                ids.forEach { facade.unpair(it) }
+            }
             historyStore.clear()
-            importer.clear()
+            withContext(work) { importer.clear() }
             _staged.value = null
             active.value = null
             settingsStore.reset()
             stop()
+            platformReset()
         }
     }
 }

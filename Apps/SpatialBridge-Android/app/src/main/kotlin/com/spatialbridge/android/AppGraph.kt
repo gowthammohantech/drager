@@ -129,12 +129,15 @@ class InMemoryManualPeerMemory : ManualPeerMemory {
  * The production dependency graph: identity and pair keys in [KeystoreSecretStore], trusted peers in
  * a JSON file in no-backup app storage, and [SenderService] over [AppPeerLocator]. Owned by the
  * ViewModel so a transfer outlives configuration changes; [close] tears it down.
+ *
+ * The constructor decrypts (or generates and wraps) the identity seed with Android Keystore, which is
+ * slow blocking I/O: never construct it on the main thread. Production uses [load].
  */
 class AppGraph(
     context: Context,
     val secrets: SecretStore = KeystoreSecretStore(context),
-    trustedPeerFile: File = File(context.noBackupFilesDir, "trusted-peers.json"),
-    manualPeerMemory: ManualPeerMemory = SharedPreferencesManualPeerMemory(context),
+    private val trustedPeerFile: File = File(context.noBackupFilesDir, "trusted-peers.json"),
+    private val manualPeerMemory: ManualPeerMemory = SharedPreferencesManualPeerMemory(context),
     nsdEnabled: Boolean = true,
     val manualEndpointsAllowed: Boolean = BuildConfig.DEBUG,
 ) {
@@ -143,6 +146,9 @@ class AppGraph(
     val locator = AppPeerLocator(manualPeerMemory, if (nsdEnabled) { sink -> NsdPeerDiscovery(context, sink) } else null)
     private val identityStore = IdentityStore(secrets)
     private val identity = identityStore.loadOrCreate()
+
+    /** This device's peer ID (public: a fingerprint of the identity key). */
+    val peerID: String get() = identity.peerID
     val sender = SenderService(
         identity = identity,
         device = SenderService.deviceInfo(identity, deviceName(context), Build.MODEL ?: "Android"),
@@ -162,8 +168,23 @@ class AppGraph(
         scope.cancel()
     }
 
-    private companion object {
-        fun deviceName(context: Context): String =
+    /**
+     * Settings › Reset: deletes every secret (identity seed, pair PSKs, and the Keystore wrapping key),
+     * the trusted-peer file and the remembered manual-endpoint peer IDs. The in-memory identity of this
+     * graph stays valid only until it is closed; the caller builds a new graph, which generates a new
+     * identity.
+     */
+    suspend fun wipe() = withContext(Dispatchers.IO) {
+        secrets.deleteAll()
+        trustedPeerFile.delete()
+        manualPeerMemory.clear()
+    }
+
+    companion object {
+        /** Builds the graph on [Dispatchers.IO]: the Keystore decrypt or keygen must not run on the main thread. */
+        suspend fun load(context: Context): AppGraph = withContext(Dispatchers.IO) { AppGraph(context) }
+
+        private fun deviceName(context: Context): String =
             runCatching { Settings.Global.getString(context.contentResolver, Settings.Global.DEVICE_NAME) }.getOrNull()
                 ?.takeIf { it.isNotBlank() } ?: Build.MODEL ?: "Android"
     }

@@ -35,19 +35,20 @@ enum class Overlay { NONE, PAIR, CALIBRATION }
 fun SpatialBridgeApp(model: AppModel) {
     SpatialBridgeTheme {
         val settings by model.settings.collectAsStateWithLifecycle()
+        // Hoisted so the pairing sheet can close the Pair overlay when the user taps Done.
+        var overlay by rememberSaveable { mutableStateOf(Overlay.NONE) }
         Box(Modifier.fillMaxSize()) {
-            if (settings.hasCompletedOnboarding) MainScreen(model) else OnboardingFlow(model)
-            PairingSheetHost(model)
+            if (settings.hasCompletedOnboarding) MainScreen(model, overlay) { overlay = it } else OnboardingFlow(model)
+            PairingSheetHost(model, onPairedDone = { if (overlay == Overlay.PAIR) overlay = Overlay.NONE })
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MainScreen(model: AppModel) {
+private fun MainScreen(model: AppModel, overlay: Overlay, setOverlay: (Overlay) -> Unit) {
     var tab by rememberSaveable { mutableStateOf(MainTab.SEND) }
-    var overlay by rememberSaveable { mutableStateOf(Overlay.NONE) }
-    BackHandler(enabled = overlay != Overlay.NONE) { overlay = Overlay.NONE }
+    BackHandler(enabled = overlay != Overlay.NONE) { setOverlay(Overlay.NONE) }
 
     if (overlay != Overlay.NONE) {
         Scaffold(
@@ -55,7 +56,7 @@ private fun MainScreen(model: AppModel) {
                 TopAppBar(
                     title = { Text(if (overlay == Overlay.PAIR) "Pair a computer" else "Calibration") },
                     navigationIcon = {
-                        IconButton(onClick = { overlay = Overlay.NONE }, modifier = Modifier.testTag("overlay.back")) {
+                        IconButton(onClick = { setOverlay(Overlay.NONE) }, modifier = Modifier.testTag("overlay.back")) {
                             Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
                     },
@@ -100,12 +101,12 @@ private fun MainScreen(model: AppModel) {
     ) { padding ->
         Box(Modifier.padding(padding)) {
             when (tab) {
-                MainTab.SEND -> HomeScreen(model, onPair = { overlay = Overlay.PAIR })
+                MainTab.SEND -> HomeScreen(model, onPair = { setOverlay(Overlay.PAIR) })
                 MainTab.HISTORY -> HistoryScreen(model)
                 MainTab.SETTINGS -> SettingsScreen(
                     model,
-                    onPair = { overlay = Overlay.PAIR },
-                    onCalibrate = { overlay = Overlay.CALIBRATION },
+                    onPair = { setOverlay(Overlay.PAIR) },
+                    onCalibrate = { setOverlay(Overlay.CALIBRATION) },
                 )
             }
         }

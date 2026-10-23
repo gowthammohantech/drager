@@ -3,6 +3,10 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 }
 
+// `-PsbTestBuildType=release` runs the instrumented tests (and `app/e2e/emulator-e2e.sh --release`)
+// against the minified release app, to check that R8 left the BouncyCastle TLS client working.
+val testAgainstRelease = (findProperty("sbTestBuildType") as String?) == "release"
+
 android {
     namespace = "com.spatialbridge.android"
     compileSdk = 37
@@ -17,6 +21,26 @@ android {
         // The emulator E2E needs `sb-swift serve` on the host; app/e2e/emulator-e2e.sh runs it.
         testInstrumentationRunnerArguments["notAnnotation"] = "com.spatialbridge.android.HostReceiverTest"
     }
+
+    buildTypes {
+        release {
+            // R8 shrinking and obfuscation. BouncyCastle is used through its lightweight API only; the
+            // reflective parts (JCA/JSSE providers) are unreachable and get stripped (proguard-rules.pro).
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            // Tests call app and core classes the app itself doesn't use; keep those (only those) for
+            // test runs. BouncyCastle and the libraries stay shrunk and obfuscated.
+            if (testAgainstRelease) {
+                proguardFiles("proguard-test-release.pro")
+                testProguardFiles("proguard-test-release.pro")
+            }
+            // Local verification only (`-PsbDebugSignRelease`): real releases are signed outside this build.
+            if (project.hasProperty("sbDebugSignRelease")) signingConfig = signingConfigs.getByName("debug")
+        }
+    }
+
+    testBuildType = if (testAgainstRelease) "release" else "debug"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -64,6 +88,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    if (testAgainstRelease) add("releaseImplementation", "androidx.compose.ui:ui-test-manifest")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation(libs.coroutines.test)

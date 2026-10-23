@@ -48,15 +48,19 @@ import com.spatialbridge.android.PairingSheetState
 import com.spatialbridge.core.PairingState
 
 @Composable
-fun PairingSheetHost(model: AppModel) {
+fun PairingSheetHost(model: AppModel, onPairedDone: () -> Unit = {}) {
     val sheet by model.pairingSheet.collectAsStateWithLifecycle()
-    sheet?.let { PairingSheet(model, it) }
+    sheet?.let { PairingSheet(model, it, onPairedDone) }
 }
 
 /** Code comparison and pairing progress (FR-107). */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun PairingSheet(model: AppModel, sheet: PairingSheetState) {
+private fun PairingSheet(model: AppModel, sheet: PairingSheetState, onPairedDone: () -> Unit) {
+    val done = {
+        model.dismissPairing()
+        onPairedDone()
+    }
     val busy = sheet.state is PairingState.Connecting || sheet.state is PairingState.WaitingForPeer
     val currentBusy by rememberUpdatedState(busy)
     val sheetState = rememberModalBottomSheetState(
@@ -68,7 +72,8 @@ private fun PairingSheet(model: AppModel, sheet: PairingSheetState) {
     ModalBottomSheet(
         onDismissRequest = {
             when (sheet.state) {
-                is PairingState.Paired, is PairingState.Failed -> model.dismissPairing()
+                is PairingState.Paired -> done()
+                is PairingState.Failed -> model.dismissPairing()
                 else -> model.cancelPairing()
             }
         },
@@ -95,7 +100,7 @@ private fun PairingSheet(model: AppModel, sheet: PairingSheetState) {
                     Text("Paired with ${sheet.peerName}", style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center,
                         modifier = Modifier.testTag("pairing.success"))
                     Text("You can now throw files to this computer.", color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    PrimaryButton("Done", Modifier.testTag("pairing.done"), onClick = model::dismissPairing)
+                    PrimaryButton("Done", Modifier.testTag("pairing.done"), onClick = done)
                 }
                 is PairingState.Failed -> {
                     Icon(Icons.Filled.Cancel, null, tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(64.dp))
