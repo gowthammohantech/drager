@@ -84,6 +84,17 @@ public sealed class StagingArea
         {
             File.SetUnixFileMode(directory, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
         }
+        else
+        {
+            // The leading dot hides it on Unix; Explorer needs the attribute (re-applied if the folder was recreated).
+            try
+            {
+                var info = new DirectoryInfo(directory);
+                if (!info.Attributes.HasFlag(FileAttributes.Hidden)) info.Attributes |= FileAttributes.Hidden;
+            }
+            catch (IOException) { }
+            catch (UnauthorizedAccessException) { }
+        }
     }
 
     public string Directory { get; }

@@ -43,28 +43,28 @@ public static class FrameCodec
         switch (frame)
         {
             case ControlFrame c:
-            {
-                if (c.Payload.Length > limits.MaxControlFrameBytes) throw new FrameCodecException(FrameError.OversizedControl, $"control {c.Payload.Length}");
-                var output = new byte[HeaderBytes + c.Payload.Length];
-                output[0] = ControlType;
-                BinaryPrimitives.WriteUInt32BigEndian(output.AsSpan(1), (uint)c.Payload.Length);
-                c.Payload.CopyTo(output, HeaderBytes);
-                return output;
-            }
+                {
+                    if (c.Payload.Length > limits.MaxControlFrameBytes) throw new FrameCodecException(FrameError.OversizedControl, $"control {c.Payload.Length}");
+                    var output = new byte[HeaderBytes + c.Payload.Length];
+                    output[0] = ControlType;
+                    BinaryPrimitives.WriteUInt32BigEndian(output.AsSpan(1), (uint)c.Payload.Length);
+                    c.Payload.CopyTo(output, HeaderBytes);
+                    return output;
+                }
             case ChunkFrame k:
-            {
-                if (k.Payload.Length > limits.MaxChunkBytes) throw new FrameCodecException(FrameError.OversizedChunk, $"chunk {k.Payload.Length}");
-                var length = ChunkFrame.HeaderBytes + k.Payload.Length;
-                var output = new byte[HeaderBytes + length];
-                output[0] = ChunkType;
-                var span = output.AsSpan();
-                BinaryPrimitives.WriteUInt32BigEndian(span[1..], (uint)length);
-                Uuids.Write(k.TransferID, span.Slice(HeaderBytes, 16));
-                BinaryPrimitives.WriteUInt32BigEndian(span[(HeaderBytes + 16)..], k.Sequence);
-                BinaryPrimitives.WriteUInt64BigEndian(span[(HeaderBytes + 20)..], k.Offset);
-                k.Payload.Span.CopyTo(span[(HeaderBytes + ChunkFrame.HeaderBytes)..]);
-                return output;
-            }
+                {
+                    if (k.Payload.Length > limits.MaxChunkBytes) throw new FrameCodecException(FrameError.OversizedChunk, $"chunk {k.Payload.Length}");
+                    var length = ChunkFrame.HeaderBytes + k.Payload.Length;
+                    var output = new byte[HeaderBytes + length];
+                    output[0] = ChunkType;
+                    var span = output.AsSpan();
+                    BinaryPrimitives.WriteUInt32BigEndian(span[1..], (uint)length);
+                    Uuids.Write(k.TransferID, span.Slice(HeaderBytes, 16));
+                    BinaryPrimitives.WriteUInt32BigEndian(span[(HeaderBytes + 16)..], k.Sequence);
+                    BinaryPrimitives.WriteUInt64BigEndian(span[(HeaderBytes + 20)..], k.Offset);
+                    k.Payload.Span.CopyTo(span[(HeaderBytes + ChunkFrame.HeaderBytes)..]);
+                    return output;
+                }
             default:
                 throw new ArgumentException("unknown frame", nameof(frame));
         }

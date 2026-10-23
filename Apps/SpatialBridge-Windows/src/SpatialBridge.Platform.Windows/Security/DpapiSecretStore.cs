@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
-using SpatialBridge.Platform.Windows.Contracts;
+using SpatialBridge.Core.Services;
 
 namespace SpatialBridge.Platform.Windows.Security;
 

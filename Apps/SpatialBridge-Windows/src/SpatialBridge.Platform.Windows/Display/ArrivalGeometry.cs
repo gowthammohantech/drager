@@ -1,152 +1,102 @@
 using SpatialBridge.Core;
+using SpatialBridge.Core.Calibration;
 
 namespace SpatialBridge.Platform.Windows.Display;
 
-/// <summary>Axis-aligned rectangle in a top-left-origin space (Windows virtual-screen pixels).</summary>
-public readonly record struct RectD(double X, double Y, double Width, double Height)
-{
-    public double Left => X;
-
-    public double Top => Y;
-
-    public double Right => X + Width;
-
-    public double Bottom => Y + Height;
-
-    public double CenterX => X + (Width / 2);
-
-    public double CenterY => Y + (Height / 2);
-
-    public bool IsEmpty => Width <= 0 || Height <= 0;
-
-    public static RectD FromEdges(double left, double top, double right, double bottom) => new(left, top, right - left, bottom - top);
-
-    public static RectD Centered(double centerX, double centerY, double width, double height) => new(centerX - (width / 2), centerY - (height / 2), width, height);
-
-    public RectD Union(RectD other) => FromEdges(Math.Min(Left, other.Left), Math.Min(Top, other.Top), Math.Max(Right, other.Right), Math.Max(Bottom, other.Bottom));
-
-    public RectD Intersect(RectD other)
-    {
-        var left = Math.Max(Left, other.Left);
-        var top = Math.Max(Top, other.Top);
-        var right = Math.Min(Right, other.Right);
-        var bottom = Math.Min(Bottom, other.Bottom);
-        return right <= left || bottom <= top ? default : FromEdges(left, top, right, bottom);
-    }
-
-    public RectD Inflate(double dx, double dy) => new(X - dx, Y - dy, Width + (2 * dx), Height + (2 * dy));
-}
+/// <summary>Everything the overlay needs to show one arrival: the chosen monitor, Core's placement and the window frame.</summary>
+/// <param name="Display">The monitor (physical pixels of the virtual screen, top-left origin).</param>
+/// <param name="Placement">Core's <see cref="CoordinateMapper.Placement"/> result, in the same pixels.</param>
+/// <param name="WindowFrame">The layered window: card rest frame ∪ entry rect, padded, clipped to the monitor.</param>
+public sealed record OverlayLayout(DisplayGeometry Display, ArrivalPlacement Placement, RectD WindowFrame);
 
 /// <summary>
-/// One monitor, as the overlay sees it. Frames are in physical pixels of the virtual screen (the process
-/// is per-monitor DPI v2 aware); <see cref="Scale"/> is the effective DPI / 96.
-/// Mirrors Swift <c>DisplayGeometry</c> with <c>originIsBottomLeft = false</c>.
+/// Windows glue around Core's <see cref="CoordinateMapper"/> (the coordinate-mapper vectors are its reference).
+/// Displays come from <see cref="MonitorEnumerator"/> with <c>OriginIsBottomLeft = false</c>. Their frames are
+/// physical pixels (the process is per-monitor DPI v2 aware), so card sizes and insets given in DIPs are scaled by
+/// the chosen monitor's <see cref="DisplayGeometry.ScaleFactor"/> before mapping; the mapping itself is linear.
+/// Like the Mac app, the arrival edge follows the phone's exit edge; display, nudge and mirroring are preferences.
 /// </summary>
-public sealed record MonitorGeometry(string Identifier, string Name, RectD Frame, RectD VisibleFrame, double Scale, bool IsPrimary);
-
-/// <summary>Where the arrival card enters and rests. Same meaning as Swift <c>ArrivalPlacement</c>.</summary>
-public sealed record ArrivalPlacement(Edge Edge, double EntryX, double EntryY, RectD CardFrame, double NormalizedPosition);
-
-/// <summary>
-/// Gesture-to-monitor mapping for the Windows overlay: a top-left-origin port of Swift's
-/// <c>CoordinateMapper.placement</c> plus the Mac app's "arrival edge follows the phone's exit edge" rule.
-/// XP2b: replace with Core's CoordinateMapper port once Lane N lands it (the coordinate-mapper vectors are the reference).
-/// </summary>
-public static class ArrivalLayout
+public static class ArrivalOverlayGeometry
 {
     /// <summary>The Mac default when the sender sent no gesture: up and out of the phone at 600 pt/s.</summary>
     public static readonly ExitGesture DefaultGesture = new(Edge.Top, 0.5, 600, 0, 0);
 
-    /// <summary>Phone exit edge → receiver arrival edge (phone below the screen ⇒ flick up ⇒ arrives from the bottom).</summary>
-    public static Edge ArrivalEdge(Edge exitEdge) => exitEdge switch
+    /// <summary>Inverse of <see cref="PhonePlacements.ExitEdge"/>: a flick up out of the phone means the phone sits below.</summary>
+    public static PhonePlacement PlacementForExitEdge(Edge exitEdge) => exitEdge switch
     {
-        Edge.Top => Edge.Bottom,
-        Edge.Bottom => Edge.Top,
-        Edge.Left => Edge.Right,
-        _ => Edge.Left,
+        Edge.Top => PhonePlacement.Below,
+        Edge.Bottom => PhonePlacement.Above,
+        Edge.Right => PhonePlacement.Left,
+        _ => PhonePlacement.Right,
     };
+
+    public static SpatialLayout LayoutFor(ExitGesture gesture, string? displayIdentifier, double alignmentOffset = 0, bool mirrored = false)
+    {
+        ArgumentNullException.ThrowIfNull(gesture);
+        return new SpatialLayout(PlacementForExitEdge(gesture.Edge), displayIdentifier, alignmentOffset, mirrored);
+    }
 
     /// <summary>Swift <c>ExitGesture.intensity</c>: 500 pt/s ≈ 0.33, 1500 pt/s → 1.</summary>
     public static double Intensity(ExitGesture gesture)
     {
         ArgumentNullException.ThrowIfNull(gesture);
-        return Math.Clamp(gesture.OutwardVelocity / 1500, 0, 1);
+        return double.IsFinite(gesture.OutwardVelocity) ? Math.Clamp(gesture.OutwardVelocity / 1500, 0, 1) : 0;
     }
 
-    public static double MapNormalizedPosition(double position, double alignmentOffset = 0, bool mirrored = false)
+    /// <summary>
+    /// Maps <paramref name="gesture"/> (or <see cref="DefaultGesture"/>) onto the preferred monitor, else the main one.
+    /// Returns null when there is no monitor or the window frame would be empty.
+    /// </summary>
+    public static OverlayLayout? Place(
+        ExitGesture? gesture,
+        IReadOnlyList<DisplayGeometry> displays,
+        string? displayIdentifier,
+        SizeD cardSizeDips,
+        double restInsetDips,
+        double paddingDips,
+        double alignmentOffset = 0,
+        bool mirrored = false)
     {
-        var p = Math.Clamp(double.IsNaN(position) ? 0.5 : position, 0, 1);
-        if (mirrored)
+        ArgumentNullException.ThrowIfNull(displays);
+        var exit = gesture ?? DefaultGesture;
+        var layout = LayoutFor(exit, displayIdentifier, alignmentOffset, mirrored);
+        if (CoordinateMapper.SelectDisplay(layout, displays) is not { } display)
         {
-            p = 1 - p;
+            return null;
         }
-        p += Math.Clamp(alignmentOffset, -0.5, 0.5);
-        return Math.Clamp(p, 0, 1);
-    }
-
-    /// <summary>The preferred monitor, else the primary, else the first.</summary>
-    public static MonitorGeometry? SelectMonitor(string? preferredIdentifier, IReadOnlyList<MonitorGeometry> monitors)
-    {
-        ArgumentNullException.ThrowIfNull(monitors);
-        if (preferredIdentifier is not null)
-        {
-            foreach (var monitor in monitors)
-            {
-                if (monitor.Identifier == preferredIdentifier)
-                {
-                    return monitor;
-                }
-            }
-        }
-        foreach (var monitor in monitors)
-        {
-            if (monitor.IsPrimary)
-            {
-                return monitor;
-            }
-        }
-        return monitors.Count > 0 ? monitors[0] : null;
-    }
-
-    /// <param name="cardWidth">Card size in the same pixels as the monitor frames (DIPs × scale).</param>
-    /// <param name="restInset">Distance from the visible edge, same pixels.</param>
-    public static ArrivalPlacement Place(ExitGesture gesture, MonitorGeometry monitor, double cardWidth, double cardHeight, double restInset, double alignmentOffset = 0, bool mirrored = false)
-    {
-        ArgumentNullException.ThrowIfNull(gesture);
-        ArgumentNullException.ThrowIfNull(monitor);
-        var edge = ArrivalEdge(gesture.Edge);
-        var mapped = MapNormalizedPosition(gesture.NormalizedPosition, alignmentOffset, mirrored);
-        var frame = monitor.Frame;
-        var visible = monitor.VisibleFrame;
-
-        double entryX, entryY, restX, restY;
-        switch (edge)
-        {
-            case Edge.Top or Edge.Bottom:
-                entryX = restX = frame.Left + (mapped * frame.Width);
-                entryY = edge == Edge.Top ? frame.Top : frame.Bottom;
-                restY = edge == Edge.Top ? visible.Top + restInset + (cardHeight / 2) : visible.Bottom - restInset - (cardHeight / 2);
-                break;
-            default:
-                entryY = restY = frame.Top + (mapped * frame.Height);
-                entryX = edge == Edge.Left ? frame.Left : frame.Right;
-                restX = edge == Edge.Left ? visible.Left + restInset + (cardWidth / 2) : visible.Right - restInset - (cardWidth / 2);
-                break;
-        }
-
-        var x = restX - (cardWidth / 2);
-        var y = restY - (cardHeight / 2);
-        x = Math.Min(Math.Max(x, visible.Left), Math.Max(visible.Left, visible.Right - cardWidth));
-        y = Math.Min(Math.Max(y, visible.Top), Math.Max(visible.Top, visible.Bottom - cardHeight));
-        return new ArrivalPlacement(edge, entryX, entryY, new RectD(x, y, cardWidth, cardHeight), mapped);
+        var scale = display.ScaleFactor > 0 && double.IsFinite(display.ScaleFactor) ? display.ScaleFactor : 1;
+        var position = double.IsFinite(exit.NormalizedPosition) ? exit.NormalizedPosition : 0.5;
+        var card = new SizeD(cardSizeDips.Width * scale, cardSizeDips.Height * scale);
+        var placement = CoordinateMapper.Placement(position, layout, display, card, restInsetDips * scale);
+        var frame = OverlayFrame(placement, display, paddingDips * scale);
+        return IsEmpty(frame) ? null : new OverlayLayout(display, placement, frame);
     }
 
     /// <summary>The overlay window: card rest frame ∪ entry rect, padded, clipped to the monitor (like the Mac panel).</summary>
-    public static RectD OverlayFrame(ArrivalPlacement placement, MonitorGeometry monitor, double padding)
+    public static RectD OverlayFrame(ArrivalPlacement placement, DisplayGeometry display, double padding)
     {
         ArgumentNullException.ThrowIfNull(placement);
-        ArgumentNullException.ThrowIfNull(monitor);
-        var entry = RectD.Centered(placement.EntryX, placement.EntryY, placement.CardFrame.Width, placement.CardFrame.Height);
-        return placement.CardFrame.Union(entry).Inflate(padding, padding).Intersect(monitor.Frame);
+        ArgumentNullException.ThrowIfNull(display);
+        var card = placement.CardFrame;
+        var entry = new RectD(placement.EntryPoint.X - (card.Width / 2), placement.EntryPoint.Y - (card.Height / 2), card.Width, card.Height);
+        return Intersect(Inflate(Union(card, entry), padding), display.Frame);
+    }
+
+    public static bool IsEmpty(RectD rect) => !(Math.Abs(rect.Width) > 0 && Math.Abs(rect.Height) > 0);
+
+    private static RectD FromEdges(double left, double top, double right, double bottom) => new(left, top, right - left, bottom - top);
+
+    private static RectD Union(RectD a, RectD b) =>
+        FromEdges(Math.Min(a.MinX, b.MinX), Math.Min(a.MinY, b.MinY), Math.Max(a.MaxX, b.MaxX), Math.Max(a.MaxY, b.MaxY));
+
+    private static RectD Inflate(RectD r, double d) => FromEdges(r.MinX - d, r.MinY - d, r.MaxX + d, r.MaxY + d);
+
+    private static RectD Intersect(RectD a, RectD b)
+    {
+        var left = Math.Max(a.MinX, b.MinX);
+        var top = Math.Max(a.MinY, b.MinY);
+        var right = Math.Min(a.MaxX, b.MaxX);
+        var bottom = Math.Min(a.MaxY, b.MaxY);
+        return right <= left || bottom <= top ? default : FromEdges(left, top, right, bottom);
     }
 }

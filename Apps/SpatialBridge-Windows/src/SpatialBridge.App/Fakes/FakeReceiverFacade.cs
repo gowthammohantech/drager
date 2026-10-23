@@ -5,7 +5,8 @@ using SpatialBridge.Platform.Windows.Storage;
 namespace SpatialBridge.App.Fakes;
 
 /// <summary>
-/// Stand-in for Core's ReceiverService until XP2b. With <c>--fake</c> it scripts a pairing request
+/// Scripted stand-in for Core's ReceiverService, used only with <c>--fake</c> / <c>--smoke-test</c>
+/// (production runs <see cref="Services.ReceiverFactory"/>). It scripts a pairing request
 /// (through <see cref="PairingApprover"/>), one transfer that really commits a small text file through
 /// <see cref="WindowsFileCommitter"/> (flush, exclusive move, Mark-of-the-Web), and one failed transfer,
 /// so the whole UI can be smoke-tested on Windows CI without a phone.
@@ -135,12 +136,18 @@ internal sealed class FakeReceiverFacade : IReceiverFacade
         Raise(new ReceiverEvent.PeerConnected(FakePeerID, prompt.PeerDisplayName));
         var content = Encoding.UTF8.GetBytes("Spatial Bridge test transfer\r\n" + new string('.', 3000));
         var id = Guid.NewGuid();
-        Raise(new ReceiverEvent.TransferIncoming(id, prompt.PeerDisplayName, content.Length, new ExitGesture(Edge.Top, 0.4, 1100, 140, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())));
+        Raise(new ReceiverEvent.TransferIncoming(id, prompt.PeerDisplayName, content.Length, new ExitGesture(Edge.Top, 0.4, 1100, 140, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()))
+        {
+            Filename = "Spatial Bridge Test.txt",
+            ContentType = "public.plain-text",
+        });
         for (var step = 1; step <= 8; step++)
         {
             await Task.Delay(150, cancellationToken).ConfigureAwait(false);
             Raise(new ReceiverEvent.TransferProgress(id, content.Length * step / 8, content.Length));
         }
+        Raise(new ReceiverEvent.TransferVerifying(id));
+        await Task.Delay(300, cancellationToken).ConfigureAwait(false);
 
         var folder = DestinationFolder ?? Services.AppPaths.DefaultDestination;
         var staging = Path.Combine(Path.GetTempPath(), "SpatialBridge", "staging");
@@ -163,7 +170,11 @@ internal sealed class FakeReceiverFacade : IReceiverFacade
         // 3. A transfer that fails verification (never shows success).
         await Task.Delay(3500, cancellationToken).ConfigureAwait(false);
         var failing = Guid.NewGuid();
-        Raise(new ReceiverEvent.TransferIncoming(failing, prompt.PeerDisplayName, 1_048_576, new ExitGesture(Edge.Right, 0.6, 500, 90, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())));
+        Raise(new ReceiverEvent.TransferIncoming(failing, prompt.PeerDisplayName, 1_048_576, new ExitGesture(Edge.Right, 0.6, 500, 90, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()))
+        {
+            Filename = "Holiday.jpeg",
+            ContentType = "public.jpeg",
+        });
         await Task.Delay(400, cancellationToken).ConfigureAwait(false);
         Raise(new ReceiverEvent.TransferProgress(failing, 524_288, 1_048_576));
         await Task.Delay(400, cancellationToken).ConfigureAwait(false);

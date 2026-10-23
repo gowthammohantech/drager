@@ -6,6 +6,7 @@ using SpatialBridge.App.Services;
 using SpatialBridge.App.Tray;
 using SpatialBridge.App.Windows;
 using SpatialBridge.Core;
+using SpatialBridge.Platform.Windows.Display;
 
 namespace SpatialBridge.App;
 
@@ -80,10 +81,10 @@ internal sealed class AppController : IAsyncDisposable
         _tray = new TrayIconController(this);
         _tray.Create();
 
-        await Facade.SetAvailableAsync(true);
+        await SetAvailableAsync(true);
         if (_options.Fake)
         {
-            await Facade.SetAllowPairingAsync(true);
+            await SetAllowPairingAsync(true);
         }
         RaiseStateChanged();
         DiagnosticsLog.Shared.Write($"app.started fake={_options.Fake} packaged={StartupRegistration.IsPackaged}");
@@ -120,19 +121,55 @@ internal sealed class AppController : IAsyncDisposable
 
     public async Task SetAvailableAsync(bool available)
     {
-        await Facade.SetAvailableAsync(available);
-        if (!available && Facade.AllowPairing)
+        try
         {
-            await Facade.SetAllowPairingAsync(false);
+            await Facade.SetAvailableAsync(available);
+            if (!available && Facade.AllowPairing)
+            {
+                await Facade.SetAllowPairingAsync(false);
+            }
+        }
+        catch (Exception error) when (IsReceiverFailure(error))
+        {
+            await OnAvailabilityFailedAsync(error);
         }
         RaiseStateChanged();
     }
 
     public async Task SetAllowPairingAsync(bool allow)
     {
-        await Facade.SetAllowPairingAsync(allow && Facade.IsAvailable);
+        try
+        {
+            await Facade.SetAllowPairingAsync(allow && Facade.IsAvailable);
+        }
+        catch (Exception error) when (IsReceiverFailure(error))
+        {
+            DiagnosticsLog.Shared.Write("pairing.advertise-failed " + Describe(error));
+            _notifier.Post("Pairing isn't available", UserText.Message(BridgeErrorCode.LocalNetworkDenied));
+        }
         RaiseStateChanged();
     }
+
+    /// <summary>Listening or DNS-SD registration failed: go back to "Not available" rather than look reachable.</summary>
+    private async Task OnAvailabilityFailedAsync(Exception error)
+    {
+        DiagnosticsLog.Shared.Write("availability.failed " + Describe(error));
+        try
+        {
+            await Facade.SetAvailableAsync(false);
+        }
+        catch (Exception cleanup) when (IsReceiverFailure(cleanup))
+        {
+            DiagnosticsLog.Shared.Write("availability.cleanup-failed " + Describe(cleanup));
+        }
+        _notifier.Post("Spatial Bridge isn't available", UserText.Message(error is BridgeException bridge ? bridge.Code : BridgeErrorCode.LocalNetworkDenied));
+    }
+
+    private static bool IsReceiverFailure(Exception error) =>
+        error is BridgeException or System.Net.Sockets.SocketException or TimeoutException or IOException or UnauthorizedAccessException or InvalidOperationException;
+
+    /// <summary>Wire code or exception type only; messages can carry paths.</summary>
+    private static string Describe(Exception error) => error is BridgeException bridge ? bridge.Code.ToWire() : error.GetType().Name;
 
     public async Task SetDestinationFolderAsync(string folder)
     {
@@ -265,9 +302,16 @@ internal sealed class AppController : IAsyncDisposable
 
             case ReceiverEvent.TransferIncoming incoming:
                 _transfers[incoming.TransferID] = (incoming.PeerDisplayName, incoming.ByteCount);
-                DiagnosticsLog.Shared.Write($"transfer.incoming {Redaction.Transfer(incoming.TransferID)} bytes={incoming.ByteCount} edge={incoming.Gesture?.Edge.ToString() ?? "none"}");
+                // The offered filename only picks the card icon; it is never logged (AGENTS.md).
+                var kind = ArrivalKinds.Classify(incoming.ContentType, incoming.Filename);
+                DiagnosticsLog.Shared.Write($"transfer.incoming {Redaction.Transfer(incoming.TransferID)} bytes={incoming.ByteCount} kind={kind} edge={incoming.Gesture?.Edge.ToString() ?? "none"}");
                 _overlayShowing = Settings.Current.OverlayEnabled
-                    && Overlay.ShowIncoming(incoming.TransferID, $"From {incoming.PeerDisplayName} · {UserText.Bytes(incoming.ByteCount)}", incoming.Gesture, Settings.Current.OverlayDisplayId);
+                    && Overlay.ShowIncoming(incoming.TransferID, $"From {incoming.PeerDisplayName} · {UserText.Bytes(incoming.ByteCount)}", kind, incoming.Gesture, Settings.Current.OverlayDisplayId);
+                break;
+
+            case ReceiverEvent.TransferVerifying verifying:
+                DiagnosticsLog.Shared.Write("transfer.verifying " + Redaction.Transfer(verifying.TransferID));
+                Overlay.ShowVerifying(verifying.TransferID);
                 break;
 
             case ReceiverEvent.TransferProgress progress:

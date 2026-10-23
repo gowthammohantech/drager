@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using SpatialBridge.Core;
-using SpatialBridge.Platform.Windows.Contracts;
+using SpatialBridge.Core.Services;
 using SpatialBridge.Platform.Windows.Interop;
 
 namespace SpatialBridge.Platform.Windows.Discovery;
@@ -60,7 +60,7 @@ public sealed class DnsSdServiceAdvertiser : IServiceAdvertiser
 
         await WithdrawAsync(role, cancellationToken).ConfigureAwait(false);
 
-        var instance = TxtRecord.InstanceName(device.DisplayName, role);
+        var instance = TxtRecord.InstanceName(device, role);
         var registration = new Registration(role, TxtRecord.FullServiceName(instance), _hostName, (ushort)port, TxtRecord.Build(device, role), OnStatus);
         lock (_gate)
         {

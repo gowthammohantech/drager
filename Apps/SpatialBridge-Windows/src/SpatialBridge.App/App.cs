@@ -44,12 +44,25 @@ internal sealed partial class App : Application
 
         var dispatcher = DispatcherQueue.GetForCurrentThread();
         UiQueue = dispatcher;
-        // XP2b swaps this for Core's ReceiverService plus the Platform.Windows services.
-        IReceiverFacade facade = new FakeReceiverFacade(scripted: _options.Fake);
+        IReceiverFacade facade;
+        try
+        {
+            // --fake / --smoke-test: the scripted fake. Otherwise Core's receiver with the Windows services;
+            // AppController.StartAsync hands it the saved destination before going available.
+            facade = _options.Fake ? new FakeReceiverFacade(scripted: true) : Services.ReceiverFactory.CreateProduction(destinationFolder: null);
+        }
+        catch (Exception error) when (error is IOException or UnauthorizedAccessException or System.Security.Cryptography.CryptographicException or System.Text.Json.JsonException)
+        {
+            // Unreadable identity or trusted-peer store: never fall back to a fake that would look available.
+            Services.DiagnosticsLog.Shared.Write("receiver.create-failed " + error.GetType().Name);
+            ExitCode = 2;
+            Exit();
+            return;
+        }
         _controller = new AppController(dispatcher, facade, _options);
         await _controller.StartAsync(_activation);
     }
 
     /// <summary>Called by Program after the message loop ends.</summary>
-    public void CaptureExitCode() => ExitCode = _controller?.ExitCode ?? 0;
+    public void CaptureExitCode() => ExitCode = _controller?.ExitCode ?? ExitCode;
 }

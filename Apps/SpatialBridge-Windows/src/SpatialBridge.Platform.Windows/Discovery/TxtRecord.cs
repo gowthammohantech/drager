@@ -1,20 +1,22 @@
 using System.Globalization;
 using System.Text;
 using SpatialBridge.Core;
-using SpatialBridge.Platform.Windows.Contracts;
+using SpatialBridge.Core.Services;
 
 namespace SpatialBridge.Platform.Windows.Discovery;
 
 /// <summary>
-/// Builds the TXT record and instance names for <c>_spatialbridge._tcp</c>, matching the Mac's
-/// <c>ServiceAdvertiser</c>: keys <c>pid</c>, <c>name</c> (48 characters), <c>plat</c>, <c>pv</c>, <c>role</c>.
+/// DNS-SD wire shapes for <c>_spatialbridge._tcp</c>. The values come from Core's
+/// <see cref="AdvertisedDevice.Txt"/> and <see cref="AdvertisedDevice.InstanceName"/> (the Mac's
+/// <c>ServiceAdvertiser</c>); this class only adds what dnsapi needs on top: a stable key order,
+/// byte caps (one TXT string, one DNS label) and DNS-safe instance labels.
 /// Pure logic, so it is tested on every host.
 /// </summary>
 public static class TxtRecord
 {
     public const string ServiceType = "_spatialbridge._tcp";
     public const string Domain = "local";
-    public const int ProtocolVersion = 1;
+    public const int ProtocolVersion = BridgeProtocol.Version;
 
     /// <summary>Same as Swift <c>String(displayName.prefix(48))</c>, counted in user-perceived characters.</summary>
     public const int MaxDisplayNameCharacters = 48;
@@ -26,52 +28,61 @@ public static class TxtRecord
     public const int MaxLabelBytes = 63;
     public const int MaxTxtEntryBytes = 255;
 
+    private const string PairingSuffix = " (pairing)";
+    private const string FallbackInstanceName = "Windows PC";
+
     public static class Keys
     {
-        public const string PeerID = "pid";
-        public const string DisplayName = "name";
-        public const string Platform = "plat";
-        public const string ProtocolVersion = "pv";
-        public const string Role = "role";
+        public const string PeerID = BridgeProtocol.TxtKey.PeerID;
+        public const string DisplayName = BridgeProtocol.TxtKey.DisplayName;
+        public const string Platform = BridgeProtocol.TxtKey.Platform;
+        public const string ProtocolVersion = BridgeProtocol.TxtKey.ProtocolVersion;
+        public const string Role = BridgeProtocol.TxtKey.Role;
     }
 
-    /// <summary>The TXT entries, in a stable order.</summary>
+    private static readonly string[] KeyOrder = [Keys.PeerID, Keys.DisplayName, Keys.Platform, Keys.ProtocolVersion, Keys.Role];
+
+    /// <summary>The TXT entries from Core's <see cref="AdvertisedDevice.Txt"/>, in a stable order, each fitting one TXT string.</summary>
     public static IReadOnlyList<KeyValuePair<string, string>> Build(AdvertisedDevice device, ServiceRole role)
     {
         ArgumentNullException.ThrowIfNull(device);
-        var name = TruncateCharacters(device.DisplayName, MaxDisplayNameCharacters);
-        // "name=" + value must fit one TXT string.
-        name = TruncateUtf8(name, MaxTxtEntryBytes - Keys.DisplayName.Length - 1);
-        var platform = string.IsNullOrEmpty(device.Platform.Raw) ? DevicePlatform.Windows.Raw : device.Platform.Raw;
-        return
-        [
-            new(Keys.PeerID, device.PeerID),
-            new(Keys.DisplayName, name),
-            new(Keys.Platform, platform),
-            new(Keys.ProtocolVersion, ProtocolVersion.ToString(CultureInfo.InvariantCulture)),
-            new(Keys.Role, role.ToWire()),
-        ];
+        if (string.IsNullOrEmpty(device.Platform.Raw))
+        {
+            device = device with { Platform = DevicePlatform.Windows };
+        }
+        var txt = device.Txt(role);
+        var entries = new List<KeyValuePair<string, string>>(txt.Count);
+        foreach (var key in KeyOrder.Where(txt.ContainsKey).Concat(txt.Keys.Except(KeyOrder, StringComparer.Ordinal).Order(StringComparer.Ordinal)))
+        {
+            // "key=" + value must fit one TXT string.
+            entries.Add(new(key, TruncateUtf8(txt[key], MaxTxtEntryBytes - Encoding.UTF8.GetByteCount(key) - 1)));
+        }
+        return entries;
     }
 
     /// <summary>
-    /// Instance label: the display name (40 characters) and " (pairing)" for the pairing role, like the Mac.
-    /// Dots and backslashes would split or escape the DNS name, so they become '-'. Capped at 63 UTF-8 bytes.
+    /// Instance label: Core's <see cref="AdvertisedDevice.InstanceName"/> (40 characters, " (pairing)" for the
+    /// pairing role). Dots and backslashes would split or escape the DNS name, so they become '-'. Capped at 63 UTF-8 bytes.
     /// </summary>
+    public static string InstanceName(AdvertisedDevice device, ServiceRole role)
+    {
+        ArgumentNullException.ThrowIfNull(device);
+        return InstanceName(device.DisplayName, role);
+    }
+
+    /// <inheritdoc cref="InstanceName(AdvertisedDevice, ServiceRole)"/>
     public static string InstanceName(string displayName, ServiceRole role)
     {
+        ArgumentNullException.ThrowIfNull(displayName);
         var cleaned = new StringBuilder(displayName.Length);
         foreach (var ch in displayName.Trim())
         {
             cleaned.Append(ch is '.' or '\\' || char.IsControl(ch) ? '-' : ch);
         }
-        var name = cleaned.ToString();
-        if (name.Length == 0)
-        {
-            name = "Windows PC";
-        }
-        const string pairingSuffix = " (pairing)";
-        var suffix = role == ServiceRole.Pairing ? pairingSuffix : string.Empty;
-        var stem = TruncateCharacters(name, MaxInstanceBaseCharacters);
+        var name = cleaned.Length == 0 ? FallbackInstanceName : cleaned.ToString();
+        // The session form is the bare (≤ 40 character) base; the pairing suffix is added after the byte cap.
+        var stem = new AdvertisedDevice(string.Empty, name, DevicePlatform.Windows).InstanceName(ServiceRole.Session);
+        var suffix = role == ServiceRole.Pairing ? PairingSuffix : string.Empty;
         stem = TruncateUtf8(stem, MaxLabelBytes - Encoding.UTF8.GetByteCount(suffix)).TrimEnd();
         return stem + suffix;
     }
@@ -83,8 +94,7 @@ public static class TxtRecord
     public static string TruncateCharacters(string value, int max)
     {
         ArgumentNullException.ThrowIfNull(value);
-        var info = new StringInfo(value);
-        return info.LengthInTextElements <= max ? value : info.SubstringByTextElements(0, max);
+        return Text.PrefixGraphemes(value, max);
     }
 
     /// <summary>Drops whole grapheme clusters from the end until the UTF-8 form fits in <paramref name="maxBytes"/>.</summary>

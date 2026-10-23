@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.UI.Dispatching;
 using SpatialBridge.App.Services;
 using SpatialBridge.Core;
+using SpatialBridge.Core.Calibration;
 using SpatialBridge.Platform.Windows.Display;
 
 namespace SpatialBridge.App.Overlay;
@@ -10,6 +11,8 @@ namespace SpatialBridge.App.Overlay;
 /// Places and animates the arrival card (port of the Mac's <c>ArrivalOverlayController</c>).
 /// It starts on <see cref="ReceiverEvent.TransferIncoming"/>; everything before <see cref="ShowSaved"/>
 /// (called only on <see cref="ReceiverEvent.TransferCommitted"/>) is provisional (AGENTS.md, AD §4).
+/// Placement is Core's <see cref="CoordinateMapper"/> over <see cref="MonitorEnumerator"/> frames
+/// (see <see cref="ArrivalOverlayGeometry"/>).
 /// Honours Windows "Animation effects" (SPI_GETCLIENTAREAANIMATION) like Reduce Motion on the Mac.
 /// Must be used on the UI thread.
 /// </summary>
@@ -27,6 +30,7 @@ internal sealed class ArrivalOverlayController : IDisposable
     private Guid? _current;
     private ArrivalPhase _phase = new ArrivalPhase.Incoming(0);
     private string _subtitle = string.Empty;
+    private ArrivalKind _kind = ArrivalKind.Document;
     private RectD _windowFrame;
     private double _scale = 1;
     private double _entryX, _entryY, _restX, _restY;
@@ -45,39 +49,44 @@ internal sealed class ArrivalOverlayController : IDisposable
         _timer.Tick += (_, _) => Tick();
     }
 
-    public static IReadOnlyList<MonitorGeometry> Displays() => MonitorEnumerator.GetMonitors();
+    public static IReadOnlyList<DisplayGeometry> Displays() => MonitorEnumerator.GetMonitors();
 
     /// <summary>Starts the provisional arrival. Returns false if no display or window is available (caller falls back to a notification).</summary>
-    public bool ShowIncoming(Guid transferID, string subtitle, ExitGesture? gesture, string? displayId)
+    public bool ShowIncoming(Guid transferID, string subtitle, ArrivalKind kind, ExitGesture? gesture, string? displayId)
     {
         var started = _clock.Elapsed.TotalSeconds;
-        var monitor = ArrivalLayout.SelectMonitor(displayId, Displays());
-        if (monitor is null || !_window.EnsureCreated())
+        var exit = gesture ?? ArrivalOverlayGeometry.DefaultGesture;
+        var layout = ArrivalOverlayGeometry.Place(
+            exit,
+            Displays(),
+            displayId,
+            new SizeD(ArrivalCardRenderer.CardWidth, ArrivalCardRenderer.CardHeight),
+            RestInsetDips,
+            PaddingDips);
+        if (layout is null || !_window.EnsureCreated())
         {
             DiagnosticsLog.Shared.Write("overlay.unavailable");
             return false;
         }
 
-        var exit = gesture ?? ArrivalLayout.DefaultGesture;
-        _scale = monitor.Scale;
-        var cardWidth = ArrivalCardRenderer.CardWidth * _scale;
-        var cardHeight = ArrivalCardRenderer.CardHeight * _scale;
-        var placement = ArrivalLayout.Place(exit, monitor, cardWidth, cardHeight, RestInsetDips * _scale);
-        _windowFrame = ArrivalLayout.OverlayFrame(placement, monitor, PaddingDips * _scale);
-        if (_windowFrame.IsEmpty || !_window.EnsureSurface((int)Math.Ceiling(_windowFrame.Width), (int)Math.Ceiling(_windowFrame.Height)))
+        var placement = layout.Placement;
+        _scale = layout.Display.ScaleFactor > 0 ? layout.Display.ScaleFactor : 1;
+        _windowFrame = layout.WindowFrame;
+        if (!_window.EnsureSurface((int)Math.Ceiling(_windowFrame.Width), (int)Math.Ceiling(_windowFrame.Height)))
         {
             return false;
         }
 
         _current = transferID;
         _subtitle = subtitle;
+        _kind = kind;
         _phase = new ArrivalPhase.Incoming(0);
         _reduceMotion = !AnimationSettings.ClientAreaAnimationsEnabled();
-        _spring = SpringCurve.ForIntensity(ArrivalLayout.Intensity(exit));
-        _entryX = placement.EntryX - _windowFrame.X;
-        _entryY = placement.EntryY - _windowFrame.Y;
-        _restX = placement.CardFrame.CenterX - _windowFrame.X;
-        _restY = placement.CardFrame.CenterY - _windowFrame.Y;
+        _spring = SpringCurve.ForIntensity(ArrivalOverlayGeometry.Intensity(exit));
+        _entryX = placement.EntryPoint.X - _windowFrame.X;
+        _entryY = placement.EntryPoint.Y - _windowFrame.Y;
+        _restX = placement.CardFrame.MidX - _windowFrame.X;
+        _restY = placement.CardFrame.MidY - _windowFrame.Y;
         _shownAt = _phaseChangedAt = _clock.Elapsed.TotalSeconds;
         _hideAt = null;
         _fadeOutStartedAt = null;
@@ -90,11 +99,21 @@ internal sealed class ArrivalOverlayController : IDisposable
 
     public void ShowProgress(Guid transferID, double fraction)
     {
+        if (transferID != _current || _phase is ArrivalPhase.Verifying or ArrivalPhase.Saved or ArrivalPhase.Failed)
+        {
+            return;
+        }
+        SetPhase(new ArrivalPhase.Incoming(Math.Clamp(fraction, 0, 1)), resetClock: false);
+    }
+
+    /// <summary>All bytes are in and the digest is being checked (<see cref="ReceiverEvent.TransferVerifying"/>). Still not success.</summary>
+    public void ShowVerifying(Guid transferID)
+    {
         if (transferID != _current || _phase is ArrivalPhase.Saved or ArrivalPhase.Failed)
         {
             return;
         }
-        SetPhase(fraction >= 1 ? new ArrivalPhase.Verifying() : new ArrivalPhase.Incoming(fraction), resetClock: false);
+        SetPhase(new ArrivalPhase.Verifying(), resetClock: false);
     }
 
     /// <summary>Final success, only after durable save and COMMITTED (FR-209).</summary>
@@ -122,15 +141,17 @@ internal sealed class ArrivalOverlayController : IDisposable
     public async Task TestAsync(string? displayId, Edge exitEdge)
     {
         var id = Guid.NewGuid();
-        if (!ShowIncoming(id, "Test Photo.jpeg", new ExitGesture(exitEdge, 0.5, 900, 0, 0), displayId))
+        if (!ShowIncoming(id, "Test Photo.jpeg", ArrivalKind.Image, new ExitGesture(exitEdge, 0.5, 900, 0, 0), displayId))
         {
             return;
         }
         for (var step = 1; step <= 5; step++)
         {
             await Task.Delay(120).ConfigureAwait(true);
-            ShowProgress(id, step / 5.0 * 0.99);
+            ShowProgress(id, step / 5.0);
         }
+        ShowVerifying(id);
+        await Task.Delay(200).ConfigureAwait(true);
         ShowSaved(id, "Test Photo.jpeg");
     }
 
@@ -217,6 +238,7 @@ internal sealed class ArrivalOverlayController : IDisposable
 
         var frame = new CardFrame(
             _phase,
+            _kind,
             _subtitle,
             _entryX + ((_restX - _entryX) * progress),
             _entryY + ((_restY - _entryY) * progress),

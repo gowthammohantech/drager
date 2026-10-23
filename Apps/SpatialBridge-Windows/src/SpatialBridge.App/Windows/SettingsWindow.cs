@@ -6,6 +6,7 @@ using Microsoft.UI.Xaml.Media;
 using SpatialBridge.App.Interop;
 using SpatialBridge.App.Services;
 using SpatialBridge.Core;
+using SpatialBridge.Core.Calibration;
 using SpatialBridge.Platform.Windows.Display;
 using SpatialBridge.Platform.Windows.Network;
 using Windows.Storage.Pickers;
@@ -248,7 +249,7 @@ internal sealed class SettingsWindow : Window
         combo.Items.Add(new ComboBoxItem { Content = "Main display", Tag = null });
         foreach (var display in displays)
         {
-            combo.Items.Add(new ComboBoxItem { Content = $"{display.Name} — {display.Frame.Width:0}×{display.Frame.Height:0}", Tag = display.Identifier });
+            combo.Items.Add(new ComboBoxItem { Content = $"{display.LocalizedName} — {display.Frame.Width:0}×{display.Frame.Height:0}", Tag = display.Identifier });
         }
         combo.SelectedIndex = Math.Max(0, displays.ToList().FindIndex(d => d.Identifier == settings.OverlayDisplayId) + 1);
         combo.SelectionChanged += (_, _) =>
@@ -277,7 +278,7 @@ internal sealed class SettingsWindow : Window
         return panel;
     }
 
-    private static IReadOnlyList<MonitorGeometry> ArrivalOverlayDisplays() => MonitorEnumerator.GetMonitors();
+    private static IReadOnlyList<DisplayGeometry> ArrivalOverlayDisplays() => MonitorEnumerator.GetMonitors();
 
     // MARK: History
 

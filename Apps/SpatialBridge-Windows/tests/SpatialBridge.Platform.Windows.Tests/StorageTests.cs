@@ -1,4 +1,5 @@
 using SpatialBridge.Core;
+using SpatialBridge.Core.Transfer;
 using SpatialBridge.Platform.Windows.Storage;
 
 namespace SpatialBridge.Platform.Windows.Tests;
@@ -38,8 +39,20 @@ public class MarkOfTheWebTests
     }
 }
 
+/// <summary>
+/// The Windows committer delegates candidate naming to Core's <see cref="FileCommit.CommitWithCollisions"/>; these run
+/// that loop with an in-memory "volume" so the naming contract is checked on every host.
+/// </summary>
 public class CollisionNameTests
 {
+    private static string CommitInto(HashSet<string> existing, string saveName)
+    {
+        var folder = Path.GetFullPath(Path.Combine(Path.GetTempPath(), "sb-collisions"));
+        var final = FileCommit.CommitWithCollisions("staged", folder, saveName, (_, candidate) => existing.Add(Path.GetFileName(candidate)));
+        Assert.Equal(folder, Path.GetDirectoryName(final));
+        return Path.GetFileName(final);
+    }
+
     [Theory]
     [InlineData("photo.jpg", 1, "photo.jpg")]
     [InlineData("photo.jpg", 2, "photo 2.jpg")]
@@ -48,24 +61,41 @@ public class CollisionNameTests
     [InlineData(".profile", 2, ".profile 2")]
     public void CandidatesMatchSwift(string name, int attempt, string expected)
     {
-        Assert.Equal(expected, CollisionNames.Candidate(name, attempt));
+        Assert.Equal(expected, FilenameSanitizer.Candidate(name, attempt));
+        var existing = new HashSet<string>(StringComparer.Ordinal);
+        for (var taken = 1; taken < attempt; taken++)
+        {
+            existing.Add(FilenameSanitizer.Candidate(name, taken));
+        }
+        Assert.Equal(expected, CommitInto(existing, name));
     }
 
     [Fact]
-    public void LongNamesStayWithinNtfsLimit()
+    public void ReservedNamesAreMappedForEveryCandidate()
     {
-        var name = new string('a', 251) + ".jpg";
-        var candidate = CollisionNames.Candidate(name, 12);
-        Assert.Equal(255, candidate.Length);
-        Assert.EndsWith(" 12.jpg", candidate, StringComparison.Ordinal);
+        Assert.Equal("CON_.txt", CommitInto([], "CON.txt"));
+        Assert.Equal("NUL_", CommitInto([], "NUL"));
+        // FolderDestination hands the committer the mapped name, so collisions keep the suffix.
+        var saveName = WindowsSaveName.Map(FilenameSanitizer.Sanitize("CON.txt"));
+        Assert.Equal("CON_.txt", saveName);
+        Assert.Equal("CON_ 2.txt", CommitInto(new HashSet<string>(StringComparer.Ordinal) { "CON_.txt" }, saveName));
+    }
+
+    [Fact]
+    public void CandidatesStayWithinTheUtf8Limit()
+    {
+        var name = new string('a', 240) + ".jpg";
+        var candidate = FilenameSanitizer.Candidate(name, 12);
+        Assert.Equal(new string('a', 240) + " 12.jpg", candidate);
+        Assert.True(System.Text.Encoding.UTF8.GetByteCount(candidate) <= FilenameSanitizer.MaxUtf8Bytes);
     }
 
     [Fact]
     public void TruncationNeverSplitsSurrogates()
     {
-        var name = string.Concat(Enumerable.Repeat("\U0001F600", 126)) + ".png"; // 252 + 4 units
-        var candidate = CollisionNames.Candidate(name, 2);
-        Assert.True(candidate.Length <= 255);
+        var name = string.Concat(Enumerable.Repeat("\U0001F600", 62)) + ".png"; // 248 + 4 UTF-8 bytes
+        var candidate = FilenameSanitizer.Candidate(name, 20);
+        Assert.True(System.Text.Encoding.UTF8.GetByteCount(candidate) <= FilenameSanitizer.MaxUtf8Bytes);
         for (var i = 0; i < candidate.Length; i++)
         {
             if (char.IsHighSurrogate(candidate[i]))
@@ -77,8 +107,14 @@ public class CollisionNameTests
                 Assert.False(char.IsLowSurrogate(candidate[i]));
             }
         }
-        Assert.EndsWith(" 2.png", candidate, StringComparison.Ordinal);
-        Assert.Equal(0, (candidate.Length - " 2.png".Length) % 2);
+        Assert.EndsWith(".png", candidate, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void GivesUpAfterTheAttemptLimit()
+    {
+        var error = Assert.Throws<BridgeException>(() => FileCommit.CommitWithCollisions("staged", Path.GetTempPath(), "a.txt", (_, _) => false, maxAttempts: 3));
+        Assert.Equal(BridgeErrorCode.WriteFailed, error.Code);
     }
 }
 

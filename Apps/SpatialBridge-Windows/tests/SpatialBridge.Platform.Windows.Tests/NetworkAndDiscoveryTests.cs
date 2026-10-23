@@ -1,7 +1,7 @@
 using System.Net;
 using System.Net.Sockets;
 using SpatialBridge.Core;
-using SpatialBridge.Platform.Windows.Contracts;
+using SpatialBridge.Core.Services;
 using SpatialBridge.Platform.Windows.Discovery;
 using SpatialBridge.Platform.Windows.Interop;
 using SpatialBridge.Platform.Windows.Network;

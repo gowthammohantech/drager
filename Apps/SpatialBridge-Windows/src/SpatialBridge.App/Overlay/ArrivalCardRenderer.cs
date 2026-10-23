@@ -4,6 +4,7 @@ using System.Drawing.Imaging;
 using System.Drawing.Text;
 using SpatialBridge.Core;
 using SpatialBridge.App.Services;
+using SpatialBridge.Platform.Windows.Display;
 
 namespace SpatialBridge.App.Overlay;
 
@@ -20,6 +21,7 @@ internal abstract record ArrivalPhase
 
 internal sealed record CardFrame(
     ArrivalPhase Phase,
+    ArrivalKind Kind,
     string Subtitle,
     double CenterX,
     double CenterY,
@@ -78,7 +80,7 @@ internal static class ArrivalCardRenderer
         using (var white = new SolidBrush(Color.White))
         using (var centered = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center })
         {
-            g.DrawString(GlyphFor(frame.Phase), glyphFont, white, tile, centered);
+            g.DrawString(GlyphFor(frame.Phase, frame.Kind), glyphFont, white, tile, centered);
         }
 
         // Text column.
@@ -147,13 +149,25 @@ internal static class ArrivalCardRenderer
     public static string Title(ArrivalPhase phase) => phase switch
     {
         ArrivalPhase.Incoming => "Receiving…",
-        ArrivalPhase.Verifying => "Saving…",
+        ArrivalPhase.Verifying => "Verifying…",
         ArrivalPhase.Saved => "Saved",
         ArrivalPhase.Failed failed => UserText.Message(failed.Code),
         _ => string.Empty,
     };
 
-    private static string GlyphFor(ArrivalPhase phase) => phase is ArrivalPhase.Failed ? "" : ""; // Warning / Document
+    /// <summary>Segoe MDL2 glyph for the kind tile: Warning on failure, else by kind (from the offered UTI or extension).</summary>
+    private static string GlyphFor(ArrivalPhase phase, ArrivalKind kind) => phase is ArrivalPhase.Failed
+        ? "\uE7BA" // Warning
+        : kind switch
+        {
+            ArrivalKind.Image => "\uEB9F", // Photo2
+            ArrivalKind.Movie => "\uE714", // Video
+            ArrivalKind.Audio => "\uE8D6", // Audio
+            ArrivalKind.Pdf => "\uEA90", // PDF
+            ArrivalKind.Archive => "\uF012", // ZipFolder
+            ArrivalKind.Text => "\uE7C3", // Page
+            _ => "\uE8A5", // Document
+        };
 
     private static GraphicsPath RoundedRect(RectangleF rect, float radius)
     {

@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using SpatialBridge.Core.Calibration;
 using SpatialBridge.Platform.Windows.Interop;
 
 namespace SpatialBridge.Platform.Windows.Display;
@@ -7,10 +8,11 @@ namespace SpatialBridge.Platform.Windows.Display;
 /// <summary>
 /// Monitors via <c>EnumDisplayMonitors</c>, <c>GetMonitorInfo</c> and <c>GetDpiForMonitor</c>.
 /// Requires a per-monitor DPI v2 process (app.manifest) so the rectangles are physical pixels.
+/// Produces Core <see cref="DisplayGeometry"/> with a top-left origin, ready for <see cref="CoordinateMapper"/>.
 /// </summary>
 public static unsafe class MonitorEnumerator
 {
-    public static IReadOnlyList<MonitorGeometry> GetMonitors()
+    public static IReadOnlyList<DisplayGeometry> GetMonitors()
     {
         if (!OperatingSystem.IsWindows())
         {
@@ -27,7 +29,7 @@ public static unsafe class MonitorEnumerator
             context.Free();
         }
 
-        var monitors = new List<MonitorGeometry>(handles.Count);
+        var monitors = new List<DisplayGeometry>(handles.Count);
         foreach (var handle in handles)
         {
             var info = default(MonitorInfoEx);
@@ -43,18 +45,19 @@ public static unsafe class MonitorEnumerator
         return monitors;
     }
 
-    internal static MonitorGeometry FromNative(string deviceName, NativeRect monitor, NativeRect work, uint dpi, bool primary, int ordinal)
+    internal static DisplayGeometry FromNative(string deviceName, NativeRect monitor, NativeRect work, uint dpi, bool primary, int ordinal)
     {
         var name = deviceName.TrimEnd('\0');
         var identifier = string.IsNullOrEmpty(name) ? $"monitor-{ordinal}" : name;
         var label = primary ? $"Display {ordinal} (main)" : $"Display {ordinal}";
-        return new MonitorGeometry(
+        return new DisplayGeometry(
             identifier,
             label,
-            RectD.FromEdges(monitor.Left, monitor.Top, monitor.Right, monitor.Bottom),
-            RectD.FromEdges(work.Left, work.Top, work.Right, work.Bottom),
+            new RectD(monitor.Left, monitor.Top, monitor.Right - monitor.Left, monitor.Bottom - monitor.Top),
+            new RectD(work.Left, work.Top, work.Right - work.Left, work.Bottom - work.Top),
             dpi / 96.0,
-            primary);
+            OriginIsBottomLeft: false,
+            IsMain: primary);
     }
 
     [UnmanagedCallersOnly(CallConvs = [typeof(CallConvStdcall)])]

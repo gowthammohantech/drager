@@ -1,6 +1,6 @@
 using System.Text;
 using SpatialBridge.Core;
-using SpatialBridge.Platform.Windows.Contracts;
+using SpatialBridge.Core.Services;
 using SpatialBridge.Platform.Windows.Discovery;
 
 namespace SpatialBridge.Platform.Windows.Tests;

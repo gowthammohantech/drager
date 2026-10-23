@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 using SpatialBridge.Core;
-using SpatialBridge.Platform.Windows.Contracts;
+using SpatialBridge.Core.Transfer;
 using SpatialBridge.Platform.Windows.Interop;
 
 namespace SpatialBridge.Platform.Windows.Storage;
@@ -11,7 +11,8 @@ namespace SpatialBridge.Platform.Windows.Storage;
 /// <item><c>FlushFileBuffers</c> on the staged file.</item>
 /// <item>Mark-of-the-Web on the staged file, so the final name never exists without it.</item>
 /// <item><c>MoveFileEx</c> without <c>MOVEFILE_REPLACE_EXISTING</c>: the existence check and the rename are one
-/// atomic step; on collision the next candidate is tried.</item>
+/// atomic step. Core's <see cref="FileCommit.CommitWithCollisions"/> drives the candidates, so collisions get the
+/// same <c>stem 2.ext</c> names (and reserved-name mapping) as Swift and the portable committer.</item>
 /// <item>Across volumes the file is first copied to a hidden temporary inside the destination, then moved
 /// exclusively, so a partial copy never carries the final name.</item>
 /// </list>
@@ -44,7 +45,6 @@ public sealed class WindowsFileCommitter : IFileCommitter
             throw new BridgeException(BridgeErrorCode.DestinationPermissionExpired, "destination folder missing");
         }
 
-        var folder = Path.GetFullPath(destinationFolder);
         Flush(stagedPath);
         var marked = _markOfTheWeb && MarkOfTheWeb.TryApply(stagedPath);
 
@@ -52,43 +52,44 @@ public sealed class WindowsFileCommitter : IFileCommitter
         string? copiedTemporary = null;
         try
         {
-            for (var attempt = 1; attempt <= _maxAttempts; attempt++)
+            var final = FileCommit.CommitWithCollisions(stagedPath, destinationFolder, saveName, TryMove, _maxAttempts);
+            copiedTemporary = null;
+            if (_markOfTheWeb && !marked)
             {
-                var candidate = Path.Combine(folder, CollisionNames.Candidate(saveName, attempt));
-                EnsureDirectlyInside(candidate, folder);
-
-                if (NativeMethods.MoveFileEx(source, candidate, NativeMethods.MoveFileWriteThrough))
-                {
-                    copiedTemporary = null;
-                    if (_markOfTheWeb && !marked)
-                    {
-                        MarkOfTheWeb.TryApply(candidate);
-                    }
-                    return candidate;
-                }
-
-                var error = Marshal.GetLastPInvokeError();
-                switch (error)
-                {
-                    case NativeMethods.ErrorFileExists or NativeMethods.ErrorAlreadyExists:
-                        continue;
-                    case NativeMethods.ErrorNotSameDevice when copiedTemporary is null:
-                        copiedTemporary = CopyToTemporary(source, folder);
-                        TryDelete(stagedPath);
-                        source = copiedTemporary;
-                        attempt--; // retry the same candidate from the same-volume temporary
-                        continue;
-                    default:
-                        throw new BridgeException(Classify(error), $"MoveFileEx failed ({error})");
-                }
+                MarkOfTheWeb.TryApply(final);
             }
-            throw new BridgeException(BridgeErrorCode.WriteFailed, "too many name collisions");
+            return final;
         }
         finally
         {
             if (copiedTemporary is not null)
             {
                 TryDelete(copiedTemporary);
+            }
+        }
+
+        // Atomic, never-overwriting rename; false only when the candidate already exists.
+        bool TryMove(string _, string candidate)
+        {
+            while (true)
+            {
+                if (NativeMethods.MoveFileEx(source, candidate, NativeMethods.MoveFileWriteThrough))
+                {
+                    return true;
+                }
+                var error = Marshal.GetLastPInvokeError();
+                switch (error)
+                {
+                    case NativeMethods.ErrorFileExists or NativeMethods.ErrorAlreadyExists:
+                        return false;
+                    case NativeMethods.ErrorNotSameDevice when copiedTemporary is null:
+                        copiedTemporary = CopyToTemporary(source, Path.GetDirectoryName(candidate)!);
+                        TryDelete(stagedPath);
+                        source = copiedTemporary;
+                        continue; // retry the same candidate from the same-volume temporary
+                    default:
+                        throw new BridgeException(Classify(error), $"MoveFileEx failed ({error})");
+                }
             }
         }
     }
@@ -142,15 +143,6 @@ public sealed class WindowsFileCommitter : IFileCommitter
         {
             TryDelete(temporary);
             throw new BridgeException(BridgeException.Classify(error, networkContext: false), "cross-volume copy failed", error);
-        }
-    }
-
-    private static void EnsureDirectlyInside(string candidate, string folder)
-    {
-        var parent = Path.GetDirectoryName(Path.GetFullPath(candidate));
-        if (!string.Equals(Path.TrimEndingDirectorySeparator(parent ?? string.Empty), Path.TrimEndingDirectorySeparator(folder), StringComparison.OrdinalIgnoreCase))
-        {
-            throw new BridgeException(BridgeErrorCode.UnsupportedFile, "path escapes destination");
         }
     }
 

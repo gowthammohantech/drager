@@ -45,8 +45,8 @@ internal static class DiagnosticsExporter
                 json.WriteStartObject();
                 json.WriteNumber("width", monitor.Frame.Width);
                 json.WriteNumber("height", monitor.Frame.Height);
-                json.WriteNumber("scale", monitor.Scale);
-                json.WriteBoolean("primary", monitor.IsPrimary);
+                json.WriteNumber("scale", monitor.ScaleFactor);
+                json.WriteBoolean("primary", monitor.IsMain);
                 json.WriteEndObject();
             }
             json.WriteEndArray();

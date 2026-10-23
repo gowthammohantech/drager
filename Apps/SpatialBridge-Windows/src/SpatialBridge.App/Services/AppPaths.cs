@@ -9,6 +9,9 @@ internal static class AppPaths
 
     public static string HistoryFile => Path.Combine(DataDirectory, "history.json");
 
+    /// <summary>Core's trusted-peer metadata (no secrets; PSKs live in the DPAPI store).</summary>
+    public static string TrustedPeersFile => Path.Combine(DataDirectory, "trusted-peers.json");
+
     public static string DefaultDestination { get; } =
         Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Downloads");
 
