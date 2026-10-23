@@ -9,5 +9,6 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/SpatialBridge.Core.Tests/SpatialBridge.Core.Tests.csproj" />
+    <Project Path="tests/SpatialBridge.Platform.Windows.Tests/SpatialBridge.Platform.Windows.Tests.csproj" />
   </Folder>
 </Solution>

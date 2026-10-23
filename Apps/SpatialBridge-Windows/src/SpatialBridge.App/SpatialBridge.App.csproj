@@ -1,19 +1,39 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <!-- WinUI 3 tray receiver. Builds on Windows only (CI job `windows`). -->
+  <!-- WinUI 3 tray receiver. The UI is built in C# (no .xaml), so the C# compiles on any host;
+       running it, PRI generation and MSIX packaging need Windows (CI job `windows`). -->
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
     <RootNamespace>SpatialBridge.App</RootNamespace>
+    <AssemblyName>SpatialBridge.App</AssemblyName>
     <Platforms>x64;ARM64</Platforms>
     <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
-    <WindowsPackageType>None</WindowsPackageType>
+    <!-- Unpackaged by default; pass -p:WindowsPackageType=MSIX to build the package (Package.appxmanifest). -->
+    <WindowsPackageType Condition="'$(WindowsPackageType)' == ''">None</WindowsPackageType>
+    <WindowsAppSDKSelfContained Condition="'$(WindowsPackageType)' == 'None'">true</WindowsAppSDKSelfContained>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- User-facing dates and sizes follow the user's locale. -->
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <Version>0.1.0</Version>
   </PropertyGroup>
+  <!-- MakePri.exe and mt.exe are Windows binaries. On other hosts this allows a compile-only check of the C#;
+       the output is not runnable there. -->
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
+    <AppxGeneratePriEnabled>false</AppxGeneratePriEnabled>
+    <WindowsAppSDKSelfContained>false</WindowsAppSDKSelfContained>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Assets\*.png" CopyToOutputDirectory="PreserveNewest" />
+    <Manifest Include="$(ApplicationManifest)" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAppSDK" />
     <PackageReference Include="H.NotifyIcon.WinUI" />
+    <PackageReference Include="System.Drawing.Common" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SpatialBridge.Core\SpatialBridge.Core.csproj" />

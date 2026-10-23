@@ -55,8 +55,18 @@ public abstract record ReceiverEvent
     public sealed record PeerDisconnected(string PeerID) : ReceiverEvent;
 
     /// <summary>Raised on TRANSFER_ACCEPT; starts the arrival overlay. <see cref="Gesture"/> is null if the sender sent none.</summary>
-    public sealed record TransferIncoming(Guid TransferID, string PeerDisplayName, long ByteCount, ExitGesture? Gesture) : ReceiverEvent;
+    public sealed record TransferIncoming(Guid TransferID, string PeerDisplayName, long ByteCount, ExitGesture? Gesture) : ReceiverEvent
+    {
+        /// <summary>The offered (sanitized) filename, for the card icon only. Never log it.</summary>
+        public string? Filename { get; init; }
+
+        /// <summary>The offered UTI, e.g. <c>public.jpeg</c>.</summary>
+        public string? ContentType { get; init; }
+    }
     public sealed record TransferProgress(Guid TransferID, long ReceivedBytes, long TotalBytes) : ReceiverEvent;
+
+    /// <summary>All bytes arrived; the digest is being checked before the commit. Not a success state.</summary>
+    public sealed record TransferVerifying(Guid TransferID) : ReceiverEvent;
 
     /// <summary>The file is fsynced and renamed into the destination; COMMITTED is about to be sent.</summary>
     public sealed record TransferCommitted(Guid TransferID, string SavedPath, long ByteCount) : ReceiverEvent;

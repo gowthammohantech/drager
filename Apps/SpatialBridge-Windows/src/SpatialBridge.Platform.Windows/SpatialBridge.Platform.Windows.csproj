@@ -1,11 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <!-- Windows services: DNS-SD advertising, DPAPI secrets, atomic commit, Mark-of-the-Web. -->
+  <!-- Windows services: DNS-SD advertising, DPAPI secrets, atomic commit, Mark-of-the-Web,
+       monitor geometry and firewall-profile detection. Compiles on any host (EnableWindowsTargeting);
+       the P/Invoke paths only run on Windows. -->
   <PropertyGroup>
     <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
+    <RootNamespace>SpatialBridge.Platform.Windows</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\SpatialBridge.Core\SpatialBridge.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="SpatialBridge.Platform.Windows.Tests" />
   </ItemGroup>
 </Project>
