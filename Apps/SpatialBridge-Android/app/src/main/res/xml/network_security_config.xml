@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Default-secure: no cleartext HTTP anywhere. The app's pairing and session traffic uses raw
+     sockets (pairing is plain TCP with its own authenticated key exchange, sessions are TLS-PSK),
+     which this policy does not govern. -->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+</network-security-config>
