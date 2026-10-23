@@ -1,6 +1,9 @@
 package com.spatialbridge.core
 
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import java.util.UUID
 
 /** Platform values carried in HELLO and TXT `plat` (ADR-015). Unknown values are kept as-is. */
 @JvmInline
@@ -66,11 +69,33 @@ sealed interface PairingState {
     data object Connecting : PairingState
 
     /** Show [code] and ask the user whether it matches the receiver's screen. */
-    data class CompareCode(val peerName: String, val code: String) : PairingState
+    data class CompareCode(
+        val peerName: String,
+        val code: String,
+        val platform: DevicePlatform? = null,
+        /** `ab12 cd34 ef56 7890`: the receiver's key fingerprint. */
+        val fingerprint: String? = null,
+    ) : PairingState
     data object WaitingForPeer : PairingState
     data class Paired(val peerID: String) : PairingState
     data class Failed(val code: BridgeErrorCode) : PairingState
 }
+
+/** A paired receiver, shown even while it is offline. */
+data class TrustedPeerInfo(val peerID: String, val displayName: String, val platform: DevicePlatform)
+
+/** Link to the preferred receiver. */
+data class ConnectionStatus(
+    val state: State = State.IDLE,
+    val peerID: String? = null,
+    val lastError: BridgeErrorCode? = null,
+) {
+    enum class State { IDLE, DISCOVERING, PAIRING, AUTHENTICATING, CONNECTED, RECONNECTING, DISCONNECTED }
+}
+
+private val idleTrusted = MutableStateFlow<List<TrustedPeerInfo>>(emptyList()).asStateFlow()
+private val idleDiscoveryError = MutableStateFlow<BridgeErrorCode?>(null).asStateFlow()
+private val idleConnection = MutableStateFlow(ConnectionStatus()).asStateFlow()
 
 /**
  * Everything the Android UI needs from the protocol core. The app shell is built against a fake
@@ -92,4 +117,23 @@ interface SenderFacade {
 
     suspend fun unpair(peerID: String)
     fun setPreferredPeer(peerID: String?)
+
+    // Additions for XP2a. Defaults keep older implementations (fakes) compiling.
+
+    /** Paired receivers, including offline ones. */
+    val trustedPeers: StateFlow<List<TrustedPeerInfo>> get() = idleTrusted
+
+    /** E001 when local-network access is denied, other discovery failures, or null. */
+    val discoveryError: StateFlow<BridgeErrorCode?> get() = idleDiscoveryError
+
+    val connection: StateFlow<ConnectionStatus> get() = idleConnection
+
+    /** Abandons a pairing in progress; the receiver is told it was rejected. */
+    fun cancelPairing() = answerPairing(false)
+
+    /**
+     * Like [send] with an explicit transfer ID. A retry of the same user activation reuses the ID, so
+     * a receiver that already committed it answers COMMITTED and saves no second copy.
+     */
+    suspend fun send(file: OutgoingFile, gesture: ExitGesture?, peerID: String?, transferID: UUID) = send(file, gesture, peerID)
 }
