@@ -14,6 +14,8 @@ android {
         versionCode = 1
         versionName = "0.1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // The emulator E2E needs `sb-swift serve` on the host; app/e2e/emulator-e2e.sh runs it.
+        testInstrumentationRunnerArguments["notAnnotation"] = "com.spatialbridge.android.HostReceiverTest"
     }
 
     compileOptions {

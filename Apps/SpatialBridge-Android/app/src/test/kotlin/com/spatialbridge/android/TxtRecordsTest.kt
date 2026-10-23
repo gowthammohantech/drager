@@ -1,10 +1,13 @@
 package com.spatialbridge.android
 
-import com.spatialbridge.android.platform.PeerMerger
-import com.spatialbridge.android.platform.ServiceInstance
-import com.spatialbridge.android.platform.ServiceRole
+import com.spatialbridge.android.platform.ManualEndpoint
+import com.spatialbridge.android.platform.NsdSink
+import com.spatialbridge.android.platform.PeerBrowser
 import com.spatialbridge.android.platform.TxtRecordParser
+import com.spatialbridge.core.BridgeErrorCode
 import com.spatialbridge.core.DevicePlatform
+import com.spatialbridge.core.service.DiscoveryState
+import com.spatialbridge.core.service.ServiceRole
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -54,46 +57,84 @@ class TxtRecordsTest {
         assertNull(TxtRecordParser.parse(attrs("pv" to "one")).protocolVersion)
     }
 
-    private fun instance(name: String, role: String, peer: String? = pid, display: String? = "Studio", port: Int = 5000) =
-        ServiceInstance(name, "192.168.1.5", port, TxtRecordParser.parse(attrs("pid" to peer, "name" to display, "plat" to "windows", "pv" to "1", "role" to role)))
+    private fun service(name: String, role: String, peer: String? = pid, display: String? = "Studio", port: Int = 5000) =
+        TxtRecordParser.resolvedService(
+            name, "192.168.1.5", port,
+            TxtRecordParser.parse(attrs("pid" to peer, "name" to display, "plat" to "windows", "pv" to "1", "role" to role)),
+        )
+
+    private class FakeBrowser(val sink: NsdSink) : PeerBrowser {
+        var running = false
+        override fun start() { running = true }
+        override fun stop() { running = false }
+    }
+
+    private fun locator(memory: ManualPeerMemory = InMemoryManualPeerMemory()): Pair<AppPeerLocator, () -> FakeBrowser> {
+        var browser: FakeBrowser? = null
+        val locator = AppPeerLocator(memory) { sink -> FakeBrowser(sink).also { browser = it } }
+        return locator to { browser!! }
+    }
 
     @Test fun mergesSessionAndPairingByPid() {
-        val merged = PeerMerger.merge(listOf(instance("Studio-pair", "pairing", port = 5001), instance("Studio", "session", port = 5000)), trusted = emptySet())
-        assertEquals(1, merged.size)
-        val peer = merged.single()
-        assertEquals(pid, peer.peer.peerID)
-        assertEquals("Studio", peer.peer.displayName)
-        assertEquals(DevicePlatform.WINDOWS, peer.peer.platform)
-        assertTrue(peer.peer.pairingAvailable)
-        assertFalse(peer.peer.isTrusted)
-        assertEquals(5000, peer.endpoints[ServiceRole.SESSION]!!.port)
-        assertEquals(5001, peer.endpoints[ServiceRole.PAIRING]!!.port)
+        val (locator, _) = locator()
+        locator.start()
+        locator.resolved(service("Studio-pair", "pairing", port = 5001)!!)
+        locator.resolved(service("Studio", "session", port = 5000)!!)
+        val peer = locator.peers.value.single()
+        assertEquals(pid, peer.id)
+        assertEquals("Studio", peer.displayName)
+        assertEquals(DevicePlatform.WINDOWS, peer.platform)
+        assertEquals(setOf(ServiceRole.SESSION, ServiceRole.PAIRING), peer.roles)
+        assertEquals(5000, locator.endpoint(pid, ServiceRole.SESSION)!!.port)
+        assertEquals(5001, locator.endpoint(pid, ServiceRole.PAIRING)!!.port)
+        locator.lost("Studio-pair")
+        assertNull(locator.endpoint(pid, ServiceRole.PAIRING))
     }
 
-    @Test fun trustComesFromStoreNotTxt() {
-        val merged = PeerMerger.merge(listOf(instance("Studio", "session")), trusted = setOf(pid))
-        assertTrue(merged.single().peer.isTrusted)
-        assertFalse(merged.single().peer.pairingAvailable)
+    @Test fun startAndStopDriveTheBrowser() {
+        val (locator, browser) = locator()
+        locator.start()
+        assertTrue(browser().running)
+        locator.stop()
+        assertFalse(browser().running)
     }
 
-    @Test fun dropsInstancesWithoutValidPidAndOwnAdvertisement() {
-        val other = "fedcba9876543210fedcba9876543210"
-        val merged = PeerMerger.merge(
-            listOf(instance("Bad", "session", peer = "nope"), instance("Me", "session", peer = other), instance("Studio", "session")),
-            trusted = emptySet(), excludePeerID = other,
-        )
-        assertEquals(listOf(pid), merged.map { it.peer.peerID })
+    @Test fun ignoresInstancesWithoutAddress() {
+        assertNull(service("Office PC", "session", display = null, port = 0))
+        assertNull(TxtRecordParser.resolvedService("x", null, 5000, TxtRecordParser.parse(emptyMap())))
     }
 
-    @Test fun separatePeersStaySeparateAndSorted() {
-        val other = "fedcba9876543210fedcba9876543210"
-        val merged = PeerMerger.merge(listOf(instance("Z", "session", display = "zeta"), instance("A", "session", peer = other, display = "Alpha")), emptySet())
-        assertEquals(listOf("Alpha", "zeta"), merged.map { it.peer.displayName })
+    @Test fun nsdFailureReportsE001WithoutManualEndpoint() {
+        val (locator, browser) = locator()
+        locator.start()
+        browser().sink.failed(BridgeErrorCode.LOCAL_NETWORK_DENIED)
+        assertEquals(DiscoveryState.Waiting(BridgeErrorCode.LOCAL_NETWORK_DENIED), locator.state.value)
     }
 
-    @Test fun fallsBackToServiceNameAndIgnoresBadPorts() {
-        val merged = PeerMerger.merge(listOf(instance("Office PC", "session", display = null, port = 0)), emptySet())
-        assertEquals("Office PC", merged.single().peer.displayName)
-        assertTrue(merged.single().endpoints.isEmpty())
+    @Test fun manualEndpointIsNotBlockedByNsdFailureAndRekeysAfterPairing() {
+        val memory = InMemoryManualPeerMemory()
+        val (locator, browser) = locator(memory)
+        locator.start()
+        browser().sink.failed(BridgeErrorCode.LOCAL_NETWORK_DENIED)
+        val target = ManualEndpoint.parse("10.0.2.2:52000/52001")!!
+        locator.setManual(target)
+        assertEquals(DiscoveryState.Browsing, locator.state.value)
+        browser().sink.failed(BridgeErrorCode.LOCAL_NETWORK_DENIED)
+        assertEquals(DiscoveryState.Browsing, locator.state.value)
+
+        val provisional = locator.peers.value.single().id
+        assertEquals(target.locatorID, provisional)
+        assertEquals(52000, locator.endpoint(provisional, ServiceRole.PAIRING)!!.port)
+        locator.didPair(provisional, pid)
+        assertEquals(pid, locator.peers.value.single().id)
+        assertEquals(52001, locator.endpoint(pid, ServiceRole.SESSION)!!.port)
+        assertEquals(pid, memory.peerID(target))
+
+        // A restarted app keys the same address by the remembered peer ID straight away.
+        val (again, _) = locator(memory)
+        again.setManual(target)
+        assertEquals(pid, again.peers.value.single().id)
+        again.setManual(null)
+        assertTrue(again.peers.value.isEmpty())
     }
 }

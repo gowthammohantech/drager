@@ -11,34 +11,39 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.spatialbridge.android.diagnostics.BridgeLog
 import com.spatialbridge.core.BridgeErrorCode
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import com.spatialbridge.core.service.ResolvedService
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 
+/** Where resolved instances go: core's `ResolvedPeerLocator` merges them by TXT `pid`. */
+interface NsdSink {
+    fun resolved(service: ResolvedService)
+    fun lost(instanceName: String)
+
+    /** E001 when browsing is impossible (no Wi-Fi/Ethernet, permission denied, NSD refused). */
+    fun failed(code: BridgeErrorCode)
+}
+
+/** Starts and stops a network browser that reports into an [NsdSink]. */
+interface PeerBrowser {
+    fun start()
+    fun stop()
+}
+
 /**
- * Browses `_spatialbridge._tcp` with NsdManager and merges each receiver's session and pairing
- * instances by `pid`. Holds a Wi-Fi multicast lock while browsing. Not wired yet: XP2a feeds
- * [peers] into core's SenderService.
+ * Browses `_spatialbridge._tcp` with NsdManager and reports each resolved instance to [sink].
+ * Holds a Wi-Fi multicast lock while browsing. Never logs names, addresses or TXT values.
  */
 class NsdPeerDiscovery(
     context: Context,
-    private val trustedPeerIDs: () -> Set<String>,
-    private val ownPeerID: String? = null,
-) {
+    private val sink: NsdSink,
+) : PeerBrowser {
     private val app = context.applicationContext
     private val nsd = app.getSystemService(NsdManager::class.java)
     private val wifi = app.getSystemService(WifiManager::class.java)
     private val connectivity = app.getSystemService(ConnectivityManager::class.java)
     private val executor = Executors.newSingleThreadExecutor()
 
-    private val _peers = MutableStateFlow<List<ResolvedPeer>>(emptyList())
-    val peers: StateFlow<List<ResolvedPeer>> = _peers.asStateFlow()
-    private val _error = MutableStateFlow<BridgeErrorCode?>(null)
-    val error: StateFlow<BridgeErrorCode?> = _error.asStateFlow()
-
-    private val resolved = ConcurrentHashMap<String, ServiceInstance>()
     private val callbacks = ConcurrentHashMap<String, Any>()
     private val pending = ArrayDeque<NsdServiceInfo>()
     private var resolving = false
@@ -46,11 +51,10 @@ class NsdPeerDiscovery(
     private var multicastLock: WifiManager.MulticastLock? = null
 
     @Synchronized
-    fun start() {
+    override fun start() {
         if (listener != null) return
-        _error.value = null
         if (!hasLocalNetwork()) {
-            _error.value = BridgeErrorCode.LOCAL_NETWORK_DENIED
+            sink.failed(BridgeErrorCode.LOCAL_NETWORK_DENIED)
             return
         }
         try {
@@ -72,7 +76,7 @@ class NsdPeerDiscovery(
     }
 
     @Synchronized
-    fun stop() {
+    override fun stop() {
         listener?.let { runCatching { nsd.stopServiceDiscovery(it) } }
         listener = null
         if (Build.VERSION.SDK_INT >= 34) {
@@ -84,12 +88,9 @@ class NsdPeerDiscovery(
         multicastLock = null
     }
 
-    /** Re-evaluates trust after pairing or unpairing without re-browsing. */
-    fun refreshTrust() = publish()
-
     private fun fail(code: BridgeErrorCode) {
-        _error.value = code
         stop()
+        sink.failed(code)
     }
 
     private fun hasLocalNetwork(): Boolean {
@@ -112,11 +113,10 @@ class NsdPeerDiscovery(
         }
         override fun onServiceLost(info: NsdServiceInfo) {
             val name = info.serviceName
-            resolved.remove(name)
             if (Build.VERSION.SDK_INT >= 34) {
                 (callbacks.remove(name) as? NsdManager.ServiceInfoCallback)?.let { runCatching { nsd.unregisterServiceInfoCallback(it) } }
             }
-            publish()
+            sink.lost(name)
         }
     }
 
@@ -131,7 +131,7 @@ class NsdPeerDiscovery(
                 val host = serviceInfo.hostAddresses.firstOrNull()?.hostAddress
                 record(serviceInfo, host)
             }
-            override fun onServiceLost() { resolved.remove(name); publish() }
+            override fun onServiceLost() = sink.lost(name)
             override fun onServiceInfoCallbackUnregistered() = Unit
         }
         callbacks[name] = cb
@@ -167,11 +167,6 @@ class NsdPeerDiscovery(
 
     private fun record(info: NsdServiceInfo, host: String?) {
         val txt = TxtRecordParser.parse(info.attributes.orEmpty())
-        resolved[info.serviceName] = ServiceInstance(info.serviceName, host, info.port, txt)
-        publish()
-    }
-
-    private fun publish() {
-        _peers.value = PeerMerger.merge(resolved.values.toList(), trustedPeerIDs(), ownPeerID)
+        TxtRecordParser.resolvedService(info.serviceName, host, info.port, txt)?.let(sink::resolved)
     }
 }

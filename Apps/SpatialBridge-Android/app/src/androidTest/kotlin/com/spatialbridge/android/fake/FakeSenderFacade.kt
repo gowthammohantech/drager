@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 /**
  * Scripted stand-in for core's SenderService (lane AU). Discovery yields [Script.peers] after a delay,
  * pairing shows [Script.sasCode], and a send walks Connecting → Offering → Sending → AwaitingCommit →
- * Committed unless [Script.transferFailure] says otherwise. Replaced by the real core in XP2a.
+ * Committed unless [Script.transferFailure] says otherwise. UI tests only: production uses core's SenderService.
  */
 class FakeSenderFacade(
     private val scope: CoroutineScope,

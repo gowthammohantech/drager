@@ -5,7 +5,6 @@ import com.spatialbridge.android.content.ContentImporter
 import com.spatialbridge.android.content.ImportResult
 import com.spatialbridge.android.content.StagedItem
 import com.spatialbridge.android.diagnostics.BridgeLog
-import com.spatialbridge.android.gesture.GestureConfiguration
 import com.spatialbridge.android.gesture.GestureEngineFactory
 import com.spatialbridge.android.model.TransferPhase
 import com.spatialbridge.android.model.TransferUi
@@ -21,6 +20,7 @@ import com.spatialbridge.core.ExitGesture
 import com.spatialbridge.core.PairingState
 import com.spatialbridge.core.SenderFacade
 import com.spatialbridge.core.TransferState
+import com.spatialbridge.core.gesture.GestureConfiguration
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -29,9 +29,11 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 /** Pairing sheet content. `null` while the sheet is hidden. */
 data class PairingSheetState(val peerName: String, val state: PairingState)
@@ -45,6 +47,8 @@ private data class ActiveTransfer(
     val preparing: Boolean = true,
     val localFailure: BridgeErrorCode? = null,
     val recorded: Boolean = false,
+    /** The facade's terminal state read when `send` returned (see [AppModel.transferUi]). */
+    val finished: TransferState? = null,
 )
 
 /**
@@ -59,14 +63,19 @@ class AppModel(
     val gestureEngines: GestureEngineFactory,
     private val scope: CoroutineScope,
     private val clock: () -> Long = System::currentTimeMillis,
+    /** Where pairing and unpairing run (crypto, socket and key-store work). Production passes `Dispatchers.Default`. */
+    private val work: CoroutineContext = EmptyCoroutineContext,
 ) {
     val settings: StateFlow<AppSettings> = settingsStore.settings
     val peers: StateFlow<List<DiscoveredPeer>> = facade.peers
     val history: StateFlow<List<TransferRecord>> = historyStore.records
 
-    val trustedPeers: StateFlow<List<DiscoveredPeer>> = facade.peers
-        .map { list -> list.filter { it.isTrusted } }
-        .stateIn(scope, SharingStarted.Eagerly, emptyList())
+    /** Paired receivers: the visible ones from discovery, then offline ones from the trust store. */
+    val trustedPeers: StateFlow<List<DiscoveredPeer>> = combine(facade.peers, facade.trustedPeers) { visible, stored ->
+        val online = visible.filter { it.isTrusted }
+        online + stored.filter { s -> online.none { it.peerID == s.peerID } }
+            .map { DiscoveredPeer(it.peerID, it.displayName, it.platform, isTrusted = true, pairingAvailable = false) }
+    }.stateIn(scope, SharingStarted.Eagerly, emptyList())
 
     private val _staged = MutableStateFlow<StagedItem?>(null)
     val staged: StateFlow<StagedItem?> = _staged.asStateFlow()
@@ -77,7 +86,9 @@ class AppModel(
 
     /** Set when the runtime local-network permission is denied or the network is unavailable (E001). */
     private val _localNetworkDenied = MutableStateFlow(false)
-    val localNetworkDenied: StateFlow<Boolean> = _localNetworkDenied.asStateFlow()
+    val localNetworkDenied: StateFlow<Boolean> = combine(_localNetworkDenied, facade.discoveryError) { denied, error ->
+        denied || error == BridgeErrorCode.LOCAL_NETWORK_DENIED
+    }.stateIn(scope, SharingStarted.Eagerly, false)
 
     private val pairingPeer = MutableStateFlow<DiscoveredPeer?>(null)
     val pairingSheet: StateFlow<PairingSheetState?> = combine(pairingPeer, facade.pairing) { peer, state ->
@@ -90,11 +101,16 @@ class AppModel(
      * What the transfer card shows. Until the facade publishes a state *newer than* [ActiveTransfer.baseline]
      * the card says "Preparing", so a stale `Committed` from the last transfer can never flash success for
      * this one. Success itself comes only from [TransferUiMapper] on [TransferState.Committed].
+     *
+     * StateFlow collectors skip values *equal* to the last one they saw, so a second transfer that ends in
+     * the same `Failed(code)` as the baseline would never be observed through the flow. The terminal state
+     * read when `send` returns ([ActiveTransfer.finished]) covers that case.
      */
     val transferUi: StateFlow<TransferUi> = combine(active, facade.transfer) { a, state ->
         when {
             a == null -> TransferUi.IDLE
             a.localFailure != null -> TransferUiMapper.map(TransferState.Failed(a.localFailure), a.item.displayName, a.peerName)
+            a.finished != null -> TransferUiMapper.map(a.finished, a.item.displayName, a.peerName)
             a.preparing || state === a.baseline ->
                 TransferUiMapper.map(TransferState.Idle, a.item.displayName, a.peerName, preparing = true)
             else -> TransferUiMapper.map(state, a.item.displayName, a.peerName)
@@ -150,7 +166,7 @@ class AppModel(
         pairingPeer.value = peer
         pairingJob = scope.launch {
             try {
-                facade.pair(peer.peerID)
+                withContext(work) { facade.pair(peer.peerID) }
                 val state = facade.pairing.value
                 if (state is PairingState.Paired) {
                     if (settings.value.preferredPeerID == null) setPreferred(state.peerID)
@@ -167,7 +183,7 @@ class AppModel(
     fun answerPairing(codesMatch: Boolean) = facade.answerPairing(codesMatch)
 
     fun cancelPairing() {
-        if (facade.pairing.value is PairingState.CompareCode) facade.answerPairing(false)
+        facade.cancelPairing()
         pairingJob?.cancel()
         pairingJob = null
         pairingPeer.value = null
@@ -179,7 +195,7 @@ class AppModel(
 
     fun unpair(peerID: String) {
         scope.launch {
-            facade.unpair(peerID)
+            withContext(work) { facade.unpair(peerID) }
             if (settings.value.preferredPeerID == peerID) setPreferred(trustedPeers.value.firstOrNull { it.peerID != peerID }?.peerID)
         }
     }
@@ -260,6 +276,9 @@ class AppModel(
             active.value = active.value?.copy(preparing = false)
             try {
                 facade.send(item.file, gesture, peer?.peerID)
+                val final = facade.transfer.value
+                val terminal = final is TransferState.Committed || final is TransferState.Failed
+                if (terminal && final !== active.value?.baseline) active.value = active.value?.copy(finished = final)
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
@@ -306,7 +325,7 @@ class AppModel(
     /** Unpairs everything, clears history, staged files and settings (Settings › Reset). */
     fun resetEverything() {
         scope.launch {
-            trustedPeers.value.forEach { facade.unpair(it.peerID) }
+            withContext(work) { trustedPeers.value.forEach { facade.unpair(it.peerID) } }
             historyStore.clear()
             importer.clear()
             _staged.value = null

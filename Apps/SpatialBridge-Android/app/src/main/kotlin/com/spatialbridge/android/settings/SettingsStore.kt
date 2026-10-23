@@ -16,7 +16,7 @@ data class AppSettings(
     val gestureSensitivity: Double = 1.0,
     val preferredPeerID: String? = null,
     val keepHistory: Boolean = true,
-    /** Debug builds only: `host:port` to bypass discovery (emulator → `10.0.2.2`). */
+    /** Debug builds only: `host:pairingPort/sessionPort` to bypass discovery (emulator → `10.0.2.2`). */
     val manualEndpoint: String? = null,
 )
 

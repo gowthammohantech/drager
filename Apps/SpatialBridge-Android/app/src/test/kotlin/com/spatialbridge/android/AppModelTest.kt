@@ -4,7 +4,7 @@ import android.net.Uri
 import com.spatialbridge.android.content.ContentImporter
 import com.spatialbridge.android.content.ImportResult
 import com.spatialbridge.android.content.StagedItem
-import com.spatialbridge.android.gesture.PlaceholderGestureEngine
+import com.spatialbridge.android.gesture.GestureEngineFactory
 import com.spatialbridge.android.model.PhonePlacement
 import com.spatialbridge.android.model.SpatialLayout
 import com.spatialbridge.android.model.TransferPhase
@@ -38,11 +38,12 @@ private class ManualFacade : SenderFacade {
     override val transfer = MutableStateFlow<TransferState>(TransferState.Idle)
     var sends = 0
     var lastGesture: ExitGesture? = null
+    var onSend: () -> Unit = {}
     override fun startDiscovery() = Unit
     override fun stopDiscovery() = Unit
     override suspend fun pair(peerID: String) = Unit
     override fun answerPairing(codesMatch: Boolean) = Unit
-    override suspend fun send(file: OutgoingFile, gesture: ExitGesture?, peerID: String?) { sends++; lastGesture = gesture }
+    override suspend fun send(file: OutgoingFile, gesture: ExitGesture?, peerID: String?) { sends++; lastGesture = gesture; onSend() }
     override fun cancelTransfer() { transfer.value = TransferState.Failed(BridgeErrorCode.TRANSFER_CANCELED) }
     override suspend fun unpair(peerID: String) = Unit
     override fun setPreferredPeer(peerID: String?) = Unit
@@ -60,9 +61,26 @@ class AppModelTest {
     private fun setup(scope: kotlinx.coroutines.CoroutineScope, settings: AppSettings = AppSettings()): Triple<AppModel, ManualFacade, InMemoryHistoryStore> {
         val facade = ManualFacade()
         val history = InMemoryHistoryStore()
-        val model = AppModel(facade, InMemorySettingsStore(settings), history, NoImporter, PlaceholderGestureEngine.factory, scope)
+        val model = AppModel(facade, InMemorySettingsStore(settings), history, NoImporter, GestureEngineFactory.core(), scope)
         model.stage(item)
         return Triple(model, facade, history)
+    }
+
+    @Test fun repeatedIdenticalFailureIsStillShown() = runTest(UnconfinedTestDispatcher()) {
+        val (model, facade, history) = setup(backgroundScope)
+        // A real facade publishes from another thread; this one finishes before the UI flow can observe
+        // the steps, and both transfers end in an *equal* Failed(E006), which StateFlow conflates.
+        facade.onSend = {
+            facade.transfer.value = TransferState.Connecting
+            facade.transfer.value = TransferState.Failed(BridgeErrorCode.UNSUPPORTED_FILE)
+        }
+        model.send(null)
+        assertEquals(TransferPhase.FAILED, model.transferUi.value.phase)
+        model.dismissTransfer()
+        model.send(null)
+        assertEquals(TransferPhase.FAILED, model.transferUi.value.phase)
+        assertEquals(BridgeErrorCode.UNSUPPORTED_FILE, model.transferUi.value.error)
+        assertEquals(2, history.records.value.size)
     }
 
     @Test fun successOnlyAfterCommitted() = runTest(UnconfinedTestDispatcher()) {

@@ -9,25 +9,40 @@ import androidx.activity.viewModels
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.spatialbridge.android.content.CacheContentImporter
-import com.spatialbridge.android.fake.FakeSenderFacade
-import com.spatialbridge.android.gesture.PlaceholderGestureEngine
+import com.spatialbridge.android.gesture.GestureEngineFactory
 import com.spatialbridge.android.settings.SharedPreferencesHistoryStore
 import com.spatialbridge.android.settings.SharedPreferencesSettingsStore
 import com.spatialbridge.android.ui.SpatialBridgeApp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
-/** Owns the [AppModel] across configuration changes. XP2a swaps [FakeSenderFacade] for core's SenderService. */
+/**
+ * Owns the [AppGraph] (core's SenderService) and the [AppModel] across configuration changes, so a
+ * transfer in flight survives rotation. Torn down only when the activity finishes for good.
+ */
 class MainViewModel(application: Application) : AndroidViewModel(application) {
+    private val graph = AppGraph(application)
     val model = AppModel(
-        facade = FakeSenderFacade(viewModelScope),
+        facade = graph.sender,
         settingsStore = SharedPreferencesSettingsStore(application),
         historyStore = SharedPreferencesHistoryStore(application),
         importer = CacheContentImporter(application),
-        gestureEngines = PlaceholderGestureEngine.factory,
+        gestureEngines = GestureEngineFactory.core(),
         scope = viewModelScope,
+        work = Dispatchers.Default,
     )
+
+    init {
+        viewModelScope.launch {
+            model.settings.map { it.manualEndpoint }.distinctUntilChanged().collect(graph::applyManualEndpoint)
+        }
+    }
 
     override fun onCleared() {
         model.stop()
+        graph.close()
     }
 }
 

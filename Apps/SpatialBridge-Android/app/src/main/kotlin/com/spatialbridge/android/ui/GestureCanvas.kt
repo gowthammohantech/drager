@@ -53,12 +53,11 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.spatialbridge.android.AppModel
-import com.spatialbridge.android.gesture.GestureConfiguration
-import com.spatialbridge.android.gesture.GestureEngine
 import com.spatialbridge.android.gesture.GestureEngineFactory
-import com.spatialbridge.android.gesture.GesturePhase
-import com.spatialbridge.android.gesture.GestureRejection
-import com.spatialbridge.android.gesture.GestureSample
+import com.spatialbridge.core.gesture.GestureConfiguration
+import com.spatialbridge.core.gesture.GesturePhase
+import com.spatialbridge.core.gesture.GestureRejection
+import com.spatialbridge.core.gesture.GestureSample
 import com.spatialbridge.android.model.displayName
 import com.spatialbridge.android.model.isHorizontal
 import com.spatialbridge.core.Edge
@@ -67,7 +66,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
- * Drives a [GestureEngine] from Compose `pointerInput` (FR-103, FR-104). Positions are converted to dp
+ * Drives core's `SpatialGestureEngine` from Compose `pointerInput` (FR-103, FR-104). Positions are converted to dp
  * and passed as points with a top-left origin. The card follows the finger; entering the edge zone
  * while moving outward arms the gesture (glow + haptic); a qualifying release fires exactly once per
  * drag (FR-108). Everything else springs back.
@@ -104,7 +103,7 @@ fun ThrowSurface(
                     awaitEachGesture {
                         val down = awaitFirstDown()
                         if (!currentEnabled) return@awaitEachGesture
-                        fun sample(p: Offset, t: Long) = with(density) { GestureSample(p.x.toDp().value.toDouble(), p.y.toDp().value.toDouble(), t) }
+                        fun sample(p: Offset, t: Long) = with(density) { GestureSample.fromDp(p.x.toDp().value, p.y.toDp().value, t) }
                         val engine = engines.create(
                             configuration,
                             with(density) { widthPx.toDp().value.toDouble() },

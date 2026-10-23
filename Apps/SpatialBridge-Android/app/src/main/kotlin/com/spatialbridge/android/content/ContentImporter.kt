@@ -6,10 +6,13 @@ import android.provider.OpenableColumns
 import com.spatialbridge.android.diagnostics.BridgeLog
 import com.spatialbridge.android.diagnostics.Redaction
 import com.spatialbridge.core.OutgoingFile
+import com.spatialbridge.core.transfer.FilenameSanitizer
+import com.spatialbridge.core.transfer.UtiMap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.io.InputStream
 import java.util.UUID
 import kotlin.coroutines.coroutineContext
 
@@ -40,13 +43,26 @@ interface ContentImporter {
 }
 
 /**
+ * The name and type offered for a picked item: core's [UtiMap] (extension, then MIME, then
+ * `public.data`) and [FilenameSanitizer]. The offered name is exactly the sanitizer's output, so the
+ * extension is lowercase (`IMG.JPG` → `IMG.jpg`); receivers reject anything else with E006.
+ */
+object OfferNaming {
+    data class Offer(val name: String, val contentType: String)
+
+    fun offer(rawName: String?, mimeType: String?): Offer {
+        val provisional = rawName ?: "Item"
+        val uti = UtiMap.resolve(provisional, mimeType)
+        return Offer(FilenameSanitizer.sanitize(provisional, uti), uti)
+    }
+}
+
+/**
  * Copies picker/SAF content into `cacheDir/outgoing/<uuid>/` on [Dispatchers.IO]: the core reads a
  * stable local file, and the content URI grant can lapse without breaking a retry.
  */
 class CacheContentImporter(
     private val context: Context,
-    private val utis: UtiResolver = PlaceholderUtiResolver,
-    private val names: FilenameRules = PlaceholderFilenameRules(utis),
     private val maxBytes: Long = MAX_FILE_BYTES,
 ) : ContentImporter {
     private val root: File get() = File(context.cacheDir, "outgoing")
@@ -67,14 +83,27 @@ class CacheContentImporter(
         }
         if (declaredSize > maxBytes) return@withContext ImportResult.TooLarge
         val mime = runCatching { resolver.getType(uri) }.getOrNull()
-        val provisional = rawName ?: "Item"
-        val uti = utis.resolve(provisional, mime)
-        val name = names.sanitize(provisional, uti)
+        val input = try {
+            resolver.openInputStream(uri)
+        } catch (e: java.io.IOException) {
+            BridgeLog.warn("Import failed: ${e.javaClass.simpleName}")
+            null
+        } catch (e: SecurityException) {
+            BridgeLog.warn("Import denied: ${e.javaClass.simpleName}")
+            null
+        } ?: return@withContext ImportResult.Unreadable
+        importStream(input, rawName, mime)
+    }
+
+    /** Stages [input] (closed afterwards) under the sanitized form of [rawName]. Runs on [Dispatchers.IO]. */
+    suspend fun importStream(input: InputStream, rawName: String?, mime: String?): ImportResult = withContext(Dispatchers.IO) {
+        val offer = OfferNaming.offer(rawName, mime)
+        val name = offer.name
+        val uti = offer.contentType
         val dir = File(root, UUID.randomUUID().toString()).apply { mkdirs() }
         val target = File(dir, name)
         try {
             var copied = 0L
-            val input = resolver.openInputStream(uri) ?: return@withContext ImportResult.Unreadable
             input.use { source ->
                 target.outputStream().use { sink ->
                     val buffer = ByteArray(256 * 1024)

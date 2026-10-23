@@ -20,7 +20,7 @@ import com.spatialbridge.android.content.ContentImporter
 import com.spatialbridge.android.content.ImportResult
 import com.spatialbridge.android.content.StagedItem
 import com.spatialbridge.android.fake.FakeSenderFacade
-import com.spatialbridge.android.gesture.PlaceholderGestureEngine
+import com.spatialbridge.android.gesture.GestureEngineFactory
 import com.spatialbridge.android.settings.AppSettings
 import com.spatialbridge.android.settings.InMemoryHistoryStore
 import com.spatialbridge.android.settings.InMemorySettingsStore
@@ -72,7 +72,7 @@ class SenderFlowTest {
     private fun launch(script: FakeSenderFacade.Script, settings: AppSettings = AppSettings()): AppModel {
         val model = AppModel(
             FakeSenderFacade(scope, script), InMemorySettingsStore(settings), InMemoryHistoryStore(), NoImporter,
-            PlaceholderGestureEngine.factory, scope,
+            GestureEngineFactory.core(), scope,
         )
         if (settings.hasCompletedOnboarding) model.start()
         compose.setContent { SpatialBridgeApp(model) }

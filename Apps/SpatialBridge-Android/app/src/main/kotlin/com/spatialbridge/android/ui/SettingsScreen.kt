@@ -184,7 +184,7 @@ private fun SensitivityPreview(model: AppModel) {
     }
 }
 
-/** Debug builds only: connect to `host:port` directly, e.g. `10.0.2.2:PORT` from the emulator. */
+/** Debug builds only: connect directly to `host:pairingPort/sessionPort`, e.g. `10.0.2.2:52000/52001` from the emulator. */
 @Composable
 private fun ManualEndpointField(current: String?, onChange: (String?) -> Unit) {
     var text by rememberSaveable { mutableStateOf(current.orEmpty()) }
@@ -195,10 +195,10 @@ private fun ManualEndpointField(current: String?, onChange: (String?) -> Unit) {
             text = it
             if (it.isBlank()) onChange(null) else if (ManualEndpoint.parse(it) != null) onChange(it.trim())
         },
-        label = { Text("Manual endpoint (host:port)") },
-        placeholder = { Text("${ManualEndpoint.EMULATOR_HOST}:52000") },
+        label = { Text("Manual endpoint (host:pairing/session)") },
+        placeholder = { Text("${ManualEndpoint.EMULATOR_HOST}:52000/52001") },
         isError = !valid,
-        supportingText = { Text(if (valid) "Bypasses discovery. Debug builds only." else "Use host:port") },
+        supportingText = { Text(if (valid) "Bypasses discovery. Debug builds only." else "Use host:pairingPort/sessionPort") },
         singleLine = true,
         modifier = Modifier.fillMaxWidth().testTag("settings.manualEndpoint"),
     )
