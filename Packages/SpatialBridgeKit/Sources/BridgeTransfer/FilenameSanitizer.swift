@@ -42,11 +42,24 @@ public enum FilenameSanitizer {
     }
 
     /// `IMG.jpeg`, attempt 2 → `IMG 2.jpeg`.
+    ///
+    /// The stem is shortened first (by whole grapheme clusters) so that `stem N.ext` fits in
+    /// 255 UTF-8 bytes and the ` N` counter is always kept. Cutting the joined `stem N` instead
+    /// would drop the counter for long names and yield the same candidate on every attempt.
     public static func candidate(for name: String, attempt: Int) -> String {
         guard attempt > 1 else { return name }
         let stem = (name as NSString).deletingPathExtension
         let ext = (name as NSString).pathExtension
-        return truncate(stem: "\(stem) \(attempt)", ext: ext)
+        let counter = " \(attempt)"
+        let suffix = ext.isEmpty ? "" : ".\(ext)"
+        let budget = maxUTF8Bytes - suffix.utf8.count - counter.utf8.count
+        var trimmed = stem
+        while trimmed.utf8.count > budget, !trimmed.isEmpty {
+            trimmed.removeLast()
+        }
+        if trimmed.isEmpty { trimmed = fallbackBaseName }
+        // Only pathological extensions leave no room; the final cap keeps the 255-byte limit.
+        return truncate(stem: trimmed + counter, ext: ext)
     }
 
     private static func truncate(stem: String, ext: String) -> String {

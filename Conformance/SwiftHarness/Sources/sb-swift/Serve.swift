@@ -139,6 +139,13 @@ actor Server {
                 "byteCount": Int(offer.byteCount),
                 "sha256Hex": offer.sha256Hex.lowercased(),
             ])
+        case .replayed(let offer, _, _):
+            Out.event("committed", [
+                "transferID": offer.transferID.uuidString,
+                "byteCount": Int(offer.byteCount),
+                "sha256Hex": offer.sha256Hex.lowercased(),
+                "replayed": true,
+            ])
         case .rejected(_, let reason, _), .failed(_, let reason, _):
             Out.error(reason.code)
         case .accepted, .verifying:

@@ -146,9 +146,24 @@ enum SanitizerVectors {
                 "sanitizedIsSafe": .bool(FilenameSanitizer.isSafe(sanitized)),
             ]
         }
-        for (name, attempt) in [("IMG.jpeg", 1), ("IMG.jpeg", 2), ("README", 3), ("archive.tar.gz", 2), (String(repeating: "a", count: 251) + ".txt", 12)] {
+        let family = "👩‍👩‍👧" // one grapheme, 18 UTF-8 bytes
+        let collisions: [(String, Int)] = [
+            ("IMG.jpeg", 1), ("IMG.jpeg", 2), ("README", 3), ("archive.tar.gz", 2), (String(repeating: "a", count: 251) + ".txt", 12),
+            // Long names: the stem is cut first so the counter always survives.
+            (String(repeating: "a", count: 251) + ".txt", 2),
+            (String(repeating: "a", count: 251) + ".txt", 9999),
+            (String(repeating: "a", count: 255), 3),
+            (String(repeating: "é", count: 125) + ".jpeg", 2),
+            (String(repeating: "a", count: 16) + String(repeating: family, count: 13) + ".png", 1000),
+            (String(repeating: "日", count: 80) + ".abcdefghijklmnop", 42),
+            ("Résumé " + String(repeating: "x", count: 240) + ".pdf", 7),
+        ]
+        for (index, (name, attempt)) in collisions.enumerated() {
+            let candidate = FilenameSanitizer.candidate(for: name, attempt: attempt)
+            #expect(candidate.utf8.count <= FilenameSanitizer.maxUTF8Bytes)
+            if attempt > 1 { #expect(candidate != name) }
             out.append([
-                "name": .string("candidate: \(name.prefix(20)) attempt \(attempt)"), "op": "candidate",
+                "name": .string(index < 5 ? "candidate: \(name.prefix(20)) attempt \(attempt)" : "candidate long \(index - 4): \(name.prefix(12)) attempt \(attempt)"), "op": "candidate",
                 "input": .string(name), "attempt": .int(attempt), "candidate": .string(FilenameSanitizer.candidate(for: name, attempt: attempt)),
             ])
         }

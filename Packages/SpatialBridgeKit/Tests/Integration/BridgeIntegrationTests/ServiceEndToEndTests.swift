@@ -219,6 +219,60 @@ struct ServiceEndToEndTests {
         await receiver.stop()
     }
 
+    /// One session attempt as a sender would make it: TLS-PSK + session auth.
+    static func connectOnce(_ phone: TestPeer, to mac: TestPeer, port: UInt16?, psk: Data, macTrust: TrustedPeer) async -> BridgeError.Code? {
+        guard let port else { return .noPeer }
+        do {
+            let transport = try await PeerConnector.openSession(to: NetworkLoopbackTests.endpoint(port), identity: phone.identity.peerID, preSharedKey: psk)
+            let channel = SessionChannel(transport: transport, configuration: .session)
+            defer { Task { await channel.close() } }
+            _ = try await SessionAuthenticator.authenticateAsInitiator(
+                channel: channel, identity: phone.identity, device: phone.device, expectedPeer: macTrust, timeout: .seconds(5)
+            )
+            return nil
+        } catch {
+            return BridgeError.wrap(error, networkContext: true).code
+        }
+    }
+
+    @Test("Re-key window: a session right after pairing may be refused; once the Mac reports success the first try works")
+    func sessionRightAfterPairing() async throws {
+        defer { try? FileManager.default.removeItem(at: root) }
+        let phone = TestPeer.iPhone(), mac = DeviceStores(peer: .mac(), root: root)
+        let (receiver, _) = try await makeReceiver(mac)
+        let activity = receiver.pairingActivity.stream()
+        let oldSessionPort = receiver.advertiser.sessionPort
+
+        let transport = try await PeerConnector.openPairing(to: NetworkLoopbackTests.endpoint(try #require(receiver.advertiser.pairingPort)))
+        let outcome = try await PairingProtocol.runInitiator(
+            channel: SessionChannel(transport: transport, configuration: .handshake),
+            identity: phone.identity, device: phone.device, decide: ScriptedDecision(approve: true).handler
+        )
+        let paired = ContinuousClock.now
+        // What a sender with a stale resolution sees: the old listener does not
+        // know the new PSK (or is already gone). Not asserted: it is a race.
+        let immediate = await Self.connectOnce(phone, to: mac.peer, port: oldSessionPort, psk: outcome.preSharedKey, macTrust: outcome.trustedPeer)
+
+        let succeeded = try await withBridgeTimeout(.seconds(10)) { () -> TrustedPeer? in
+            for await event in activity {
+                switch event {
+                case .succeeded(let peer): return peer
+                case .failed(let error): throw error
+                }
+            }
+            return nil
+        }
+        let window = ContinuousClock.now - paired
+        #expect(succeeded?.peerID == phone.identity.peerID)
+        #expect(window < .seconds(3), "re-key took \(window)")
+        // After `.succeeded` the rebuilt listener is up with the new key.
+        let port = receiver.advertiser.sessionPort
+        #expect(port != nil && port != oldSessionPort)
+        #expect(await Self.connectOnce(phone, to: mac.peer, port: port, psk: outcome.preSharedKey, macTrust: outcome.trustedPeer) == nil)
+        print("re-key window \(window); immediate attempt on the old listener: \(immediate?.rawValue ?? "ok")")
+        await receiver.stop()
+    }
+
     @Test("T-02: when the Mac user rejects pairing, nothing is trusted on either side")
     func rejectedPairing() async throws {
         defer { try? FileManager.default.removeItem(at: root) }

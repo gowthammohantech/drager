@@ -172,7 +172,19 @@ public actor ReceiverService {
             )
             try dependencies.pairSecrets.store(psk: outcome.preSharedKey, for: outcome.trustedPeer.peerID)
             try await dependencies.trustedPeers.upsert(outcome.trustedPeer)
-            if available { advertiser.updateSessionKeys(await sessionKeys()) }
+            // Re-key window: the initiator finishes as soon as it has our
+            // PAIR_CONFIRM and may connect before we have verified its confirm,
+            // stored the PSK and rebuilt the session listener (Network.framework
+            // fixes the PSK set per listener, and the rebuilt listener has a new
+            // port that Bonjour must re-announce). That first session fails
+            // (unknown PSK identity → E004, or refused/unresolved → retry) and the
+            // sender's reconnect loop gets in once the new listener is up. Only
+            // report success once that listener is ready, so "Paired" on the Mac
+            // means the peer's sessions are accepted.
+            if available {
+                advertiser.updateSessionKeys(await sessionKeys())
+                if !(await advertiser.waitUntilSessionReady()) { log.error("Session listener not ready after pairing") }
+            }
             pairingActivity.send(.succeeded(outcome.trustedPeer))
         } catch {
             pairingActivity.send(.failed(BridgeError.wrap(error, networkContext: true)))
@@ -265,7 +277,7 @@ public actor ReceiverService {
         case .rejected(let offer, let reason, let peer): await record(offer, peer: peer, state: .failed, error: reason.code)
         case .failed(let offer, let reason, let peer):
             await record(offer, peer: peer, state: reason.code == .transferCanceled ? .canceled : .failed, error: reason.code)
-        case .progress, .verifying: break
+        case .progress, .verifying, .replayed: break // a replay leaves the original record as is
         }
     }
 }

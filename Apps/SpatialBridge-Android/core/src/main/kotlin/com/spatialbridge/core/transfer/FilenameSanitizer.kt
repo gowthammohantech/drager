@@ -38,10 +38,18 @@ object FilenameSanitizer {
         return truncate(stem, ext)
     }
 
-    /** `IMG.jpeg`, attempt 2 → `IMG 2.jpeg`. */
+    /**
+     * `IMG.jpeg`, attempt 2 → `IMG 2.jpeg`. The stem is cut first, by grapheme, so `stem N.ext` fits
+     * in 255 UTF-8 bytes and the counter is always kept (Swift `candidate(for:attempt:)`).
+     */
     fun candidate(name: String, attempt: Int): String {
         if (attempt <= 1) return name
-        return truncate("${deletingPathExtension(name)} $attempt", pathExtension(name))
+        val ext = pathExtension(name)
+        val counter = " $attempt"
+        val suffix = if (ext.isEmpty()) "" else ".$ext"
+        var trimmed = trimToUtf8(deletingPathExtension(name), MAX_UTF8_BYTES - utf8Length(suffix) - utf8Length(counter))
+        if (trimmed.isEmpty()) trimmed = FALLBACK_BASE_NAME
+        return truncate(trimmed + counter, ext)
     }
 
     /**
@@ -53,15 +61,18 @@ object FilenameSanitizer {
     private fun truncate(stem: String, ext: String): String {
         val suffix = if (ext.isEmpty()) "" else ".$ext"
         val budget = MAX_UTF8_BYTES - utf8Length(suffix)
-        var trimmed = stem
-        if (utf8Length(trimmed) > budget) {
-            val clusters = graphemes(stem).toMutableList()
-            var length = utf8Length(stem)
-            while (length > budget && clusters.isNotEmpty()) length -= utf8Length(clusters.removeAt(clusters.size - 1))
-            trimmed = clusters.joinToString("")
-        }
+        var trimmed = trimToUtf8(stem, budget)
         if (trimmed.isEmpty()) trimmed = FALLBACK_BASE_NAME
         return trimmed + suffix
+    }
+
+    /** Drops whole trailing grapheme clusters until [text] is at most [budget] UTF-8 bytes. */
+    private fun trimToUtf8(text: String, budget: Int): String {
+        if (utf8Length(text) <= budget) return text
+        val clusters = graphemes(text).toMutableList()
+        var length = utf8Length(text)
+        while (length > budget && clusters.isNotEmpty()) length -= utf8Length(clusters.removeAt(clusters.size - 1))
+        return clusters.joinToString("")
     }
 
     private fun utf8Length(text: String): Int = text.toByteArray(Charsets.UTF_8).size

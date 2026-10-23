@@ -25,6 +25,9 @@ final class EventLog: Sendable {
     var rejections: [BridgeError.Code] {
         all.compactMap { if case .rejected(_, let reason, _) = $0 { return reason.code } else { return nil } }
     }
+    var replays: [(transferID: UUID, savedFilename: String)] {
+        all.compactMap { if case .replayed(let offer, let name, _) = $0 { return (offer.transferID, name) } else { return nil } }
+    }
     var acceptedCount: Int { all.filter { if case .accepted = $0 { return true } else { return false } }.count }
 
     func waitFor(_ condition: @escaping @Sendable (EventLog) -> Bool, timeout: Duration = .seconds(10)) async -> Bool {
@@ -319,6 +322,12 @@ struct TransferTests {
         #expect(again == first)
         #expect(h.destinationContents == [first.savedFilename])
         #expect(h.events.acceptedCount == 1)
+        // The replay is visible as its own event, never as a second `.committed`
+        // (which would post a second success notification on the Mac).
+        #expect(await h.events.waitFor { $0.replays.count == 1 })
+        #expect(h.events.committedURLs.count == 1)
+        #expect(h.events.replays.first?.transferID == id)
+        #expect(h.events.replays.first?.savedFilename == first.savedFilename)
     }
 
     @Test("Retrying a failed transfer with the same ID succeeds and saves exactly one file")

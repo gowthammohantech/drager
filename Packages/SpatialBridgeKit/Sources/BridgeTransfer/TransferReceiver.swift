@@ -15,6 +15,11 @@ public enum ReceiverEvent: Sendable {
     case rejected(TransferOffer, reason: BridgeError, from: TrustedPeer)
     /// Accepted transfer that did not complete; staging was cleaned up.
     case failed(TransferOffer, reason: BridgeError, from: TrustedPeer)
+    /// A replayed offer for an ID that was already committed (ADR-011): answered
+    /// with `COMMITTED` from the ledger, no bytes moved and no new file. The
+    /// original `.committed` already announced success, so this must never
+    /// trigger a second success notification.
+    case replayed(TransferOffer, savedFilename: String, from: TrustedPeer)
 }
 
 /// Receives transfers on one authenticated session, one at a time (ADR-007).
@@ -96,6 +101,7 @@ public actor TransferReceiver {
         // produce two saved files even if a COMMITTED message was lost.
         if case .committed(let name, let bytes) = await ledger.outcome(for: offer.transferID) {
             try? await channel.send(.committed(TransferCommitted(transferID: offer.transferID, savedFilename: name, byteCount: bytes)))
+            emit(.replayed(offer, savedFilename: name, from: peer))
             return
         }
 

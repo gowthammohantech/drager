@@ -96,6 +96,24 @@ public final class ServiceAdvertiser: @unchecked Sendable {
         publishState()
     }
 
+    /// Waits until the current session listener (with the current key set) is
+    /// ready, so a peer added by `updateSessionKeys` can connect. Returns `false`
+    /// on timeout or when the advertiser is stopped.
+    ///
+    /// The session listener is rebuilt on every key change and binds a new
+    /// ephemeral port, so it can take a moment before a just-paired peer's TLS
+    /// handshake succeeds; see `ReceiverService` for what that means for senders.
+    public func waitUntilSessionReady(timeout: Duration = .seconds(5)) async -> Bool {
+        let deadline = ContinuousClock.now + timeout
+        while ContinuousClock.now < deadline {
+            let (running, port) = store.withLock { ($0.running, $0.sessionPort) }
+            guard running else { return false }
+            if port != nil { return true }
+            try? await Task.sleep(for: .milliseconds(5))
+        }
+        return false
+    }
+
     public func updateSessionKeys(_ keys: [(identity: PeerID, preSharedKey: Data)]) {
         let (running, generation, old) = store.withLock { store -> (Bool, Int, NWListener?) in
             store.sessionKeys = keys
@@ -186,10 +204,17 @@ public final class ServiceAdvertiser: @unchecked Sendable {
             guard let self else { return }
             switch newState {
             case .ready:
-                let port = listener?.port?.rawValue
-                self.store.withLock { store in
+                guard let listener else { return }
+                let port = listener.port?.rawValue
+                let identifier = ObjectIdentifier(listener)
+                let current = self.store.withLock { store -> Bool in
+                    // A listener replaced before it became ready must not publish its port.
+                    let active = role == .session ? store.sessionListener : store.pairingListener
+                    guard let active, ObjectIdentifier(active) == identifier else { return false }
                     if role == .session { store.sessionPort = port } else { store.pairingPort = port }
+                    return true
                 }
+                guard current else { return }
                 self.log.info("\(role.rawValue) listener ready")
                 self.publishState()
             case .failed(let error):

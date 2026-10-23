@@ -48,6 +48,38 @@ struct FilenameSanitizerTests {
         #expect(FilenameSanitizer.candidate(for: "README", attempt: 3) == "README 3")
     }
 
+    @Test("Long names keep the collision counter: the stem is cut first, by grapheme")
+    func longCandidatesKeepTheCounter() {
+        let long = String(repeating: "a", count: 251) + ".txt" // exactly 255 bytes
+        #expect(FilenameSanitizer.candidate(for: long, attempt: 12) == String(repeating: "a", count: 248) + " 12.txt")
+        // Every attempt yields a distinct name within the limit.
+        let names = (1...200).map { FilenameSanitizer.candidate(for: long, attempt: $0) }
+        #expect(Set(names).count == names.count)
+        #expect(names.allSatisfy { $0.utf8.count <= FilenameSanitizer.maxUTF8Bytes && $0.hasSuffix(".txt") })
+        // Multi-byte graphemes are never split: 16 + 13 × 18 + 4 = 254 bytes; the stem budget at attempt 1000 is 246.
+        let family = "👩‍👩‍👧"
+        let emoji = String(repeating: "a", count: 16) + String(repeating: family, count: 13) + ".png"
+        let candidate = FilenameSanitizer.candidate(for: emoji, attempt: 1000)
+        #expect(candidate == String(repeating: "a", count: 16) + String(repeating: family, count: 12) + " 1000.png")
+        #expect(candidate.utf8.count <= FilenameSanitizer.maxUTF8Bytes)
+    }
+
+    @Test("Committing a long name over existing collisions gets a fresh counter")
+    func longNameCommitsPastCollisions() throws {
+        let folder = FileManager.default.temporaryDirectory.appendingPathComponent("sb-long-\(UUID().uuidString)", isDirectory: true)
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: folder) }
+        let long = String(repeating: "b", count: 251) + ".txt"
+        var saved: [String] = []
+        for index in 0..<4 {
+            let staged = folder.appendingPathComponent(".staged-\(index)")
+            try Data([UInt8(index)]).write(to: staged)
+            let url = try FolderDestinationStore.commit(stagedFile: staged, into: folder, suggestedName: long, maxAttempts: 8)
+            saved.append(url.lastPathComponent)
+        }
+        #expect(saved == [long] + (2...4).map { String(repeating: "b", count: 249) + " \($0).txt" })
+    }
+
     @Test("isSafe accepts sanitized names and rejects raw input")
     func isSafe() {
         #expect(FilenameSanitizer.isSafe("Photo 2.jpeg"))

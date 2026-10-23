@@ -42,12 +42,19 @@ public static class FilenameSanitizer
         return Truncate(stem, ext);
     }
 
-    /// <summary><c>IMG.jpeg</c>, attempt 2 → <c>IMG 2.jpeg</c>.</summary>
+    /// <summary>
+    /// <c>IMG.jpeg</c>, attempt 2 → <c>IMG 2.jpeg</c>. The stem is cut first, by grapheme, so <c>stem N.ext</c> fits in
+    /// 255 UTF-8 bytes and the counter is always kept (Swift <c>candidate(for:attempt:)</c>).
+    /// </summary>
     public static string Candidate(string name, int attempt)
     {
         if (attempt <= 1) return name;
         var (stem, ext) = SplitExtension(name);
-        return Truncate($"{stem} {attempt.ToString(CultureInfo.InvariantCulture)}", ext);
+        var counter = " " + attempt.ToString(CultureInfo.InvariantCulture);
+        var suffix = ext.Length == 0 ? "" : "." + ext;
+        var trimmed = TrimToUtf8(stem, MaxUtf8Bytes - Text.Utf8Length(suffix) - Text.Utf8Length(counter));
+        if (trimmed.Length == 0) trimmed = FallbackBaseName;
+        return Truncate(trimmed + counter, ext);
     }
 
     /// <summary>True if <paramref name="name"/> is exactly what <see cref="Sanitize"/> produces (Swift compares canonically).</summary>
@@ -68,16 +75,19 @@ public static class FilenameSanitizer
     {
         var suffix = ext.Length == 0 ? "" : "." + ext;
         var budget = MaxUtf8Bytes - Text.Utf8Length(suffix);
-        var trimmed = stem;
-        if (Text.Utf8Length(trimmed) > budget)
-        {
-            var info = new StringInfo(trimmed);
-            var count = info.LengthInTextElements;
-            while (count > 0 && Text.Utf8Length(info.SubstringByTextElements(0, count)) > budget) count--;
-            trimmed = count == 0 ? "" : info.SubstringByTextElements(0, count);
-        }
+        var trimmed = TrimToUtf8(stem, budget);
         if (trimmed.Length == 0) trimmed = FallbackBaseName;
         return trimmed + suffix;
+    }
+
+    /// <summary>Drops whole trailing grapheme clusters until <paramref name="text"/> is at most <paramref name="budget"/> UTF-8 bytes.</summary>
+    private static string TrimToUtf8(string text, int budget)
+    {
+        if (Text.Utf8Length(text) <= budget) return text;
+        var info = new StringInfo(text);
+        var count = info.LengthInTextElements;
+        while (count > 0 && Text.Utf8Length(info.SubstringByTextElements(0, count)) > budget) count--;
+        return count == 0 ? "" : info.SubstringByTextElements(0, count);
     }
 
     private static string? FirstGrapheme(string s) => s.Length == 0 ? null : StringInfo.GetNextTextElement(s, 0);

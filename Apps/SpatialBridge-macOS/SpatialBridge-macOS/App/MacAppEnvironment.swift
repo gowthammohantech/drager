@@ -206,6 +206,10 @@ final class MacAppModel {
             }
             if reason.code == .destinationPermissionExpired { destinationProblem = reason }
             Task { await refreshStores() }
+        case .replayed:
+            // The sender retried an ID that is already saved; it got COMMITTED
+            // again. The first commit already showed success, so stay quiet.
+            break
         case .rejected(_, let reason, let peer):
             if reason.code == .destinationPermissionExpired || reason.code == .insufficientStorage {
                 destinationProblem = reason

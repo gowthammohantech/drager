@@ -54,6 +54,22 @@ public sealed class WindowsSaveNameTests
         var ex = Assert.Throws<BridgeException>(() => TransferPolicy.Default.ValidateName("x.exe.", "public.data"));
         Assert.Equal(BridgeErrorCode.UnsupportedFile, ex.Code);
     }
+
+    [Fact]
+    public void LongNamesKeepTheCollisionCounter()
+    {
+        // 255 bytes: cutting "stem N" as a whole used to drop " N", so every attempt collided and failed E011.
+        var name = new string('a', 251) + ".txt";
+        var taken = new HashSet<string>(StringComparer.Ordinal);
+        var folder = Path.GetFullPath(Path.Combine(Path.GetTempPath(), "sb-long-collisions"));
+        for (var i = 0; i < 4; i++)
+        {
+            var final = FileCommit.CommitWithCollisions("staged", folder, name, (_, candidate) => taken.Add(Path.GetFileName(candidate)), maxAttempts: 8);
+            Assert.True(Encoding.UTF8.GetByteCount(Path.GetFileName(final)) <= FilenameSanitizer.MaxUtf8Bytes);
+        }
+        Assert.Equal(new[] { name, new string('a', 249) + " 2.txt", new string('a', 249) + " 3.txt", new string('a', 249) + " 4.txt" }.ToHashSet(), taken);
+        Assert.Equal(new string('a', 246) + " 9999.txt", FilenameSanitizer.Candidate(name, 9999));
+    }
 }
 
 public sealed class TransferPolicyTests
