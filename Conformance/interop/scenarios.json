@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "comment": "Loopback interop matrix. Run with Scripts/interop.sh. Pairs are initiator (sender) -> responder (receiver). Scenarios run in this order against one long-lived `serve` per pair; `requires` names a scenario that must have passed first. Kinds are implemented in run_matrix.py.",
+  "pairs": [
+    {"initiator": "swift", "responder": "swift", "label": "baseline"},
+    {"initiator": "swift", "responder": "dotnet", "label": "iPhone -> Windows"},
+    {"initiator": "jvm", "responder": "swift", "label": "Android -> Mac"},
+    {"initiator": "jvm", "responder": "dotnet", "label": "Android -> Windows"}
+  ],
+  "selfPairs": [
+    {"initiator": "jvm", "responder": "jvm", "label": "self (Kotlin)"},
+    {"initiator": "dotnet", "responder": "dotnet", "label": "self (.NET)"}
+  ],
+  "unsupported": {
+    "comment": "tool -> scenario id -> reason. A listed scenario is reported as SKIP for any pair that uses the tool.",
+    "swift": {},
+    "jvm": {},
+    "dotnet": {}
+  },
+  "scenarios": [
+    {"id": "pair-approve", "kind": "pair-approve", "timeout": 30,
+     "doc": "SAS and pskFingerprint equal on both sides; each side reports the other's peer ID"},
+    {"id": "send-after-pair", "kind": "send", "bytes": 1, "timeout": 30, "requires": "pair-approve",
+     "doc": "First send immediately after pairing (receiver PSK-registration race)"},
+    {"id": "send-1B", "kind": "send", "bytes": 1, "timeout": 30, "requires": "pair-approve"},
+    {"id": "send-262143B", "kind": "send", "bytes": 262143, "timeout": 30, "requires": "pair-approve",
+     "doc": "One chunk minus one byte"},
+    {"id": "send-262145B", "kind": "send", "bytes": 262145, "timeout": 30, "requires": "pair-approve",
+     "doc": "One chunk plus one byte"},
+    {"id": "send-1MiB", "kind": "send", "bytes": 1048576, "timeout": 60, "requires": "pair-approve"},
+    {"id": "send-100MiB", "kind": "send", "bytes": 104857600, "timeout": 600, "requires": "pair-approve", "large": true,
+     "doc": "Maximum file size; opt-in with --large"},
+    {"id": "replay", "kind": "replay", "bytes": 4096, "timeout": 30, "requires": "pair-approve",
+     "doc": "Same --transfer-id twice: COMMITTED both times, one file in dest"},
+    {"id": "oversize-offer", "kind": "fault", "fault": "oversize-offer", "expect": "E007", "bytes": 1048576, "timeout": 30, "requires": "pair-approve"},
+    {"id": "unsafe-name", "kind": "fault", "fault": "unsafe-name", "expect": "E006", "bytes": 1048576, "timeout": 30, "requires": "pair-approve"},
+    {"id": "denied-type", "kind": "denied-type", "contentType": "public.unix-executable", "expect": "E006", "bytes": 1024, "timeout": 30, "requires": "pair-approve",
+     "doc": "Executable UTI via --content-type"},
+    {"id": "corrupt-chunk", "kind": "fault", "fault": "corrupt-chunk", "expect": "E010", "bytes": 1048576, "timeout": 30, "requires": "pair-approve"},
+    {"id": "out-of-order", "kind": "fault", "fault": "out-of-order", "expect": "E012", "bytes": 1048576, "timeout": 30, "requires": "pair-approve"},
+    {"id": "cancel-mid", "kind": "fault", "fault": "cancel-mid", "expect": "E013", "bytes": 1048576, "timeout": 30, "requires": "pair-approve",
+     "doc": "Staging must be left empty"},
+    {"id": "stall", "kind": "fault", "fault": "stall", "expect": "E014", "bytes": 1048576, "timeout": 60, "requires": "pair-approve",
+     "doc": "Receiver idle timeout under --test-mode (5 s)"},
+    {"id": "unknown-identity", "kind": "unknown-identity", "expect": "E004", "timeout": 30,
+     "doc": "Sender state trusted by a different server"},
+    {"id": "pair-reject", "kind": "pair-reject", "expect": "E003", "timeout": 30,
+     "doc": "Responder rejects: E003 on both sides"},
+    {"id": "after-unpair", "kind": "skip", "reason": "no CLI implements an unpair command (CONFORMANCE.md §5 has none)"}
+  ]
+}

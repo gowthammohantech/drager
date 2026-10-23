@@ -39,6 +39,11 @@ jobs:
           test "$(python3 -c 'import json;print(len(json.load(open("deps.json"))["dependencies"]))')" = "0"
       - name: Unit + integration tests
         run: Scripts/test-packages.sh
+      - name: Golden vectors unchanged
+        # VectorExportTests run in check mode by default; this also catches untracked vector files.
+        run: |
+          git diff --exit-code Conformance/vectors
+          test -z "$(git status --porcelain Conformance/vectors)"
 
   apps:
     runs-on: macos-26
@@ -58,6 +63,102 @@ jobs:
         run: |
           source Scripts/_common.sh
           xcb -scheme SpatialBridge-macOS -destination 'platform=macOS' analyze
+
+  android:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Apps/SpatialBridge-Android
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+      - name: Core tests, sb-jvm, app build, unit tests and lint
+        run: ./gradlew --no-daemon :core:test :cli:installDist :app:assembleDebug :app:testDebugUnitTest :app:lintDebug
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: android-reports
+          path: Apps/SpatialBridge-Android/*/build/reports/
+
+  dotnet-core:
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+      DOTNET_NOLOGO: "1"
+    defaults:
+      run:
+        working-directory: Apps/SpatialBridge-Windows
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Core tests
+        run: dotnet test tests/SpatialBridge.Core.Tests -c Release
+      - name: Platform tests (non-Windows subset; [WindowsFact] tests skip)
+        run: dotnet test tests/SpatialBridge.Platform.Windows.Tests -c Release
+      - name: Format check
+        run: |
+          status=0
+          for p in src/SpatialBridge.Core src/SpatialBridge.Cli tests/SpatialBridge.Core.Tests tests/SpatialBridge.Platform.Windows.Tests; do
+            dotnet format "$p" --verify-no-changes || status=1
+          done
+          exit $status
+
+  windows:
+    runs-on: windows-latest
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+      DOTNET_NOLOGO: "1"
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: Apps/SpatialBridge-Windows
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Restore
+        run: dotnet restore src/SpatialBridge.App/SpatialBridge.App.csproj -r win-x64 -p:Platform=x64
+      - name: Build WinUI app (x64)
+        run: dotnet build src/SpatialBridge.App/SpatialBridge.App.csproj -c Release -p:Platform=x64 -r win-x64 -warnaserror
+      - name: Core tests
+        run: dotnet test tests/SpatialBridge.Core.Tests -c Release
+      - name: Platform tests
+        run: dotnet test tests/SpatialBridge.Platform.Windows.Tests -c Release
+      - name: Tray smoke test
+        run: ../../Scripts/build-windows.ps1 smoke Release
+
+  interop:
+    needs: packages
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Loopback interop matrix
+        run: Scripts/interop.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: interop-results
+          path: |
+            Conformance/interop/results.json
+            Conformance/interop/logs/
+          if-no-files-found: warn
 
   release-artifacts:
     # Signed artifacts need secrets (Developer ID cert, notarytool profile) that must be

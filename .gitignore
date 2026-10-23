@@ -28,3 +28,9 @@ AuthKey_*.p8
 
 # macOS
 .DS_Store
+
+# Interop matrix output (Scripts/interop.sh)
+Conformance/interop/results.json
+Conformance/interop/logs/
+__pycache__/
+*.pyc
