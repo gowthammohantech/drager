@@ -78,6 +78,12 @@ jobs:
           cache: gradle
       - name: Core tests, sb-jvm, app build, unit tests and lint
         run: ./gradlew --no-daemon :core:test :cli:installDist :app:assembleDebug :app:testDebugUnitTest :app:lintDebug
+      - name: Release APK (minified, debug-signed for testing)
+        run: ./gradlew --no-daemon :app:assembleRelease -PsbDebugSignRelease
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SpatialBridge-Android-apk
+          path: Apps/SpatialBridge-Android/app/build/outputs/apk/release/app-release.apk
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
@@ -133,6 +139,14 @@ jobs:
         run: dotnet test tests/SpatialBridge.Platform.Windows.Tests -c Release
       - name: Tray smoke test
         run: ../../Scripts/build-windows.ps1 smoke Release
+      - name: Publish release build (x64, self-contained)
+        run: ../../Scripts/build-windows.ps1 publish Release x64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SpatialBridge-Windows-x64
+          path: |
+            build/release/SpatialBridge-Windows-*-x64.zip
+            build/release/SpatialBridge-Windows-*-x64.zip.sha256
 
   interop:
     needs: packages
