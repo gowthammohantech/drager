@@ -45,7 +45,7 @@ enum TLSEcho {
     private static func echo(_ connection: NWConnection) async {
         do {
             try await Net.ready(connection, timeout: .seconds(30))
-            Out.event("tlsEstablished")
+            Out.event("tlsEstablished", negotiated(connection))
             while let data = try await Net.receive(connection) {
                 if !data.isEmpty { try await Net.send(connection, data) }
             }
@@ -55,6 +55,12 @@ enum TLSEcho {
             Out.error(bridgeCode(error))
         }
         connection.cancel()
+    }
+
+    /// The negotiated suite (always CCAC once `Net.ready` passed), for interop logs.
+    private static func negotiated(_ connection: NWConnection) -> [String: any Sendable] {
+        guard let metadata = connection.metadata(definition: NWProtocolTLS.definition) as? NWProtocolTLS.Metadata else { return [:] }
+        return ["cipherSuite": String(format: "%04X", NetworkParameters.negotiatedTLS(metadata).suite)]
     }
 
     static func client(_ args: Args, identity: PeerID, psk: Data) async -> Int32 {
@@ -67,7 +73,7 @@ enum TLSEcho {
             )
             defer { connection.cancel() }
             try await Net.ready(connection)
-            Out.event("tlsEstablished")
+            Out.event("tlsEstablished", negotiated(connection))
             let ping = Data("ping\n".utf8)
             try await Net.send(connection, ping)
             let received = try await withBridgeTimeout(.seconds(10)) {

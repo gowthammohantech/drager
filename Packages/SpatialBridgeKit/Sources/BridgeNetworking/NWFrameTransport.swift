@@ -41,6 +41,8 @@ public final class NWFrameTransport: FrameTransport, @unchecked Sendable {
     ///
     /// TLS failures (unknown PSK identity, bad MAC) surface as `.waiting` on the
     /// client and are mapped to E004 immediately instead of waiting forever.
+    /// A TLS connection that negotiated anything but TLS 1.2 with 0xCCAC is
+    /// cancelled with E004 when it becomes ready (ADR-010).
     public static func open(
         _ connection: NWConnection,
         limits: TransferLimits = .default,
@@ -70,7 +72,15 @@ public final class NWFrameTransport: FrameTransport, @unchecked Sendable {
                     connection.stateUpdateHandler = { newState in
                         switch newState {
                         case .ready:
-                            finish(.success(()))
+                            // ADR-010: only TLS 1.2 + 0xCCAC. Network.framework also
+                            // offers and accepts plain-PSK suites, so check here before
+                            // any application data flows.
+                            do throws(BridgeError) {
+                                try NetworkParameters.validateNegotiatedTLS(connection)
+                                finish(.success(()))
+                            } catch {
+                                finish(.failure(error))
+                            }
                         case .waiting(let error):
                             let mapped = NetworkErrorMapper.map(error)
                             // Authentication and policy failures will never resolve by waiting.

@@ -13,4 +13,7 @@ application {
 
 dependencies {
     implementation(project(":core"))
+    // tls-echo --cipher-suite (test-only downgrade probe) builds its own BouncyCastle peer.
+    implementation(libs.bcprov)
+    implementation(libs.bctls)
 }

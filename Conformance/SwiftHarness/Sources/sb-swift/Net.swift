@@ -49,7 +49,15 @@ enum Net {
             }
             connection.stateUpdateHandler = { state in
                 switch state {
-                case .ready: finish(.success(()))
+                case .ready:
+                    // ADR-010: TLS 1.2 + 0xCCAC only (same guard as NWFrameTransport.open).
+                    do {
+                        try NetworkParameters.validateNegotiatedTLS(connection)
+                        finish(.success(()))
+                    } catch {
+                        connection.cancel()
+                        finish(.failure(error))
+                    }
                 case .waiting(let error):
                     let mapped = NetworkErrorMapper.map(error)
                     if mapped.code == .authenticationFailed { finish(.failure(mapped)) }
