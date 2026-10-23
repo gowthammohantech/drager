@@ -1,0 +1,19 @@
+sb-swift tls-echo is ready (verified on loopback: matching PSK -> echoOk/exit 0; wrong PSK or unknown identity -> E004/exit 4).
+
+Build (from repo root):
+  swift build -c release --package-path Conformance/SwiftHarness
+
+Binary:
+  $(swift build -c release --package-path Conformance/SwiftHarness --show-bin-path)/sb-swift
+  currently: Conformance/SwiftHarness/.build/out/Products/Release/sb-swift
+
+Server:
+  sb-swift tls-echo --role server --listen 127.0.0.1:0 --identity ID --psk-hex <64 hex>
+  -> {"event":"listening","port":N,"pskFingerprint":"..."}   then per connection {"event":"tlsEstablished"}
+     (failed handshakes print {"code":"E004","event":"error"} and the server keeps running)
+Client:
+  sb-swift tls-echo --role client --connect 127.0.0.1:N --identity ID --psk-hex <64 hex>
+  -> sends "ping\n", expects echo, prints {"event":"echoOk"} exit 0; else {"event":"error","code":"E004",...} exit 4
+
+Parameters: NetworkParameters.serverSession/clientSession (TLS 1.2 only, suite 0xCCAC, no tickets/resumption/renegotiation).
+Identity is the UTF-8 bytes of --identity.
