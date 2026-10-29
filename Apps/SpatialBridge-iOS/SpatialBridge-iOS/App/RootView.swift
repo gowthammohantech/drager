@@ -17,7 +17,9 @@ struct RootView: View {
         Group {
             if model.settings.settings.hasCompletedOnboarding {
                 MainTabView()
-                    .task { model.start() }
+                    .task {
+                        if AppModel.isScreenshotMode { await model.seedForScreenshots() } else { model.start() }
+                    }
             } else {
                 OnboardingFlow()
             }

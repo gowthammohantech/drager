@@ -11,7 +11,7 @@
 | 7 | Privacy manifests and App Privacy answers match behaviour (no collection) | IMPLEMENTED |
 | 8 | Local Network usage strings reviewed | IMPLEMENTED |
 | 9 | Developer ID archive, notarized, stapled, `spctl` passes | NOT_STARTED (needs Developer ID certificate) |
-| 10 | TestFlight build uploaded and smoke-tested | NOT_STARTED (needs App Store Connect app record) |
+| 10 | TestFlight build uploaded and smoke-tested | IN_PROGRESS (iOS 1.0.0 (1) uploaded 2026-10-29; smoke test pending) |
 | 11 | Release notes (`docs/Release/RELEASE_NOTES.md`) updated | IMPLEMENTED |
 | 12 | KNOWN_LIMITATIONS reviewed | IMPLEMENTED |
 | 13 | Tag `vX.Y.Z`, never commit signing material | — |
