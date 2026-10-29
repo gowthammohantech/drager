@@ -10,11 +10,11 @@
   IgnorableNamespaces="uap uap5 desktop desktop2 com rescap">
 
   <!-- Placeholder identity: replace Publisher with the signing certificate's subject before release. -->
-  <Identity Name="SpatialBridge.Receiver" Publisher="CN=SpatialBridge Dev" Version="0.1.0.0" />
+  <Identity Name="Drager.Receiver" Publisher="CN=Drager Dev" Version="0.1.0.0" />
 
   <Properties>
-    <DisplayName>Spatial Bridge</DisplayName>
-    <PublisherDisplayName>Spatial Bridge</PublisherDisplayName>
+    <DisplayName>Drager</DisplayName>
+    <PublisherDisplayName>Drager</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -29,7 +29,7 @@
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="Spatial Bridge"
+        DisplayName="Drager"
         Description="Receive files flicked from your phone."
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
@@ -40,7 +40,7 @@
       <Extensions>
         <!-- Start at login (Settings › General). Off until the user turns it on. -->
         <uap5:Extension Category="windows.startupTask">
-          <uap5:StartupTask TaskId="SpatialBridgeStartup" Enabled="false" DisplayName="Spatial Bridge" />
+          <uap5:StartupTask TaskId="SpatialBridgeStartup" Enabled="false" DisplayName="Drager" />
         </uap5:Extension>
         <!-- App notification activation (AppNotificationManager) for the packaged build. -->
         <desktop:Extension Category="windows.toastNotificationActivation">
@@ -48,7 +48,7 @@
         </desktop:Extension>
         <com:Extension Category="windows.comServer">
           <com:ComServer>
-            <com:ExeServer Executable="SpatialBridge.App.exe" Arguments="----AppNotificationActivated:" DisplayName="Spatial Bridge">
+            <com:ExeServer Executable="SpatialBridge.App.exe" Arguments="----AppNotificationActivated:" DisplayName="Drager">
               <com:Class Id="6B3E2F0A-5C1D-4E8B-9A7F-2D4C6E8A1B35" />
             </com:ExeServer>
           </com:ComServer>

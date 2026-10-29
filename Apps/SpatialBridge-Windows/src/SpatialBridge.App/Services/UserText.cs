@@ -8,7 +8,7 @@ internal static class UserText
 {
     public static string Message(BridgeErrorCode code) => code switch
     {
-        BridgeErrorCode.LocalNetworkDenied => "Spatial Bridge can't use the local network.",
+        BridgeErrorCode.LocalNetworkDenied => "Drager can't use the local network.",
         BridgeErrorCode.NoPeer => "No device was found nearby.",
         BridgeErrorCode.PairingRejected => "Pairing was declined.",
         BridgeErrorCode.AuthenticationFailed => "The device couldn't be verified.",

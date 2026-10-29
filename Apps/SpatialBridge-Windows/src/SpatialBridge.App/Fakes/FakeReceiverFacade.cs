@@ -134,11 +134,11 @@ internal sealed class FakeReceiverFacade : IReceiverFacade
         // 2. A transfer that commits a real file.
         await Task.Delay(1200, cancellationToken).ConfigureAwait(false);
         Raise(new ReceiverEvent.PeerConnected(FakePeerID, prompt.PeerDisplayName));
-        var content = Encoding.UTF8.GetBytes("Spatial Bridge test transfer\r\n" + new string('.', 3000));
+        var content = Encoding.UTF8.GetBytes("Drager test transfer\r\n" + new string('.', 3000));
         var id = Guid.NewGuid();
         Raise(new ReceiverEvent.TransferIncoming(id, prompt.PeerDisplayName, content.Length, new ExitGesture(Edge.Top, 0.4, 1100, 140, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()))
         {
-            Filename = "Spatial Bridge Test.txt",
+            Filename = "Drager Test.txt",
             ContentType = "public.plain-text",
         });
         for (var step = 1; step <= 8; step++)
@@ -157,7 +157,7 @@ internal sealed class FakeReceiverFacade : IReceiverFacade
         try
         {
             Directory.CreateDirectory(folder);
-            var saved = await new WindowsFileCommitter().CommitAsync(staged, folder, "Spatial Bridge Test.txt", cancellationToken).ConfigureAwait(false);
+            var saved = await new WindowsFileCommitter().CommitAsync(staged, folder, "Drager Test.txt", cancellationToken).ConfigureAwait(false);
             ScriptCommitted = true;
             Raise(new ReceiverEvent.TransferCommitted(id, saved, content.Length));
         }

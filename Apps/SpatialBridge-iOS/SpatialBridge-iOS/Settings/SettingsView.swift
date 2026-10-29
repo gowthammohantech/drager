@@ -117,7 +117,7 @@ struct SettingsView: View {
             }
 
             Section {
-                Button("Reset Spatial Bridge", role: .destructive) { confirmReset = true }
+                Button("Reset Drager", role: .destructive) { confirmReset = true }
             }
         }
         .navigationTitle("Settings")
@@ -128,7 +128,7 @@ struct SettingsView: View {
                     .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { showPairing = false } } }
             }
         }
-        .confirmationDialog("Reset Spatial Bridge?", isPresented: $confirmReset, titleVisibility: .visible) {
+        .confirmationDialog("Reset Drager?", isPresented: $confirmReset, titleVisibility: .visible) {
             Button("Unpair All and Reset", role: .destructive) { model.resetEverything() }
         } message: {
             Text("This unpairs every computer, clears history and restores default settings.")
@@ -173,7 +173,7 @@ private struct SensitivityPreview: View {
 struct PrivacyDetailsView: View {
     var body: some View {
         List {
-            ExplainerRow(icon: "photo", title: "Photos", text: "You pick items with the system photo picker. Spatial Bridge gets only those items and never needs full library access.")
+            ExplainerRow(icon: "photo", title: "Photos", text: "You pick items with the system photo picker. Drager gets only those items and never needs full library access.")
             ExplainerRow(icon: "wifi", title: "Local Network", text: "Used to find and connect to your computer. Files travel directly between your devices, encrypted.")
             ExplainerRow(icon: "key", title: "Keys", text: "Pairing keys are stored in the Keychain on this device only. Unpairing deletes them.")
             ExplainerRow(icon: "clock", title: "History", text: "Only names, sizes and outcomes are kept, on this device. You can turn it off or clear it.")

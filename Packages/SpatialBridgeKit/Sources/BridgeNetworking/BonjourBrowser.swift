@@ -46,7 +46,7 @@ public final class BonjourBrowser: PeerDiscovering, @unchecked Sendable {
     }
 
     public let configuration: Configuration
-    private let queue = DispatchQueue(label: "com.gowthammohan.spatialbridge.browser")
+    private let queue = DispatchQueue(label: "com.gowthammohan.drager.browser")
     private let lock = OSAllocatedUnfairLock(initialState: State())
     private let peerBroadcaster = Broadcaster<[DiscoveredPeer]>([])
     private let stateBroadcaster = Broadcaster<DiscoveryState>(.idle)

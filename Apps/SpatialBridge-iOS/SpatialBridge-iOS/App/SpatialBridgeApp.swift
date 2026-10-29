@@ -9,7 +9,7 @@ import BridgeServices
 import BridgeTransfer
 import SwiftUI
 
-/// Spatial Bridge for iPhone.
+/// Drager for iPhone.
 @main
 struct SpatialBridgeApp: App {
     @State private var model = AppEnvironment.live()

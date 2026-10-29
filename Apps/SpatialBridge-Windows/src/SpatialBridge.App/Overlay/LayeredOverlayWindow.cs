@@ -58,7 +58,7 @@ internal sealed unsafe class LayeredOverlayWindow : IDisposable
             s_classRegistered = true;
         }
         const int exStyle = Win32.WsExLayered | Win32.WsExTransparent | Win32.WsExNoActivate | Win32.WsExToolWindow | Win32.WsExTopmost;
-        _hwnd = Win32.CreateWindowEx(exStyle, ClassName, "Spatial Bridge arrival", Win32.WsPopup, 0, 0, 1, 1, 0, 0, instance, 0);
+        _hwnd = Win32.CreateWindowEx(exStyle, ClassName, "Drager arrival", Win32.WsPopup, 0, 0, 1, 1, 0, 0, instance, 0);
         return _hwnd != 0;
     }
 

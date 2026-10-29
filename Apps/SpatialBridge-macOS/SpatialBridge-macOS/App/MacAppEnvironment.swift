@@ -23,7 +23,7 @@ enum MacAppEnvironment {
 
     static func live() -> MacAppModel {
         let uiTesting = isUITesting
-        let keychain = KeychainSecretStore(service: "com.gowthammohan.spatialbridge.mac")
+        let keychain = KeychainSecretStore(service: "com.gowthammohan.drager.mac")
         let secrets: any SecretStore
         let identity: DeviceIdentity
         if uiTesting {
@@ -298,7 +298,7 @@ final class MacAppModel {
         panel.canCreateDirectories = true
         panel.allowsMultipleSelection = false
         panel.prompt = "Choose"
-        panel.message = "Choose where Spatial Bridge saves files from your phone."
+        panel.message = "Choose where Drager saves files from your phone."
         panel.directoryURL = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first
         NSApp.activate()
         guard panel.runModal() == .OK, let url = panel.url else { return }

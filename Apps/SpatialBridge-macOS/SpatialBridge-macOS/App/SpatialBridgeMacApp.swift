@@ -10,7 +10,7 @@ import BridgeTransfer
 import SwiftUI
 import UniformTypeIdentifiers
 
-/// Spatial Bridge for Mac: a menu-bar utility (LSUIElement) with a Settings window.
+/// Drager for Mac: a menu-bar utility (LSUIElement) with a Settings window.
 @main
 struct SpatialBridgeMacApp: App {
     @State private var model: MacAppModel
@@ -27,7 +27,7 @@ struct SpatialBridgeMacApp: App {
             MenuBarContentView()
                 .environment(model)
         } label: {
-            Label("Spatial Bridge", systemImage: model.activeTransfer == nil ? "arrow.down.to.line.compact" : "arrow.down.circle.dotted")
+            Label("Drager", systemImage: model.activeTransfer == nil ? "arrow.down.to.line.compact" : "arrow.down.circle.dotted")
                 .accessibilityIdentifier("menubar.extra")
         }
         .menuBarExtraStyle(.window)

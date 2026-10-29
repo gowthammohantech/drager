@@ -12,7 +12,7 @@ namespace SpatialBridge.App;
 /// </summary>
 public static class Program
 {
-    private const string InstanceKey = "SpatialBridge.Receiver";
+    private const string InstanceKey = "Drager.Receiver";
 
     [STAThread]
     public static int Main(string[] args)

@@ -124,11 +124,11 @@ private struct LocalNetworkStep: View {
                 Text("Find your computer on this network").font(.title.bold())
                 VStack(alignment: .leading, spacing: Tokens.Spacing.l) {
                     ExplainerRow(icon: "dot.radiowaves.left.and.right", title: "Local network access",
-                                 text: "iOS will ask to let Spatial Bridge find devices on your Wi-Fi. It's needed to discover and connect to your computer.")
+                                 text: "iOS will ask to let Drager find devices on your Wi-Fi. It's needed to discover and connect to your computer.")
                     ExplainerRow(icon: "lock.shield", title: "Private and direct",
                                  text: "Files go straight to your computer over an encrypted connection. No account, no cloud, no upload.")
                     ExplainerRow(icon: "photo", title: "Only what you pick",
-                                 text: "You choose each photo or file with the system picker. Spatial Bridge never reads your whole library.")
+                                 text: "You choose each photo or file with the system picker. Drager never reads your whole library.")
                 }
             }
             .padding(Tokens.Spacing.xl)

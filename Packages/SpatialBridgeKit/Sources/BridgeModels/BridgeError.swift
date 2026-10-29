@@ -23,7 +23,7 @@ public struct BridgeError: Error, Codable, Sendable, Hashable, LocalizedError {
         public var userMessage: String {
             switch self {
             case .localNetworkDenied:
-                "Spatial Bridge isn't allowed to use the local network."
+                "Drager isn't allowed to use the local network."
             case .noPeer:
                 "No device was found nearby."
             case .pairingRejected:
@@ -56,9 +56,9 @@ public struct BridgeError: Error, Codable, Sendable, Hashable, LocalizedError {
         public var recoverySuggestion: String {
             switch self {
             case .localNetworkDenied:
-                "Open Settings › Privacy & Security › Local Network and enable Spatial Bridge."
+                "Open Settings › Privacy & Security › Local Network and enable Drager."
             case .noPeer:
-                "Make sure Spatial Bridge is running on the computer, both devices are on the same Wi-Fi, and Availability is on."
+                "Make sure Drager is running on the computer, both devices are on the same Wi-Fi, and Availability is on."
             case .pairingRejected:
                 "Try pairing again and confirm that the codes match on both devices."
             case .authenticationFailed:
@@ -72,13 +72,13 @@ public struct BridgeError: Error, Codable, Sendable, Hashable, LocalizedError {
             case .insufficientStorage:
                 "Free up space on the computer or choose another destination folder."
             case .destinationPermissionExpired:
-                "Choose the destination folder again in Spatial Bridge on the computer."
+                "Choose the destination folder again in Drager on the computer."
             case .hashMismatch:
                 "Try sending the file again."
             case .writeFailed:
                 "Check that the destination folder is writable and try again."
             case .protocolMismatch:
-                "Update Spatial Bridge on both devices."
+                "Update Drager on both devices."
             case .transferCanceled:
                 "Flick the file again to retry."
             case .timeout:

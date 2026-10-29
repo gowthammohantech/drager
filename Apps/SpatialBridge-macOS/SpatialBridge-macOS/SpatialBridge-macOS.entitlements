@@ -14,7 +14,7 @@
 	<true/>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)com.gowthammohan.spatialbridge.mac</string>
+		<string>$(AppIdentifierPrefix)com.gowthammohan.drager.mac</string>
 	</array>
 </dict>
 </plist>

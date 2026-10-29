@@ -1,4 +1,4 @@
-# Spatial Bridge conformance profile
+# Drager conformance profile
 
 Status: IN_PROGRESS
 

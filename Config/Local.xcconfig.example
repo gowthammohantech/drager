@@ -1,3 +1,3 @@
 // Copy to Config/Local.xcconfig (git-ignored) to override signing locally.
 // SB_DEVELOPMENT_TEAM = ABCDE12345
-// SB_BUNDLE_PREFIX_OVERRIDE = com.example.spatialbridge
+// SB_BUNDLE_PREFIX_OVERRIDE = com.example.drager

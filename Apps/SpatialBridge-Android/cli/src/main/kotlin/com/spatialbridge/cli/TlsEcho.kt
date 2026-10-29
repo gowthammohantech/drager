@@ -143,7 +143,7 @@ private class Production(private val connection: PskTls.Connection) : EchoStream
 
 /**
  * Test-only TLS 1.2 PSK peer restricted to one caller-chosen suite (`--cipher-suite`). Used to
- * check that Spatial Bridge peers refuse anything but 0xCCAC. Failures map to E004 like [PskTls].
+ * check that Drager peers refuse anything but 0xCCAC. Failures map to E004 like [PskTls].
  */
 private object SuiteProbe {
     private val crypto: TlsCrypto by lazy { BcTlsCrypto(SecureRandom()) }

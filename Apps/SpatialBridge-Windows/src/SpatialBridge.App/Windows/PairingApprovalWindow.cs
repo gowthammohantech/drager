@@ -18,7 +18,7 @@ internal sealed class PairingApprovalWindow : Window
 
     private PairingApprovalWindow(PairingPrompt prompt)
     {
-        Title = "Pair with Spatial Bridge";
+        Title = "Pair with Drager";
         ExtendsContentIntoTitleBar = false;
         SystemBackdrop = new MicaBackdrop();
 

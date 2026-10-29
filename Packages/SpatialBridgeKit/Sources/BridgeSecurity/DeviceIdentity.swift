@@ -67,7 +67,7 @@ public struct IdentityStore: Sendable {
         return identity
     }
 
-    /// Destroys the identity and all pair secrets. Used by "Reset Spatial Bridge".
+    /// Destroys the identity and all pair secrets. Used by "Reset Drager".
     public func resetAll() throws {
         try secrets.delete(key: BridgeProtocol.SecretKey.identitySeed)
         for key in try secrets.keys(withPrefix: BridgeProtocol.SecretKey.pairPSKPrefix) {

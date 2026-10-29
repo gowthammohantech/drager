@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://spatialbridge.local/conformance/vectors.schema.json",
-  "title": "Spatial Bridge conformance vector file",
+  "title": "Drager conformance vector file",
   "type": "object",
   "required": ["version", "kind", "cases"],
   "additionalProperties": false,

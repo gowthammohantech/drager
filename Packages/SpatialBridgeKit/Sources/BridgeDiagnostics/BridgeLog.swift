@@ -36,7 +36,7 @@ public enum LogLevel: String, Sendable, Codable, Comparable {
 /// the caller; use `Redaction` helpers for filenames and peers. Every record is
 /// also mirrored into `DiagnosticsRecorder` for the exportable bundle.
 public struct BridgeLogger: Sendable {
-    public static let subsystem = "com.gowthammohan.spatialbridge"
+    public static let subsystem = "com.gowthammohan.drager"
 
     public let category: LogCategory
     private let logger: Logger

@@ -31,7 +31,7 @@ function setUpDownloads() {
   }
   if (missing) {
     document.getElementById("downloadNote").textContent =
-      "Coming soon. Spatial Bridge is in pre-release. Requires iOS 26 and macOS 26 or later.";
+      "Coming soon. Drager is in pre-release. Requires iOS 26 and macOS 26 or later.";
   }
 }
 

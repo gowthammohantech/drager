@@ -19,7 +19,7 @@ public actor JSONFileStore<Value: Codable & Sendable> {
     /// Default location inside Application Support/<bundle>/<name>.json.
     public static func applicationSupportURL(fileName: String, fileManager: FileManager = .default) throws -> URL {
         let base = try fileManager.url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-        let bundleID = Bundle.main.bundleIdentifier ?? "com.gowthammohan.spatialbridge"
+        let bundleID = Bundle.main.bundleIdentifier ?? "com.gowthammohan.drager"
         let dir = base.appendingPathComponent(bundleID, isDirectory: true)
         try fileManager.createDirectory(at: dir, withIntermediateDirectories: true)
         return dir.appendingPathComponent(fileName)

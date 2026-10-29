@@ -32,11 +32,11 @@ internal sealed class TrayIconController : IDisposable
         menu.Items.Add(new MenuFlyoutItem { Text = "Choose Save Folder…", Command = new RelayCommand(() => _ = _app.ChooseFolderAsync()) });
         menu.Items.Add(new MenuFlyoutItem { Text = "Settings…", Command = new RelayCommand(() => _app.OpenSettings(null)) });
         menu.Items.Add(new MenuFlyoutSeparator());
-        menu.Items.Add(new MenuFlyoutItem { Text = "Quit Spatial Bridge", Command = new RelayCommand(() => _ = _app.QuitAsync()) });
+        menu.Items.Add(new MenuFlyoutItem { Text = "Quit Drager", Command = new RelayCommand(() => _ = _app.QuitAsync()) });
 
         _icon = new TaskbarIcon
         {
-            ToolTipText = "Spatial Bridge",
+            ToolTipText = "Drager",
             IconSource = new GeneratedIconSource
             {
                 Text = "SB",
@@ -62,7 +62,7 @@ internal sealed class TrayIconController : IDisposable
         _allowPairing.IsChecked = facade.AllowPairing;
         _allowPairing.IsEnabled = facade.IsAvailable;
         _status.Text = _app.StatusLine;
-        _icon.ToolTipText = "Spatial Bridge — " + _app.StatusLine;
+        _icon.ToolTipText = "Drager — " + _app.StatusLine;
     }
 
     public void Dispose() => _icon.Dispose();

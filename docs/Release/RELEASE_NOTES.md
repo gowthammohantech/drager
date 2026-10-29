@@ -1,4 +1,4 @@
-# Spatial Bridge 0.1.0 (MVP pilot)
+# Drager 0.1.0 (MVP pilot)
 
 ## New
 - **Throw files from iPhone to Mac.** Pick photos or files, flick them toward the edge facing your Mac, and watch them arrive.

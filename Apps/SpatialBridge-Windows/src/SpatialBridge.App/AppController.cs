@@ -162,7 +162,7 @@ internal sealed class AppController : IAsyncDisposable
         {
             DiagnosticsLog.Shared.Write("availability.cleanup-failed " + Describe(cleanup));
         }
-        _notifier.Post("Spatial Bridge isn't available", UserText.Message(error is BridgeException bridge ? bridge.Code : BridgeErrorCode.LocalNetworkDenied));
+        _notifier.Post("Drager isn't available", UserText.Message(error is BridgeException bridge ? bridge.Code : BridgeErrorCode.LocalNetworkDenied));
     }
 
     private static bool IsReceiverFailure(Exception error) =>

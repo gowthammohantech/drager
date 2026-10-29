@@ -136,14 +136,14 @@ fun SettingsScreen(model: AppModel, onPair: () -> Unit, onCalibrate: () -> Unit)
 
         HorizontalDivider()
         TextButton(onClick = { confirmReset = true }, modifier = Modifier.testTag("settings.reset")) {
-            Text("Reset Spatial Bridge", color = MaterialTheme.colorScheme.error)
+            Text("Reset Drager", color = MaterialTheme.colorScheme.error)
         }
     }
 
     if (confirmReset) {
         AlertDialog(
             onDismissRequest = { confirmReset = false },
-            title = { Text("Reset Spatial Bridge?") },
+            title = { Text("Reset Drager?") },
             text = { Text("This unpairs every computer, clears history and restores default settings.") },
             confirmButton = {
                 TextButton(onClick = { confirmReset = false; model.resetEverything() }, modifier = Modifier.testTag("settings.reset.confirm")) {

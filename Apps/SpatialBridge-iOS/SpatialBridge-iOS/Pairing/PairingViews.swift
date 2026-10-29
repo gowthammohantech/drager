@@ -21,7 +21,7 @@ struct DiscoverPeersView: View {
                 Section {
                     StateMessageView(
                         systemImage: "wifi.exclamationmark", title: "Local Network access is off",
-                        message: "Turn on Local Network for Spatial Bridge in Settings to find your computer.",
+                        message: "Turn on Local Network for Drager in Settings to find your computer.",
                         tint: Tokens.Palette.danger, actionTitle: "Open Settings",
                         action: { UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!) }
                     )
@@ -38,7 +38,7 @@ struct DiscoverPeersView: View {
                         ProgressView()
                         VStack(alignment: .leading) {
                             Text("Looking for computers…").font(.body)
-                            Text("Open Spatial Bridge on your computer and keep both devices on the same Wi-Fi.")
+                            Text("Open Drager on your computer and keep both devices on the same Wi-Fi.")
                                 .font(.footnote).foregroundStyle(.secondary)
                         }
                     }
@@ -106,10 +106,10 @@ struct TroubleshootingView: View {
         NavigationStack {
             List {
                 Section {
-                    ExplainerRow(icon: "laptopcomputer", title: "Open Spatial Bridge on the computer", text: "Spatial Bridge must be running on your Mac or PC with Available turned on.")
+                    ExplainerRow(icon: "laptopcomputer", title: "Open Drager on the computer", text: "Drager must be running on your Mac or PC with Available turned on.")
                     ExplainerRow(icon: "wifi", title: "Same network", text: "Both devices need to be on the same Wi-Fi. Guest networks often block devices from seeing each other.")
                     ExplainerRow(icon: "network.badge.shield.half.filled", title: "VPNs and firewalls", text: "Some VPNs and router settings block local discovery. Try pausing the VPN.")
-                    ExplainerRow(icon: "hand.raised", title: "Local Network permission", text: "On iPhone: Settings › Privacy & Security › Local Network. On Mac: System Settings › Privacy & Security › Local Network. On Windows, allow Spatial Bridge through the firewall on private networks.")
+                    ExplainerRow(icon: "hand.raised", title: "Local Network permission", text: "On iPhone: Settings › Privacy & Security › Local Network. On Mac: System Settings › Privacy & Security › Local Network. On Windows, allow Drager through the firewall on private networks.")
                 }
             }
             .navigationTitle("Troubleshooting")

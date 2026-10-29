@@ -75,7 +75,7 @@ private fun MainScreen(model: AppModel, overlay: Overlay, setOverlay: (Overlay) 
     }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text(if (tab == MainTab.SEND) "Spatial Bridge" else tab.title) }) },
+        topBar = { TopAppBar(title = { Text(if (tab == MainTab.SEND) "Drager" else tab.title) }) },
         bottomBar = {
             NavigationBar {
                 MainTab.entries.forEach { t ->

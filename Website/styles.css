@@ -296,6 +296,13 @@ p, dl, dd { margin: 0; }
 .plain li { padding: var(--space-2) 0; border-top: var(--border) solid var(--color-border); }
 .note { grid-column: 1 / -1; font-size: var(--text-sm); color: var(--color-text-secondary); }
 
+/* Long-form text (privacy.html) */
+.prose { max-width: var(--measure); color: var(--color-text-secondary); }
+.prose h3 { color: var(--color-text); margin-top: var(--space-8); }
+.prose h3:first-child { margin-top: 0; }
+.prose p + p { margin-top: var(--space-4); }
+.prose a { color: var(--color-primary); }
+
 .faq > div { padding: var(--space-4) 0; border-bottom: var(--border) solid var(--color-border); }
 .faq > div:first-child { padding-top: 0; }
 .faq dt { font-weight: var(--weight-semibold); margin-bottom: var(--space-1); }
@@ -306,6 +313,8 @@ p, dl, dd { margin: 0; }
 
 .footer { padding: var(--space-6) 0 var(--space-8); font-size: var(--text-xs); color: var(--color-text-secondary); border-top: var(--border) solid var(--color-border); }
 .footer-inner { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-6); justify-content: space-between; }
+.footer a { color: inherit; }
+.footer a:hover { color: var(--color-text); }
 
 /* Responsive */
 @media (max-width: 920px) {

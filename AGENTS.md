@@ -1,4 +1,4 @@
-# AGENTS.md: working on Spatial Bridge
+# AGENTS.md: working on Drager
 
 Guidance for AI agents and new contributors.
 

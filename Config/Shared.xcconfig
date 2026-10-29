@@ -1,13 +1,13 @@
-// Shared build settings for both Spatial Bridge app targets.
-// Signing: automatic, personal team (ADR-009). Override DEVELOPMENT_TEAM locally with
+// Shared build settings for both Drager app targets.
+// Signing: automatic, paid individual team (ADR-016; supersedes ADR-009). Override DEVELOPMENT_TEAM locally with
 // `xcodebuild DEVELOPMENT_TEAM=XXXX` or a Local.xcconfig (git-ignored) if you use a different team.
 #include? "Local.xcconfig"
 
-DEVELOPMENT_TEAM = $(SB_DEVELOPMENT_TEAM:default=TWR2VXDJQB)
+DEVELOPMENT_TEAM = $(SB_DEVELOPMENT_TEAM:default=F25JAA3QPD)
 CODE_SIGN_STYLE = Automatic
-SB_BUNDLE_PREFIX = $(SB_BUNDLE_PREFIX_OVERRIDE:default=com.gowthammohan.spatialbridge)
+SB_BUNDLE_PREFIX = $(SB_BUNDLE_PREFIX_OVERRIDE:default=com.gowthammohan.drager)
 
-MARKETING_VERSION = 0.1.0
+MARKETING_VERSION = 1.0.0
 CURRENT_PROJECT_VERSION = 1
 
 SWIFT_VERSION = 6.0
@@ -31,7 +31,7 @@ ENABLE_TESTABILITY[config=Debug] = YES
 PRODUCT_NAME = $(TARGET_NAME)
 
 // Privacy strings shared by both apps.
-INFOPLIST_KEY_NSLocalNetworkUsageDescription = Spatial Bridge uses your local network to find and connect to your paired devices. Files are sent directly between them and never leave your network.
+INFOPLIST_KEY_NSLocalNetworkUsageDescription = Drager uses your local network to find and connect to your paired devices. Files are sent directly between them and never leave your network.
 INFOPLIST_KEY_NSHumanReadableCopyright = © 2026 Gowtham Mohan
 
 // Security-oriented warnings.

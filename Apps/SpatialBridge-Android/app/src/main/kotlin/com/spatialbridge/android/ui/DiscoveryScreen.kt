@@ -81,7 +81,7 @@ fun DiscoveryScreen(model: AppModel) {
                     Column {
                         Text("Looking for computers…")
                         Text(
-                            "Open Spatial Bridge on your Mac or Windows PC and keep both devices on the same Wi-Fi.",
+                            "Open Drager on your Mac or Windows PC and keep both devices on the same Wi-Fi.",
                             style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
@@ -149,11 +149,11 @@ fun TroubleshootingDialog(onDismiss: () -> Unit) {
         title = { Text("Troubleshooting") },
         text = {
             Column(Modifier.verticalScroll(rememberScrollState())) {
-                ExplainerRow(Icons.Filled.Computer, "Open the computer app", "Spatial Bridge must be running on your Mac or Windows PC with Available turned on.")
+                ExplainerRow(Icons.Filled.Computer, "Open the computer app", "Drager must be running on your Mac or Windows PC with Available turned on.")
                 ExplainerRow(Icons.Filled.Wifi, "Same Wi-Fi", "Both devices need to be on the same Wi-Fi network. Guest networks often block devices from seeing each other.")
-                ExplainerRow(Icons.Filled.Security, "Private network on Windows", "On Windows, set this Wi-Fi network to Private (Settings › Network & internet › Wi-Fi › your network) and allow Spatial Bridge through the firewall.")
+                ExplainerRow(Icons.Filled.Security, "Private network on Windows", "On Windows, set this Wi-Fi network to Private (Settings › Network & internet › Wi-Fi › your network) and allow Drager through the firewall.")
                 ExplainerRow(Icons.Filled.VpnLock, "VPNs and firewalls", "Some VPNs and router settings block local discovery. Try pausing the VPN.")
-                ExplainerRow(Icons.Filled.WifiTethering, "Nearby devices permission", "On Android: Settings › Apps › Spatial Bridge › Permissions › Nearby devices. On Mac: System Settings › Privacy & Security › Local Network.")
+                ExplainerRow(Icons.Filled.WifiTethering, "Nearby devices permission", "On Android: Settings › Apps › Drager › Permissions › Nearby devices. On Mac: System Settings › Privacy & Security › Local Network.")
                 Text("Service: ${TxtRecordParser.SERVICE_TYPE}", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(top = 8.dp))
             }

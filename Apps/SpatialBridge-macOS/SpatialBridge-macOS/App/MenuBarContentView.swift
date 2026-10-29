@@ -24,7 +24,7 @@ struct MenuBarContentView: View {
                     .foregroundStyle(model.connectedPeers.isEmpty ? Color.secondary : Color.accentColor)
                     .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Spatial Bridge").font(.headline)
+                    Text("Drager").font(.headline)
                     Text(model.statusSummary).font(.caption).foregroundStyle(.secondary).lineLimit(1)
                 }
                 Spacer()
@@ -58,7 +58,7 @@ struct MenuBarContentView: View {
             section("Phones") {
                 if model.trustedPeers.isEmpty {
                     Text(model.settings.settings.allowNewPairings
-                         ? "No paired phones. Open Spatial Bridge on your phone to pair."
+                         ? "No paired phones. Open Drager on your phone to pair."
                          : "No paired phones. Turn on “Allow new pairings” in Settings.")
                         .font(.caption).foregroundStyle(.secondary)
                 } else {
@@ -173,7 +173,7 @@ private struct GeneralSettings: View {
                 Toggle("Open at login", isOn: Binding(get: { model.launchAtLogin }, set: { model.setLaunchAtLogin($0) }))
                 if model.launchAtLoginNeedsApproval {
                     HStack {
-                        Text("Approve Spatial Bridge in Login Items.").font(.caption).foregroundStyle(.secondary)
+                        Text("Approve Drager in Login Items.").font(.caption).foregroundStyle(.secondary)
                         Button("Open Login Items") { model.openLoginItemsSettings() }
                     }
                 }

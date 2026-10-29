@@ -12,7 +12,7 @@ android {
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.gowthammohan.spatialbridge.android"
+        applicationId = "com.gowthammohan.drager.android"
         minSdk = 28
         targetSdk = 36
         versionCode = 1

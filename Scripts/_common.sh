@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Shared helpers for Spatial Bridge scripts. Source, don't execute.
+# Shared helpers for Drager scripts. Source, don't execute.
 set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 WORKSPACE="$REPO_ROOT/SpatialBridge.xcworkspace"

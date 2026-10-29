@@ -7,7 +7,7 @@ See `docs/DEVELOPER_SETUP.md`. Debug builds use automatic signing with your deve
 
 ## iOS: TestFlight
 1. Bump `MARKETING_VERSION` / `CURRENT_PROJECT_VERSION` in `Config/Shared.xcconfig`.
-2. Create the App ID `com.gowthammohan.spatialbridge.ios` in App Store Connect (or your prefix).
+2. Create the App ID `com.gowthammohan.drager.ios` in App Store Connect (or your prefix).
 3. Xcode › SpatialBridge-iOS › Any iOS Device › Product › Archive › Distribute App › App Store Connect › Upload. CLI equivalent:
    ```sh
    xcodebuild -workspace SpatialBridge.xcworkspace -scheme SpatialBridge-iOS -configuration Release \

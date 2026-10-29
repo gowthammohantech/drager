@@ -54,7 +54,7 @@ struct CalibrationView: View {
             } header: {
                 Text("Fine-tune")
             } footer: {
-                Text("Shift where files appear along the computer's edge. This is your preference; Spatial Bridge doesn't sense where your devices physically are.")
+                Text("Shift where files appear along the computer's edge. This is your preference; Drager doesn't sense where your devices physically are.")
             }
         }
     }

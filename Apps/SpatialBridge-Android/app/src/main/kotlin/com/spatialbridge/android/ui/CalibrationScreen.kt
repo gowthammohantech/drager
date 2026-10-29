@@ -87,7 +87,7 @@ fun CalibrationScreen(model: AppModel) {
             Switch(checked = layout.mirrored, onCheckedChange = { m -> set { it.copy(mirrored = m) } }, modifier = Modifier.testTag("calibration.mirror"))
         }
         Text(
-            "Shift where files appear along the computer's edge. This is your preference; Spatial Bridge doesn't sense where your devices physically are.",
+            "Shift where files appear along the computer's edge. This is your preference; Drager doesn't sense where your devices physically are.",
             style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }

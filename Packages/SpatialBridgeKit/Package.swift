@@ -1,5 +1,5 @@
 // swift-tools-version: 6.2
-// Spatial Bridge shared packages. Platform-neutral: no UIKit/AppKit imports allowed here.
+// Drager shared packages. Platform-neutral: no UIKit/AppKit imports allowed here.
 import PackageDescription
 
 let swiftSettings: [SwiftSetting] = [

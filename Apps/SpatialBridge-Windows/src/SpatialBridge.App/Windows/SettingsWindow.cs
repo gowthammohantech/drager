@@ -29,7 +29,7 @@ internal sealed class SettingsWindow : Window
     public SettingsWindow(AppController app)
     {
         _app = app;
-        Title = "Spatial Bridge Settings";
+        Title = "Drager Settings";
         SystemBackdrop = new MicaBackdrop();
 
         _navigation = new NavigationView
@@ -185,7 +185,7 @@ internal sealed class SettingsWindow : Window
         var peers = _app.Facade.TrustedPeers;
         if (peers.Count == 0)
         {
-            panel.Children.Add(new TextBlock { Text = "No paired devices. Turn on Allow pairing, then pair from the Spatial Bridge app on your phone.", TextWrapping = TextWrapping.Wrap, Opacity = 0.7 });
+            panel.Children.Add(new TextBlock { Text = "No paired devices. Turn on Allow pairing, then pair from the Drager app on your phone.", TextWrapping = TextWrapping.Wrap, Opacity = 0.7 });
             return panel;
         }
         foreach (var peer in peers.OrderBy(p => p.DisplayName, StringComparer.CurrentCultureIgnoreCase))
@@ -342,7 +342,7 @@ internal sealed class SettingsWindow : Window
     {
         var panel = Section("About");
         var version = typeof(SettingsWindow).Assembly.GetName().Version?.ToString(3) ?? "dev";
-        panel.Children.Add(new TextBlock { Text = $"Spatial Bridge for Windows {version}", FontWeight = FontWeights.SemiBold });
+        panel.Children.Add(new TextBlock { Text = $"Drager for Windows {version}", FontWeight = FontWeights.SemiBold });
         panel.Children.Add(Note(StartupRegistration.IsPackaged ? "Installed package" : "Unpackaged build"));
         panel.Children.Add(Note("Files travel directly between your devices over your local network, encrypted end to end. Nothing is uploaded."));
 

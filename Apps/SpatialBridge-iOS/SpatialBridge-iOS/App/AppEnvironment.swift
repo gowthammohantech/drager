@@ -25,7 +25,7 @@ enum AppEnvironment {
         let uiTesting = isUITesting
         let secrets: any SecretStore
         let identity: DeviceIdentity
-        let keychain = KeychainSecretStore(service: "com.gowthammohan.spatialbridge.ios")
+        let keychain = KeychainSecretStore(service: "com.gowthammohan.drager.ios")
         if uiTesting {
             let memory = InMemorySecretStore()
             secrets = memory

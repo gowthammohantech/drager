@@ -1,4 +1,4 @@
-# Spatial Bridge
+# Drager
 
 Pick a photo or file on your iPhone, flick it toward the edge facing your Mac, and watch it land. The file travels over an encrypted local connection and is verified and saved into a folder you chose. No account, no cloud.
 

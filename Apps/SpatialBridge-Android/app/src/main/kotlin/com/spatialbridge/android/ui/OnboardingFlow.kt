@@ -175,11 +175,11 @@ private fun LocalNetworkStep(model: AppModel, onContinue: () -> Unit) {
             Icon(Icons.Filled.Wifi, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(48.dp))
             Text("Find your computer on this network", style = MaterialTheme.typography.headlineSmall)
             ExplainerRow(Icons.Filled.WifiTethering, "Local network access",
-                "Android will ask to let Spatial Bridge find nearby devices on your Wi-Fi. It's needed to discover and connect to your computer. It is never used for location.")
+                "Android will ask to let Drager find nearby devices on your Wi-Fi. It's needed to discover and connect to your computer. It is never used for location.")
             ExplainerRow(Icons.Filled.Lock, "Private and direct",
                 "Files go straight to your computer over an encrypted connection. No account, no cloud, no upload.")
             ExplainerRow(Icons.Filled.Photo, "Only what you pick",
-                "You choose each photo or file with the system picker. Spatial Bridge never reads your whole library.")
+                "You choose each photo or file with the system picker. Drager never reads your whole library.")
             ExplainerRow(Icons.Filled.Check, "Pair once",
                 "The first time, you'll compare a 6-digit code on both screens. After that your phone and computer recognise each other.")
         }

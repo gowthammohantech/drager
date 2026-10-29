@@ -21,7 +21,7 @@ object Diagnostics {
     )
 
     fun report(env: Environment, settings: AppSettings, pairedCount: Int, history: List<TransferRecord>): String = buildString {
-        appendLine("Spatial Bridge diagnostics")
+        appendLine("Drager diagnostics")
         appendLine("app=${env.appVersion} (${env.build}) platform=android os=${env.osRelease} sdk=${env.sdk} device=${env.model}")
         appendLine("paired=$pairedCount placement=${settings.layout.placement.raw} offset=${"%.2f".format(settings.layout.alignmentOffset)} mirrored=${settings.layout.mirrored}")
         appendLine("sensitivity=${"%.1f".format(settings.gestureSensitivity)} keepHistory=${settings.keepHistory}")
@@ -34,7 +34,7 @@ object Diagnostics {
     fun shareIntent(context: Context, text: String): Intent {
         val send = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
-            putExtra(Intent.EXTRA_SUBJECT, "Spatial Bridge diagnostics")
+            putExtra(Intent.EXTRA_SUBJECT, "Drager diagnostics")
             putExtra(Intent.EXTRA_TEXT, text)
         }
         return Intent.createChooser(send, "Share Diagnostics").also {

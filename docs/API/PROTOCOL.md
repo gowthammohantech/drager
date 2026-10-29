@@ -1,4 +1,4 @@
-# Spatial Bridge wire protocol v1
+# Drager wire protocol v1
 
 Status: IMPLEMENTED (BridgeModels, BridgeNetworking, BridgeTransfer)
 

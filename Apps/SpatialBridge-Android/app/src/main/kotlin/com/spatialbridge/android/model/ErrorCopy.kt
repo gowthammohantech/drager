@@ -5,7 +5,7 @@ import com.spatialbridge.core.BridgeErrorCode
 /** User-facing copy for wire error codes, mirroring `BridgeError.Code` in the Swift package. */
 object ErrorCopy {
     fun message(code: BridgeErrorCode): String = when (code) {
-        BridgeErrorCode.LOCAL_NETWORK_DENIED -> "Spatial Bridge isn't allowed to use the local network."
+        BridgeErrorCode.LOCAL_NETWORK_DENIED -> "Drager isn't allowed to use the local network."
         BridgeErrorCode.NO_PEER -> "No device was found nearby."
         BridgeErrorCode.PAIRING_REJECTED -> "Pairing was declined."
         BridgeErrorCode.AUTHENTICATION_FAILED -> "The device couldn't be verified."
@@ -23,19 +23,19 @@ object ErrorCopy {
 
     fun recovery(code: BridgeErrorCode): String = when (code) {
         BridgeErrorCode.LOCAL_NETWORK_DENIED ->
-            "Open Settings › Apps › Spatial Bridge › Permissions and allow Nearby devices, then connect to Wi-Fi."
+            "Open Settings › Apps › Drager › Permissions and allow Nearby devices, then connect to Wi-Fi."
         BridgeErrorCode.NO_PEER ->
-            "Make sure Spatial Bridge is running on the computer, both devices are on the same Wi-Fi, and Availability is on."
+            "Make sure Drager is running on the computer, both devices are on the same Wi-Fi, and Availability is on."
         BridgeErrorCode.PAIRING_REJECTED -> "Try pairing again and confirm that the codes match on both devices."
         BridgeErrorCode.AUTHENTICATION_FAILED -> "Unpair the device on both sides and pair again."
         BridgeErrorCode.PEER_LOST -> "Check Wi-Fi on both devices and try again."
         BridgeErrorCode.UNSUPPORTED_FILE -> "Choose a different file."
         BridgeErrorCode.SIZE_LIMIT -> "Files up to 100 MB are supported in this version."
         BridgeErrorCode.INSUFFICIENT_STORAGE -> "Free up space on the computer or choose another destination folder."
-        BridgeErrorCode.DESTINATION_PERMISSION_EXPIRED -> "Choose the destination folder again in Spatial Bridge on the computer."
+        BridgeErrorCode.DESTINATION_PERMISSION_EXPIRED -> "Choose the destination folder again in Drager on the computer."
         BridgeErrorCode.HASH_MISMATCH -> "Try sending the file again."
         BridgeErrorCode.WRITE_FAILED -> "Check that the destination folder is writable and try again."
-        BridgeErrorCode.PROTOCOL_MISMATCH -> "Update Spatial Bridge on both devices."
+        BridgeErrorCode.PROTOCOL_MISMATCH -> "Update Drager on both devices."
         BridgeErrorCode.TRANSFER_CANCELED -> "Flick the file again to retry."
         BridgeErrorCode.TIMEOUT -> "Make sure the other device is awake and nearby, then try again."
     }

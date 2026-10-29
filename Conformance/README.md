@@ -1,6 +1,6 @@
 # Conformance
 
-The compatibility gate between the Swift, Kotlin and .NET implementations of the Spatial Bridge protocol. The rules are in [docs/API/CONFORMANCE.md](../docs/API/CONFORMANCE.md).
+The compatibility gate between the Swift, Kotlin and .NET implementations of the Drager protocol. The rules are in [docs/API/CONFORMANCE.md](../docs/API/CONFORMANCE.md).
 
 - `vectors/`: golden vectors generated from Swift by `Packages/SpatialBridgeKit/Tests/Conformance/VectorExportTests`. Do not edit them by hand.
   - Regenerate: `SB_WRITE_VECTORS=1 Scripts/test-packages.sh`

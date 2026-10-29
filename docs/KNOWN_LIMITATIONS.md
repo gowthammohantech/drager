@@ -2,7 +2,7 @@
 
 | # | Limitation | Impact | Mitigation / plan |
 |---|---|---|---|
-| L-01 | iOS gesture works only inside the Spatial Bridge app | No system-wide Photos/Finder drag-off | Platform restriction (BRD out of scope) |
+| L-01 | iOS gesture works only inside the Drager app | No system-wide Photos/Finder drag-off | Platform restriction (BRD out of scope) |
 | L-02 | iOS sending requires the app in the foreground | Long transfers can fail if the app is backgrounded | Automatic retry (same transfer ID) on return; messaging |
 | L-03 | Maximum file size 100 MiB in MVP | Larger files rejected with E007 | `TransferLimits.maxFileBytes` / `AppSettings.maxFileBytes` |
 | L-04 | No resume; interrupted transfers restart (ADR-011) | Large transfers on flaky Wi-Fi restart from zero | Protocol already carries offsets and acks |

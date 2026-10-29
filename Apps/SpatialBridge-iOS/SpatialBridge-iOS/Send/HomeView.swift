@@ -60,7 +60,7 @@ struct HomeView: View {
             .padding(Tokens.Spacing.l)
         }
         .background(Tokens.Palette.canvas)
-        .navigationTitle("Spatial Bridge")
+        .navigationTitle("Drager")
         .fileImporter(isPresented: $showFileImporter, allowedContentTypes: [.item], allowsMultipleSelection: true) { result in
             model.gallery.importFiles(result)
         }

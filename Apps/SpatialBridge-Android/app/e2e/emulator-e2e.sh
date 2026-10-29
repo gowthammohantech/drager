@@ -62,8 +62,8 @@ fi
 
 echo "== installing app + test APKs ($VARIANT)"
 # Debug and release share the application ID and (here) the debug key; start from a clean install.
-"$ADB" uninstall com.gowthammohan.spatialbridge.android >/dev/null 2>&1 || true
-"$ADB" uninstall com.gowthammohan.spatialbridge.android.test >/dev/null 2>&1 || true
+"$ADB" uninstall com.gowthammohan.drager.android >/dev/null 2>&1 || true
+"$ADB" uninstall com.gowthammohan.drager.android.test >/dev/null 2>&1 || true
 (cd "$ANDROID_ROOT" && ./gradlew -q ${GRADLE_PROPS[@]+"${GRADLE_PROPS[@]}"} ":app:install$VARIANT" ":app:install${VARIANT}AndroidTest")
 
 echo "== starting sb-swift serve on $BIND"
@@ -81,7 +81,7 @@ set +e
 "$ADB" shell am instrument -w -r \
   -e class com.spatialbridge.android.EmulatorE2ETest \
   -e sbHost 10.0.2.2 -e sbPairingPort "$PAIRING_PORT" -e sbSessionPort "$SESSION_PORT" \
-  com.gowthammohan.spatialbridge.android.test/androidx.test.runner.AndroidJUnitRunner >"$INSTR_LOG" 2>&1
+  com.gowthammohan.drager.android.test/androidx.test.runner.AndroidJUnitRunner >"$INSTR_LOG" 2>&1
 set -e
 sleep 1
 

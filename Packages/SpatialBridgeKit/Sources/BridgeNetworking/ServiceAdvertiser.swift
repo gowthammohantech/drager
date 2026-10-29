@@ -67,7 +67,7 @@ public final class ServiceAdvertiser: @unchecked Sendable {
     private let incomingContinuation: AsyncStream<Incoming>.Continuation
     private let stateBroadcaster = Broadcaster<State>(.stopped)
     private let store = OSAllocatedUnfairLock(initialState: Store())
-    private let queue = DispatchQueue(label: "com.gowthammohan.spatialbridge.listener")
+    private let queue = DispatchQueue(label: "com.gowthammohan.drager.listener")
     private let log = BridgeLogger(.discovery)
     private let device: DeviceInfo
 
@@ -301,7 +301,7 @@ public final class PathObserver: @unchecked Sendable {
 
     private let monitor = NWPathMonitor()
     private let broadcaster = Broadcaster<Status>(.unknown)
-    private let queue = DispatchQueue(label: "com.gowthammohan.spatialbridge.path")
+    private let queue = DispatchQueue(label: "com.gowthammohan.drager.path")
 
     public init() {}
 

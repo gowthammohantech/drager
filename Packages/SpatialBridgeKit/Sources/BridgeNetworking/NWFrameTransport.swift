@@ -48,7 +48,7 @@ public final class NWFrameTransport: FrameTransport, @unchecked Sendable {
         limits: TransferLimits = .default,
         timeout: Duration = .seconds(15)
     ) async throws -> NWFrameTransport {
-        let queue = DispatchQueue(label: "com.gowthammohan.spatialbridge.connection")
+        let queue = DispatchQueue(label: "com.gowthammohan.drager.connection")
         let transport = NWFrameTransport(connection: connection, queue: queue, limits: limits)
         try await transport.waitUntilReady(timeout: timeout)
         return transport
