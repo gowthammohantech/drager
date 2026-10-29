@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Spatial Bridge: flick files from iPhone to Mac</title>
   <meta name="description" content="Pick a photo on your iPhone, flick it toward your Mac and watch it land. Encrypted, local and private. No account, no cloud.">
-  <meta name="theme-color" content="#0b0f17" media="(prefers-color-scheme: dark)">
-  <meta name="theme-color" content="#f6f8fb" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#ffffff">
   <meta property="og:title" content="Spatial Bridge">
   <meta property="og:description" content="Flick a photo from your iPhone toward your Mac and watch it land. Local, encrypted, no account.">
   <meta property="og:type" content="website">
@@ -20,12 +19,12 @@
   <header class="nav">
     <div class="wrap nav-inner">
       <a class="brand" href="#top" aria-label="Spatial Bridge home">
-        <img src="favicon.svg" alt="" width="28" height="28">
+        <img src="favicon.svg" alt="" width="24" height="24">
         <span>Spatial Bridge</span>
       </a>
       <nav aria-label="Primary">
         <a href="#how">How it works</a>
-        <a href="#privacy">Privacy</a>
+        <a href="#security">Security</a>
         <a href="#faq">FAQ</a>
         <a class="btn btn-small" href="#download">Download</a>
       </nav>
@@ -36,193 +35,199 @@
     <section class="hero" id="top">
       <div class="wrap hero-grid">
         <div class="hero-copy">
-          <p class="eyebrow"><span class="dot" aria-hidden="true"></span> Pre-release · iPhone + Mac</p>
-          <h1>Flick it.<br><span class="grad">It lands on your&nbsp;Mac.</span></h1>
+          <p class="status mono"><span class="status-dot" aria-hidden="true"></span>Pre-release · iPhone to Mac</p>
+          <h1>Flick it.<br><span class="accent">It lands on your&nbsp;Mac.</span></h1>
           <p class="lede">Pick a photo on your iPhone, throw it toward the edge that faces your Mac, and watch it arrive on screen. It travels over an encrypted local connection and is saved to a folder you choose.</p>
           <div class="cta-row">
             <a class="btn" href="#download">Get Spatial Bridge</a>
             <a class="btn btn-ghost" href="#how">See how it works</a>
           </div>
-          <ul class="pills" aria-label="Highlights">
-            <li>No account</li>
-            <li>No cloud</li>
-            <li>Verified before saved</li>
-          </ul>
+          <p class="hero-foot">No account. No cloud. Nothing is saved until your Mac has checked it.</p>
         </div>
 
-        <figure class="scene" id="scene" aria-label="Interactive demo: drag the photo on the phone upward and let go to send it to the Mac">
-          <div class="mac" aria-hidden="true">
-            <div class="mac-screen" id="macScreen">
-              <div class="menubar">
-                <span class="mb-apple"></span><span class="mb-item"></span><span class="mb-item short"></span>
-                <span class="mb-spacer"></span>
-                <img class="mb-icon" src="favicon.svg" alt="">
+        <div class="demo">
+          <figure class="scene" id="scene" aria-label="Interactive demo: drag the photo on the phone upward and let go to send it to the Mac">
+            <div class="mac" aria-hidden="true">
+              <div class="mac-screen" id="macScreen">
+                <div class="menubar">
+                  <span class="mb-apple"></span><span class="mb-item"></span><span class="mb-item short"></span>
+                  <span class="mb-spacer"></span>
+                  <img class="mb-icon" src="favicon.svg" alt="">
+                </div>
+                <div class="desktop" id="desktop">
+                  <div class="landing-slot" id="landingSlot"></div>
+                </div>
+                <div class="toast" id="toast" role="status" aria-live="polite">
+                  <span class="toast-check" aria-hidden="true">
+                    <svg class="icon icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                  </span>
+                  <span><strong>Saved to Desktop</strong><br><small>Checked and committed by your Mac</small></span>
+                </div>
               </div>
-              <div class="desktop" id="desktop">
-                <div class="landing-slot" id="landingSlot"></div>
-              </div>
-              <div class="toast" id="toast" role="status" aria-live="polite">
-                <span class="toast-check" aria-hidden="true">
-                  <svg viewBox="0 0 20 20"><path d="M5 10.5l3.2 3.2L15 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </span>
-                <span><strong>Saved to Desktop</strong><br><small>Checked and committed by your Mac</small></span>
-              </div>
+              <div class="mac-stand"></div>
+              <div class="mac-foot"></div>
             </div>
-            <div class="mac-stand"></div>
-            <div class="mac-foot"></div>
-          </div>
 
-          <div class="phone">
-            <div class="phone-screen" id="phoneScreen">
-              <div class="phone-island" aria-hidden="true"></div>
-              <div class="edge-zone" id="edgeZone" aria-hidden="true"><span>Mac is this way</span></div>
-              <button class="photo" id="photo" type="button" aria-label="Send photo to Mac">
-                <span class="photo-art" aria-hidden="true"></span>
-              </button>
-              <p class="phone-hint" id="phoneHint" aria-hidden="true">Drag up and let go</p>
-              <div class="progress" id="progress" aria-hidden="true"><span></span></div>
+            <div class="phone">
+              <div class="phone-screen" id="phoneScreen">
+                <div class="phone-island" aria-hidden="true"></div>
+                <div class="edge-zone" id="edgeZone" aria-hidden="true"><span>Mac is this way</span></div>
+                <button class="photo" id="photo" type="button" aria-label="Send photo to Mac">
+                  <span class="photo-art" aria-hidden="true"></span>
+                </button>
+                <p class="phone-hint" id="phoneHint" aria-hidden="true">Drag up and let go</p>
+                <div class="progress" id="progress" aria-hidden="true"><span></span></div>
+              </div>
             </div>
+          </figure>
+
+          <div class="wire" aria-label="Messages between the two apps">
+            <p class="wire-head mono"><span>Between the apps</span><span id="wireState">idle</span></p>
+            <ol class="wire-log mono" id="wireLog">
+              <li class="wire-idle">Drag the photo up and let go, or press it.</li>
+            </ol>
           </div>
-          <figcaption class="scene-caption">Try it: drag the photo up and let go. Or press it to send.</figcaption>
-        </figure>
+        </div>
       </div>
     </section>
 
     <section class="section" id="how">
-      <div class="wrap">
-        <p class="kicker">How it works</p>
-        <h2>Pair once, then just throw.</h2>
+      <div class="wrap row">
+        <header class="row-head">
+          <p class="num mono">01</p>
+          <h2>Pair once, then just throw.</h2>
+        </header>
         <ol class="steps">
-          <li class="card">
-            <span class="step-num">1</span>
-            <h3>Pair with a code</h3>
-            <p>Open both apps on the same Wi-Fi. Your iPhone finds your Mac, and both show the same six-digit code. Confirm it on each and they trust each other from then on.</p>
+          <li class="step">
+            <div>
+              <h3>Pair with a code</h3>
+              <p>Open both apps on the same Wi-Fi. Your iPhone finds your Mac, and both show the same six-digit code. Confirm it on each and they trust each other from then on.</p>
+            </div>
+            <div class="fig code-fig" aria-hidden="true">
+              <div class="code-side"><span class="fig-label mono">iPhone</span><span class="code mono">482 913</span></div>
+              <span class="code-eq mono">=</span>
+              <div class="code-side"><span class="fig-label mono">Mac</span><span class="code mono">482 913</span></div>
+            </div>
           </li>
-          <li class="card">
-            <span class="step-num">2</span>
-            <h3>Tell it where your Mac is</h3>
-            <p>Say whether your phone sits below, left of, right of or above your Mac, and pick the display. That edge becomes your throw direction.</p>
+          <li class="step">
+            <div>
+              <h3>Tell it where your Mac is</h3>
+              <p>Say whether your phone sits below, left of, right of or above your Mac, and pick the display. That edge becomes your throw direction.</p>
+            </div>
+            <div class="fig" aria-hidden="true">
+              <svg class="dir-fig" viewBox="0 0 160 112">
+                <rect class="dir-mac" x="52" y="32" width="56" height="36" rx="4"/>
+                <rect class="dir-slot" x="74" y="4" width="12" height="20" rx="3"/>
+                <rect class="dir-slot" x="20" y="40" width="12" height="20" rx="3"/>
+                <rect class="dir-slot" x="128" y="40" width="12" height="20" rx="3"/>
+                <rect class="dir-pick" x="74" y="80" width="12" height="20" rx="3"/>
+                <path class="dir-arrow" d="M80 76V72"/>
+              </svg>
+              <span class="fig-label mono">Below · Display 1</span>
+            </div>
           </li>
-          <li class="card">
-            <span class="step-num">3</span>
-            <h3>Flick a photo or file</h3>
-            <p>Choose something from Photos or Files and flick it toward that edge. A haptic tap confirms the throw, and it slides onto your Mac's screen from the matching side.</p>
+          <li class="step">
+            <div>
+              <h3>Flick a photo or file</h3>
+              <p>Choose something from Photos or Files and flick it toward that edge. A haptic tap confirms the throw, and it slides onto your Mac's screen from the matching side.</p>
+            </div>
           </li>
         </ol>
       </div>
     </section>
 
-    <section class="section section-alt" id="privacy">
-      <div class="wrap split">
-        <div>
-          <p class="kicker">Private by design</p>
+    <section class="section section-alt" id="security">
+      <div class="wrap row">
+        <header class="row-head">
+          <p class="num mono">02</p>
           <h2>Your files never leave your network.</h2>
-          <p class="lede">There's no server in the middle and no account to make. Your iPhone talks directly to your Mac, and nothing gets saved until your Mac has checked every byte.</p>
-        </div>
-        <ul class="facts">
-          <li>
-            <h3>Only Macs you approved</h3>
-            <p>A device can't send or receive until you've matched its pairing code. Unknown devices are refused.</p>
-          </li>
-          <li>
-            <h3>Encrypted on the wire</h3>
-            <p>Every transfer runs over an authenticated, encrypted connection with keys created during pairing.</p>
-          </li>
-          <li>
-            <h3>Verified before it's saved</h3>
-            <p>Your Mac checks the file's SHA-256 fingerprint and only then moves it into your folder. Your iPhone shows "sent" only after the Mac confirms.</p>
-          </li>
-          <li>
-            <h3>You choose the folder</h3>
-            <p>The Mac app writes only to the folder you picked. No quiet access to your Desktop or photo library.</p>
-          </li>
-        </ul>
+          <p class="row-lede">There's no server in the middle and no account to make. Your iPhone talks directly to your Mac.</p>
+        </header>
+        <dl class="spec">
+          <div><dt class="mono">Discovery</dt><dd>Bonjour on your local network. Your Mac is only visible while it's set to receive.</dd></div>
+          <div><dt class="mono">Pairing</dt><dd>A six-digit code on both screens. A device can't send or receive until you've confirmed it on each.</dd></div>
+          <div><dt class="mono">Encryption</dt><dd>TLS 1.2 with ChaCha20-Poly1305, keyed by a secret made during pairing. Unknown devices fail the handshake.</dd></div>
+          <div><dt class="mono">Integrity</dt><dd>Your Mac checks the SHA-256 fingerprint before moving the file into place. Your iPhone shows "sent" only after the Mac confirms.</dd></div>
+          <div><dt class="mono">Storage</dt><dd>Only the folder you picked on the Mac. No quiet access to your Desktop or photo library.</dd></div>
+          <div><dt class="mono">Limits</dt><dd>Up to 100 MB per file, one at a time. An interrupted transfer starts over and never leaves a half-saved file.</dd></div>
+        </dl>
       </div>
     </section>
 
-    <section class="section" id="features">
-      <div class="wrap">
-        <p class="kicker">Two small apps</p>
-        <h2>One on your phone, one in your menu bar.</h2>
-        <div class="duo">
-          <article class="card">
+    <section class="section" id="apps">
+      <div class="wrap row">
+        <header class="row-head">
+          <p class="num mono">03</p>
+          <h2>One on your phone, one in your menu bar.</h2>
+        </header>
+        <div class="apps">
+          <div>
             <h3>iPhone</h3>
-            <ul class="ticks">
+            <ul class="plain">
               <li>Pick from Photos or Files</li>
               <li>A throw surface with haptic feedback</li>
               <li>A Send button if you'd rather tap</li>
               <li>Live progress and clear errors with retry</li>
             </ul>
-          </article>
-          <article class="card">
+          </div>
+          <div>
             <h3>Mac</h3>
-            <ul class="ticks">
+            <ul class="plain">
               <li>Lives quietly in the menu bar</li>
               <li>An arrival animation that never steals focus</li>
               <li>A notification when the animation can't show, such as over full-screen apps</li>
               <li>A transfer history you can clear, with an Open in Finder button</li>
             </ul>
-          </article>
+          </div>
+          <p class="note">Supports VoiceOver, and follows Reduce Motion: you get a calm static confirmation in place of the flying animation.</p>
         </div>
-        <p class="note">Supports VoiceOver, and follows Reduce Motion: you get a calm static confirmation in place of the flying animation.</p>
       </div>
     </section>
 
     <section class="section section-alt" id="faq">
-      <div class="wrap narrow">
-        <p class="kicker">FAQ</p>
-        <h2>Good to know</h2>
-        <details>
-          <summary>Is this a replacement for AirDrop?</summary>
-          <p>No. Spatial Bridge is a quicker, more visual way to move things to one Mac you use every day. Pair once and you never pick a destination again.</p>
-        </details>
-        <details>
-          <summary>Do I need the internet?</summary>
-          <p>No. Both devices need to be on the same local network. Some guest, hotel and office Wi-Fi blocks devices from finding each other, and so do some VPNs. The app tells you when that's happening.</p>
-        </details>
-        <details>
-          <summary>Can I flick from inside the Photos app?</summary>
-          <p>No. iOS doesn't let apps capture gestures inside other apps, so you pick photos and throw them from within Spatial Bridge.</p>
-        </details>
-        <details>
-          <summary>How big can files be?</summary>
-          <p>Up to 100 MB each, one at a time, in this first release. Keep the app open while it sends. If a transfer is interrupted, it starts again from the beginning and never leaves a half-saved file behind.</p>
-        </details>
-        <details>
-          <summary>Does it know where my phone is?</summary>
-          <p>No. You set the direction once, and it doesn't use sensors or location to guess. If you move your setup around, change the direction in Settings.</p>
-        </details>
-        <details>
-          <summary>What do I need?</summary>
-          <p>An iPhone on iOS 26 or later and a Mac on macOS 26 or later.</p>
-        </details>
+      <div class="wrap row">
+        <header class="row-head">
+          <p class="num mono">04</p>
+          <h2>Good to know</h2>
+        </header>
+        <dl class="faq">
+          <div><dt>Is this a replacement for AirDrop?</dt><dd>No. It's a quicker, more visual way to move things to one Mac you use every day. Pair once and you never pick a destination again.</dd></div>
+          <div><dt>Do I need the internet?</dt><dd>No. Both devices need to be on the same local network. Some guest, hotel and office Wi-Fi blocks devices from finding each other, and so do some VPNs. The app tells you when that's happening.</dd></div>
+          <div><dt>Can I flick from inside the Photos app?</dt><dd>No. iOS doesn't let apps capture gestures inside other apps, so you pick photos and throw them from within Spatial Bridge.</dd></div>
+          <div><dt>Does it know where my phone is?</dt><dd>No. You set the direction once, and it doesn't use sensors or location to guess. If you move your setup around, change the direction in Settings.</dd></div>
+          <div><dt>What do I need?</dt><dd>An iPhone on iOS 26 or later and a Mac on macOS 26 or later.</dd></div>
+        </dl>
       </div>
     </section>
 
-    <section class="section download" id="download">
-      <div class="wrap narrow center">
-        <img class="download-mark" src="favicon.svg" alt="" width="64" height="64">
-        <h2>Get both apps</h2>
-        <p class="lede">Install Spatial Bridge on your iPhone and your Mac, pair them once, and start throwing.</p>
-        <div class="cta-row center">
-          <a class="btn btn-store" data-download="ios" href="#download">
-            <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="7" y="2.5" width="10" height="19" rx="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10.5 18.5h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-            <span><small>Download for</small>iPhone</span>
-          </a>
-          <a class="btn btn-store" data-download="mac" href="#download">
-            <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="12.5" rx="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 20.5h6M12 16.5v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-            <span><small>Download for</small>Mac</span>
-          </a>
+    <section class="section" id="download">
+      <div class="wrap row">
+        <header class="row-head">
+          <p class="num mono">05</p>
+          <h2>Get both apps</h2>
+          <p class="row-lede">Install Spatial Bridge on your iPhone and your Mac, pair them once, and start throwing.</p>
+        </header>
+        <div>
+          <div class="cta-row stores">
+            <a class="btn btn-store" data-download="ios" href="#download">
+              <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+              <span><small>Download for</small>iPhone</span>
+            </a>
+            <a class="btn btn-store" data-download="mac" href="#download">
+              <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16"/></svg>
+              <span><small>Download for</small>Mac</span>
+            </a>
+          </div>
+          <p class="note" id="downloadNote">Requires iOS 26 and macOS 26 or later.</p>
         </div>
-        <p class="note" id="downloadNote">Requires iOS 26 and macOS 26 or later.</p>
       </div>
     </section>
   </main>
 
   <footer class="footer">
-    <div class="wrap footer-inner">
-      <span class="brand"><img src="favicon.svg" alt="" width="20" height="20"> Spatial Bridge</span>
-      <span>© <span id="year">2026</span> Spatial Bridge. iPhone and Mac are trademarks of Apple Inc.</span>
+    <div class="wrap footer-inner mono">
+      <span>Spatial Bridge</span>
+      <span>© <span id="year">2026</span> · iPhone and Mac are trademarks of Apple Inc.</span>
     </div>
   </footer>
 </body>

@@ -44,6 +44,25 @@ function setUpDemo() {
   const toast = document.getElementById("toast");
   const hint = document.getElementById("phoneHint");
   const bar = document.querySelector("#progress span");
+  const wireLog = document.getElementById("wireLog");
+  const wireState = document.getElementById("wireState");
+
+  // Message names match the real protocol (FRD §4). The file and hash are placeholders.
+  const log = (from, msg, detail = "", ok = false) => {
+    const line = document.createElement("li");
+    if (ok) line.className = "ok";
+    for (const [cls, text] of [["from", from], ["msg", msg], ["detail", detail]]) {
+      const cell = document.createElement("span");
+      cell.className = cls;
+      cell.textContent = text;
+      line.append(cell);
+    }
+    wireLog.append(line);
+  };
+  const setWire = (state) => {
+    wireState.textContent = state;
+    wireState.className = state === "committed" ? "done" : state === "idle" ? "" : "busy";
+  };
 
   let drag = null;
   let busy = false;
@@ -103,6 +122,11 @@ function setUpDemo() {
     busy = true;
     hint.textContent = "Sending…";
     scene.classList.add("sending");
+    wireLog.replaceChildren();
+    setWire("sending");
+    log("iPhone", "TRANSFER_OFFER", "sunset.heic · 2.4 MB · bottom edge");
+    wait(120).then(() => log("Mac", "TRANSFER_ACCEPT"));
+    wait(480).then(() => log("Mac", "PROGRESS", "1.2 of 2.4 MB received"));
     const still = reduceMotion.matches;
 
     const exit = photo.offsetTop + photo.offsetHeight + 20;
@@ -138,10 +162,16 @@ function setUpDemo() {
 
     const progress = bar.animate([{ width: "0%" }, { width: "100%" }], { duration: 900, easing: "ease-in-out", fill: "forwards" });
     await Promise.all([leaving.finished, arriving.finished, progress.finished]);
+    log("iPhone", "COMPLETE", "sha256 9f2c…e41a");
+    hint.textContent = "Waiting for Mac…";
+    setWire("verifying");
+    await wait(450);
 
-    // Success shows only once the transfer is done, just like the app waits for COMMITTED.
+    // Success shows only once the Mac sends COMMITTED, just like the app.
+    log("Mac", "COMMITTED", "hash matches · saved to Desktop", true);
+    setWire("committed");
     toast.classList.add("show");
-    hint.textContent = "Sent ✓";
+    hint.textContent = "Sent";
     await wait(2400);
 
     toast.classList.remove("show");
@@ -152,6 +182,7 @@ function setUpDemo() {
     progress.cancel();
     photo.animate([{ opacity: 0, transform: "scale(0.94)" }, { opacity: 1, transform: "none" }], { duration: 260 });
     hint.textContent = "Drag up and let go";
+    setWire("idle");
     busy = false;
   }
 
